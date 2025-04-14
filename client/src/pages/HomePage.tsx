@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
+import Features from '@/components/home/Features';
 
 /**
  * HomePage - Agregando componentes uno a uno
@@ -24,6 +25,9 @@ const HomePage: React.FC = () => {
         <main>
           {/* 1. Hero Section */}
           <Hero />
+          
+          {/* 2. Features */}
+          <Features />
         </main>
         
         <Footer />

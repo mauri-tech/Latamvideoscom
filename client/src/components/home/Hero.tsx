@@ -40,14 +40,13 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Imagen del editor trabajando con DaVinci Resolve */}
+          {/* Imagen del editor trabajando */}
           <div className="md:w-1/2">
-            <div className="bg-gray-100 rounded-xl p-4 shadow-md">
-              <h3 className="font-medium text-lg mb-3 text-gray-700">Editor trabajando en DaVinci Resolve</h3>
-              <div className="aspect-video rounded-lg overflow-hidden border border-gray-200">
+            <div className="bg-gradient-to-br from-[#F5F9FF] to-[#EAF2FF] rounded-xl p-4 shadow-lg">
+              <div className="aspect-video rounded-lg overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1574717024453-354056afd6fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450&q=80" 
-                  alt="Editor trabajando en DaVinci Resolve"
+                  alt="Editor profesional trabajando"
                   className="w-full h-full object-cover"
                 />
               </div>
