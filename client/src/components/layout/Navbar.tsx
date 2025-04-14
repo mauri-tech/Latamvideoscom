@@ -42,6 +42,9 @@ export function Navbar() {
           <Link href="/search">
             <a className="hover:text-primary transition-colors">Buscar Editores</a>
           </Link>
+          <Link href="/forum">
+            <a className="hover:text-primary transition-colors">Foro</a>
+          </Link>
           {user?.userType === "editor" && (
             <Link href="/dashboard">
               <a className="hover:text-primary transition-colors">Mi Portafolio</a>

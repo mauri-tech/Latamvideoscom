@@ -12,6 +12,7 @@ import EditorProfilePage from "@/pages/EditorProfilePage";
 import SearchPage from "@/pages/SearchPage";
 import DashboardPage from "@/pages/DashboardPage";
 import AdminPanel from "@/pages/AdminPanel";
+import ForumPage from "@/pages/ForumPage";
 
 function Router() {
   return (
