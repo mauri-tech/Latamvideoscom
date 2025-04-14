@@ -39,7 +39,7 @@ const Header = () => {
           {user ? (
             <Link href="/dashboard">
               <Button className="bg-gradient-to-r from-[#041C32] to-[#0050FF] text-white px-4 py-2 rounded-md hover:from-[#0A2540] hover:to-[#0060FF] transition font-medium">
-                Mi cuenta
+                Mi perfil
               </Button>
             </Link>
           ) : (

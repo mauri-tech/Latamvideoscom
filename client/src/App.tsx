@@ -26,6 +26,7 @@ import CookiesPage from "@/pages/CookiesPage";
 import TestimonialsPage from "@/pages/TestimonialsPage";
 import ComoFuncionaPage from "@/pages/ComoFuncionaPage";
 import MessagesPage from "@/pages/MessagesPage";
+import EditProfilePage from "@/pages/EditProfilePage";
 
 function Router() {
   return (
@@ -49,6 +50,7 @@ function Router() {
       <Route path="/como-funciona" component={ComoFuncionaPage} />
       <ProtectedRoute path="/mensajes" component={MessagesPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
+      <ProtectedRoute path="/editar-perfil" component={EditProfilePage} />
       <ProtectedRoute path="/admin" component={AdminPanel} />
       <ProtectedRoute path="/admin/test-data" component={AdminPage} />
       <Route component={NotFound} />

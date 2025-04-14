@@ -154,14 +154,23 @@ const DashboardPage = () => {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           
-          {user.userType === 'editor' && (
-            <Link href={`/editor/${profile.id}`}>
-              <Button variant="outline">
-                <Eye className="mr-2 h-4 w-4" />
-                Ver mi perfil público
+          <div className="flex space-x-4">
+            <Link href="/editar-perfil">
+              <Button variant="secondary">
+                <Plus className="mr-2 h-4 w-4" />
+                {editorProfile ? 'Editar mi perfil' : 'Crear perfil profesional'}
               </Button>
             </Link>
-          )}
+            
+            {user.userType === 'editor' && editorProfile && (
+              <Link href={`/editor/${profile.id}`}>
+                <Button variant="outline">
+                  <Eye className="mr-2 h-4 w-4" />
+                  Ver mi perfil público
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab}>
