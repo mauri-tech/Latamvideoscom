@@ -36,7 +36,7 @@ const newConversationSchema = z.object({
 type NewConversationFormValues = z.infer<typeof newConversationSchema>;
 
 const MessagesPage = () => {
-  const [, navigate] = useLocation();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ const MessagesPage = () => {
         description: "Debes iniciar sesión para acceder a tus mensajes",
         variant: "destructive",
       });
-      navigate('/auth');
+      setLocation('/auth');
     }
   });
   
