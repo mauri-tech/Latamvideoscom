@@ -18,68 +18,45 @@ interface FeaturedEditor {
   currency: string;
 }
 
-// Datos de muestra
+// Datos de editores y videógrafos destacados
 const featuredEditors: FeaturedEditor[] = [
   {
     id: 1,
     name: "Mauricio Treviño",
     profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80",
-    location: "Ciudad de México",
+    location: "🇲🇽 México",
     verified: true,
     rating: 4.9,
-    specialties: ["Reels", "YouTube", "Documental"],
-    software: ["Adobe Premiere", "After Effects"],
-    baseRate: 200,
+    specialties: ["Cine", "YouTube", "Documental"],
+    software: ["Premiere Pro", "After Effects", "DaVinci Resolve"],
+    baseRate: 350,
     currency: "USD"
   },
   {
     id: 2,
-    name: "Valentina Quiroga",
+    name: "Camila Valenzuela",
     profilePicture: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80",
-    location: "Bogotá",
+    location: "🇨🇴 Colombia",
     verified: true,
     rating: 4.8,
-    specialties: ["Comerciales", "Moda", "Viajes"],
-    software: ["DaVinci Resolve", "Photoshop"],
-    baseRate: 300,
+    specialties: ["Animación 3D", "Motion Graphics", "VFX"],
+    software: ["After Effects", "Cinema 4D", "Blender"],
+    baseRate: 400,
     currency: "USD"
   },
   {
     id: 3,
-    name: "Alejandro Ramos",
+    name: "Diego Montero",
     profilePicture: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80",
-    location: "Buenos Aires",
+    location: "🇦🇷 Argentina",
     verified: true,
-    rating: 4.7,
-    specialties: ["Cine", "Videoclips", "Animación"],
-    software: ["Final Cut Pro", "Motion"],
-    baseRate: 250,
+    rating: 5.0,
+    specialties: ["Comerciales", "Música", "Videoclips"],
+    software: ["Final Cut Pro", "DaVinci Resolve", "Logic Pro"],
+    baseRate: 380,
     currency: "USD"
   },
-  {
-    id: 4,
-    name: "Carolina Silva",
-    profilePicture: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80",
-    location: "Santiago",
-    verified: true,
-    rating: 4.9,
-    specialties: ["Corporativo", "E-learning", "Entrevistas"],
-    software: ["Adobe Premiere", "Audition"],
-    baseRate: 180,
-    currency: "USD"
-  },
-  {
-    id: 5,
-    name: "Diego Mendoza",
-    profilePicture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80",
-    location: "Lima",
-    verified: false,
-    rating: 4.6,
-    specialties: ["Reels", "TikTok", "Social Media"],
-    software: ["CapCut", "Adobe Premiere"],
-    baseRate: 150,
-    currency: "USD"
-  },
+
 ];
 
 const FeaturedEditors = () => {
