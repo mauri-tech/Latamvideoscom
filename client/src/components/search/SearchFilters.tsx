@@ -82,7 +82,9 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
   ];
   
   const updateFilter = (key: string, value: any) => {
-    const newFilters = { ...filters, [key]: value };
+    // Si el valor es "all" para el país, convertirlo a string vacío para mantener la lógica existente
+    const processedValue = key === 'country' && value === 'all' ? '' : value;
+    const newFilters = { ...filters, [key]: processedValue };
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
@@ -191,7 +193,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
               <SelectValue placeholder="Todos los países" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos los países</SelectItem>
+              <SelectItem value="all">Todos los países</SelectItem>
               {countries.map((country) => (
                 <SelectItem key={country.code} value={country.code}>
                   {country.name}

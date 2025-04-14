@@ -61,7 +61,7 @@ const RegisterPage = () => {
     try {
       // Send registration request to API
       const response = await apiRequest('POST', '/api/users', {
-        username: values.email, // Backend expects username instead of email
+        email: values.email,
         password: values.password,
         name: values.name,
         userType: values.userType,
