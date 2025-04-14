@@ -14,35 +14,28 @@ const Header = () => {
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center">
-          <span className="flex">
-            <span className="text-[#E63946] font-bold text-xl">l</span>
-            <span className="text-[#F4B400] font-bold text-xl">a</span>
-            <span className="text-[#50BFA5] font-bold text-xl">t</span>
-            <span className="text-[#2D6A4F] font-bold text-xl">a</span>
-            <span className="text-[#2A9D8F] font-bold text-xl">m</span>
-            <span className="text-[#1C1C1E] font-bold text-xl">videos</span>
-          </span>
+          <span className="font-bold text-xl text-[#1C1C1E]">latamvideos</span>
           <span className="text-[#B0B0B0] font-light text-base">.com</span>
         </Link>
         
         <nav className="hidden md:flex space-x-8">
-          <Link href="/#como-funciona" className="text-[#1c1c1e] hover:text-[#2A9D8F] transition">
+          <Link href="/#como-funciona" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
             Cómo funciona
           </Link>
-          <Link href="/#para-editores" className="text-[#1c1c1e] hover:text-[#2A9D8F] transition">
+          <Link href="/#para-editores" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
             Para editores
           </Link>
-          <Link href="/#para-marcas" className="text-[#1c1c1e] hover:text-[#2A9D8F] transition">
+          <Link href="/#para-marcas" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
             Para marcas
           </Link>
         </nav>
         
         <div className="flex items-center space-x-4">
-          <Link href="/login" className="text-[#1c1c1e] hover:text-[#2A9D8F] hidden md:inline">
+          <Link href="/login" className="text-[#1c1c1e] hover:text-[#007AFF] hidden md:inline">
             Iniciar sesión
           </Link>
           <Link href="/register">
-            <Button className="bg-[#2A9D8F] text-white px-4 py-2 rounded-md hover:bg-[#21867A]">
+            <Button className="bg-[#007AFF] text-white px-4 py-2 rounded-md hover:bg-[#0060CF] transition font-medium">
               Registrarse
             </Button>
           </Link>
@@ -56,16 +49,16 @@ const Header = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white w-full py-2 px-4">
           <nav className="flex flex-col space-y-3">
-            <Link href="/#como-funciona" className="text-[#1c1c1e] hover:text-[#2A9D8F] py-2">
+            <Link href="/#como-funciona" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
               Cómo funciona
             </Link>
-            <Link href="/#para-editores" className="text-[#1c1c1e] hover:text-[#2A9D8F] py-2">
+            <Link href="/#para-editores" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
               Para editores
             </Link>
-            <Link href="/#para-marcas" className="text-[#1c1c1e] hover:text-[#2A9D8F] py-2">
+            <Link href="/#para-marcas" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
               Para marcas
             </Link>
-            <Link href="/login" className="text-[#1c1c1e] hover:text-[#2A9D8F] py-2">
+            <Link href="/login" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
               Iniciar sesión
             </Link>
           </nav>

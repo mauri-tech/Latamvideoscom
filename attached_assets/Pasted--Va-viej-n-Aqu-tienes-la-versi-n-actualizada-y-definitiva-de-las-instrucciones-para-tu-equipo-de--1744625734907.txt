@@ -1,0 +1,105 @@
+¡Va, viejón! Aquí tienes la versión actualizada y definitiva de las instrucciones para tu equipo de diseño y desarrollo web de latamvideos.com, con todo alineado a la estética Apple y con el azul que tanto impone. Todo bien explicado y sin tablas.
+
+⸻
+
+Actualización Oficial – Diseño y Desarrollo Web
+
+1. Nombre del sitio
+
+El nombre oficial es latamvideos.com
+Siempre va en minúsculas y debe usarse en todo el producto, comunicaciones y branding sin espacios ni guiones.
+
+⸻
+
+2. Identidad visual y estilo general
+
+La identidad debe inspirarse directamente en el diseño de Apple.com.
+Eso incluye:
+	•	Estética limpia, moderna, sin ruido
+	•	Mucho espacio en blanco
+	•	Jerarquía tipográfica marcada
+	•	Fotos o mockups con gradientes suaves y elegantes de fondo
+	•	Interacciones suaves, sin animaciones exageradas
+	•	Diseño que respire, se sienta premium y se vea “caro”
+
+⸻
+
+3. Tipografía
+
+Usar Satoshi como fuente principal.
+	•	Estilo sans-serif moderno, equilibrado y minimalista
+	•	Usar variantes Regular / Medium / Bold según jerarquía
+	•	Mantener buen tracking y line-height para dar claridad
+
+⸻
+
+4. Colores principales
+
+Color de acento principal:
+	•	Azul estilo Apple
+	•	Código hexadecimal: #007AFF
+Este azul debe usarse en:
+	•	Botones primarios
+	•	Links
+	•	Badges activos
+	•	Elementos interactivos o destacados
+
+Fondo principal del sitio:
+	•	Blanco suave #F9F9F9 o blanco puro #FFFFFF dependiendo del contraste con imágenes o texto
+
+Texto principal:
+	•	Gris oscuro #1C1C1E
+
+Texto secundario o atenuado:
+	•	Gris claro #B0B0B0
+
+⸻
+
+5. Composición del logo
+	•	latamvideos.com todo en una sola línea
+	•	Tipografía: sans-serif (Satoshi)
+	•	Todo en negro #1C1C1E, limpio, sin íconos
+	•	Se puede usar un degradado azul (tipo Apple) como acento si se quiere resaltar
+	•	.com puede ir en gris claro (#B0B0B0) y con menor peso visual
+
+⸻
+
+6. Componentes UI
+	•	Botones primarios: color de fondo #007AFF, texto blanco #FFFFFF, border radius suave (4px o 6px máx)
+	•	Botones secundarios: fondo blanco, borde #007AFF, texto azul
+	•	Cards: fondo blanco, sombra muy sutil (rgba(0,0,0,0.05)), bordes suaves
+	•	Inputs: bordes grises, padding amplio, no saturar con elementos
+	•	Hover: efecto de sombra suave o cambio de fondo muy sutil
+	•	Focus: border o sombra azul clara (#B3D4FF)
+
+⸻
+
+7. Gradientes y fondos visuales
+	•	Usar gradientes suaves tipo Apple como fondo de secciones destacadas
+	•	Ejemplos de tonos:
+	•	Azul cielo (#CFE6FF) a blanco
+	•	Azul lavanda (#D9E6FB) a gris claro
+	•	Fondo negro con letras blancas para bloques de impacto
+	•	El gradiente debe sentirse premium, nunca chillón ni arcoíris
+
+⸻
+
+8. Spacing & Layout
+	•	Espaciado generoso entre secciones (mínimo 48px entre bloques grandes)
+	•	Padding interno cómodo (16px - 24px)
+	•	Bordes redondeados mínimos (4px a 6px), sin exagerar
+	•	Cards siempre con aire y contenido centrado vertical y horizontalmente
+	•	Nada debe sentirse apretado ni comprimido
+
+⸻
+
+9. Comportamiento en scroll y responsive
+	•	Mobile-first
+	•	Carruseles y sliders deben tener scroll horizontal suave, con snap y rebote tipo iOS
+	•	Transiciones de navegación y botones: 0.3s ease-in-out
+
+⸻
+
+10. Para el desarrollador
+
+Si están usando Tailwind CSS, agregar este color a tailwind.config.js:

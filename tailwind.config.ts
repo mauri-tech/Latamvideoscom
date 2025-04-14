@@ -16,6 +16,9 @@ export default {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        appleBlue: "#007AFF",
+        textGray: "#1C1C1E",
+        textLight: "#B0B0B0",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
