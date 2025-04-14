@@ -6,6 +6,10 @@ import Hero from '@/components/home/Hero';
 import Features from '@/components/home/Features';
 import EditorInteractiveProfiles from '@/components/home/EditorInteractiveProfiles';
 import BusinessSection from '@/components/home/BusinessSection';
+import FeaturedEditors from '@/components/home/FeaturedEditors';
+import HiringProcess from '@/components/home/HiringProcess';
+import Testimonials from '@/components/home/Testimonials';
+import CTASection from '@/components/home/CTASection';
 
 /**
  * HomePage - Agregando componentes uno a uno
@@ -36,6 +40,18 @@ const HomePage: React.FC = () => {
           
           {/* 4. Business Section */}
           <BusinessSection />
+          
+          {/* 5. Featured Editors */}
+          <FeaturedEditors />
+          
+          {/* 6. Hiring Process */}
+          <HiringProcess />
+          
+          {/* 7. Testimonials */}
+          <Testimonials />
+          
+          {/* 8. Final CTA */}
+          <CTASection />
         </main>
         
         <Footer />
