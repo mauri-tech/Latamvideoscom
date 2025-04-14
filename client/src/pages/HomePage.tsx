@@ -3,6 +3,7 @@ import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
 import Features from '@/components/home/Features';
 import EditorInteractiveProfiles from '@/components/home/EditorInteractiveProfiles';
+import BusinessSection from '@/components/home/BusinessSection';
 import HiringProcess from '@/components/home/HiringProcess';
 import Testimonials from '@/components/home/Testimonials';
 import CTASection from '@/components/home/CTASection';
@@ -21,6 +22,7 @@ const HomePage = () => {
         <Hero />
         <Features />
         <EditorInteractiveProfiles />
+        <BusinessSection />
         <HiringProcess />
         <Testimonials />
         <CTASection />
