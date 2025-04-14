@@ -273,10 +273,18 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
         <select 
           className="text-sm border rounded-md p-1"
           aria-label="Ordenar resultados"
+          value={filters.sortBy}
+          onChange={(e) => {
+            // Actualizar el filtro de ordenamiento
+            onFilterChange({
+              ...filters,
+              sortBy: e.target.value
+            });
+          }}
         >
-          <option value="relevance">Más relevantes</option>
-          <option value="price_asc">Precio: menor a mayor</option>
-          <option value="price_desc">Precio: mayor a menor</option>
+          <option value="popularity">Más relevantes</option>
+          <option value="price_low">Precio: menor a mayor</option>
+          <option value="price_high">Precio: mayor a menor</option>
           <option value="experience">Más experiencia</option>
         </select>
       </div>
