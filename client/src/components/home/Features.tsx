@@ -35,10 +35,6 @@ const Features = () => {
     {
       title: "Tarifas personalizadas",
       description: "Define tus tarifas según el servicio y experiencia que ofreces, con paquetes para diferentes necesidades."
-    },
-    {
-      title: "Clientes específicos",
-      description: "Recibe solicitudes de clientes que buscan específicamente tu perfil y experiencia para sus proyectos."
     }
   ];
   
@@ -54,10 +50,6 @@ const Features = () => {
     {
       title: "Verificación de portafolios",
       description: "Cada portafolio es revisado para verificar la calidad y autenticidad, garantizando que contrates talento real."
-    },
-    {
-      title: "Conexión directa y rápida",
-      description: "Contacta directamente con el profesional que mejor se adapte a tu visión sin intermediarios ni comisiones."
     }
   ];
 
