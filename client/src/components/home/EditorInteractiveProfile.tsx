@@ -160,10 +160,10 @@ const EditorInteractiveProfile = () => {
             
             {/* Contenido de las pestañas */}
             <div className="md:w-2/3 flex flex-col">
-              {/* Barra de pestañas */}
-              <div className="flex border-b border-gray-200">
+              {/* Barra de pestañas con scroll horizontal en móvil */}
+              <div className="flex overflow-x-auto whitespace-nowrap scrollbar-hide border-b border-gray-200">
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setActiveTab('portafolio')}
                 >
                   <div className="flex items-center gap-2">
@@ -172,7 +172,7 @@ const EditorInteractiveProfile = () => {
                   </div>
                 </button>
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setActiveTab('equipamiento')}
                 >
                   <div className="flex items-center gap-2">
@@ -181,7 +181,7 @@ const EditorInteractiveProfile = () => {
                   </div>
                 </button>
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setActiveTab('tarifas')}
                 >
                   <div className="flex items-center gap-2">
@@ -190,7 +190,7 @@ const EditorInteractiveProfile = () => {
                   </div>
                 </button>
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'reseñas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'reseñas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setActiveTab('reseñas')}
                 >
                   <div className="flex items-center gap-2">
@@ -206,17 +206,60 @@ const EditorInteractiveProfile = () => {
                   <div>
                     <h4 className="text-lg font-medium mb-4">Proyectos destacados</h4>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
-                        <p className="text-gray-400">Proyecto 1</p>
+                      {/* Miniatura de Reel 1 */}
+                      <div className="relative rounded-lg overflow-hidden shadow-md">
+                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1595341888016-a392ef81b7de?q=80&w=300)' }}></div>
+                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                            </div>
+                            <span className="text-xs text-white">00:25</span>
+                          </div>
+                        </div>
+                        <div className="p-2 text-sm font-medium">Reel promocional para marca de cosmética</div>
                       </div>
-                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
-                        <p className="text-gray-400">Proyecto 2</p>
+
+                      {/* Miniatura de Reel 2 */}
+                      <div className="relative rounded-lg overflow-hidden shadow-md">
+                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1551292831-023188e78222?q=80&w=300)' }}></div>
+                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                            </div>
+                            <span className="text-xs text-white">00:58</span>
+                          </div>
+                        </div>
+                        <div className="p-2 text-sm font-medium">Edición ejecutiva para StartupLATAM</div>
                       </div>
-                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
-                        <p className="text-gray-400">Proyecto 3</p>
+
+                      {/* Miniatura de Reel 3 */}
+                      <div className="relative rounded-lg overflow-hidden shadow-md">
+                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=300)' }}></div>
+                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                            </div>
+                            <span className="text-xs text-white">01:43</span>
+                          </div>
+                        </div>
+                        <div className="p-2 text-sm font-medium">Documental - Extracto comercial</div>
                       </div>
-                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
-                        <p className="text-gray-400">Proyecto 4</p>
+
+                      {/* Miniatura de Reel 4 */}
+                      <div className="relative rounded-lg overflow-hidden shadow-md">
+                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=300)' }}></div>
+                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                            </div>
+                            <span className="text-xs text-white">00:36</span>
+                          </div>
+                        </div>
+                        <div className="p-2 text-sm font-medium">Vídeo de producto con técnica cinemática</div>
                       </div>
                     </div>
                   </div>
