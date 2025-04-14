@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
+import EditorProfileCarousel from './EditorProfileCarousel';
 
 // Mock data for featured editors (would be fetched from API in production)
 const featuredEditors = [
@@ -41,64 +42,102 @@ const featuredEditors = [
 ];
 
 const EditorShowcase = () => {
+  const [activeTab, setActiveTab] = useState<'carousel' | 'grid'>('carousel');
+  
   return (
     <section className="py-16 md:py-24 bg-[#F2F2F7]">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Editores destacados</h2>
           <p className="text-lg text-[#8E8E93] max-w-2xl mx-auto">
             Descubre algunos de los mejores talentos disponibles en nuestra plataforma.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredEditors.map((editor) => (
-            <div key={editor.id} className="bg-white rounded-lg shadow-sm overflow-hidden transition hover:shadow-md">
-              <div className="aspect-video relative bg-gray-100">
-                <img 
-                  src={editor.thumbnail}
-                  alt={`${editor.name} showreel thumbnail`} 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                  <Button className="bg-primary text-white px-4 py-2 rounded-md font-medium">
-                    Ver portafolio
-                  </Button>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <img 
-                    src={editor.profilePic}
-                    alt={`Foto de ${editor.name}`} 
-                    className="w-12 h-12 rounded-full mr-4 object-cover"
-                  />
-                  <div>
-                    <h3 className="font-medium text-lg">{editor.name}</h3>
-                    <p className="text-[#8E8E93] text-sm">{editor.location}</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {[...editor.software, ...editor.styles].map((tag, index) => (
-                    <span key={index} className="px-2 py-1 bg-[#F2F2F7] text-[#8E8E93] text-xs rounded-md">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-[#8E8E93] text-sm mb-4">{editor.experience}</p>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <span className="text-sm text-[#8E8E93]">Desde</span>
-                    <span className="font-semibold ml-1">${editor.rate} USD</span>
-                  </div>
-                  <Link href={`/editor/${editor.id}`} className="text-primary hover:text-[#0056B3] font-medium text-sm">
-                    Ver perfil
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Tabs para cambiar entre vista de carrusel y grid */}
+        <div className="flex justify-center mb-8">
+          <div className="flex border rounded-lg p-1 bg-white">
+            <button
+              onClick={() => setActiveTab('carousel')}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                activeTab === 'carousel' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Perfiles Interactivos
+            </button>
+            <button
+              onClick={() => setActiveTab('grid')}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                activeTab === 'grid' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Todos los Perfiles
+            </button>
+          </div>
         </div>
+        
+        {/* Carrusel de perfiles de editores */}
+        {activeTab === 'carousel' && (
+          <div className="max-w-4xl mx-auto">
+            <EditorProfileCarousel />
+          </div>
+        )}
+        
+        {/* Grid de perfiles tradicional */}
+        {activeTab === 'grid' && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredEditors.map((editor) => (
+              <div key={editor.id} className="bg-white rounded-lg shadow-sm overflow-hidden transition hover:shadow-md">
+                <div className="aspect-video relative bg-gray-100">
+                  <img 
+                    src={editor.thumbnail}
+                    alt={`${editor.name} showreel thumbnail`} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                    <Button className="bg-primary text-white px-4 py-2 rounded-md font-medium">
+                      Ver portafolio
+                    </Button>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <img 
+                      src={editor.profilePic}
+                      alt={`Foto de ${editor.name}`} 
+                      className="w-12 h-12 rounded-full mr-4 object-cover"
+                    />
+                    <div>
+                      <h3 className="font-medium text-lg">{editor.name}</h3>
+                      <p className="text-[#8E8E93] text-sm">{editor.location}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {[...editor.software, ...editor.styles].map((tag, index) => (
+                      <span key={index} className="px-2 py-1 bg-[#F2F2F7] text-[#8E8E93] text-xs rounded-md">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-[#8E8E93] text-sm mb-4">{editor.experience}</p>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="text-sm text-[#8E8E93]">Desde</span>
+                      <span className="font-semibold ml-1">${editor.rate} USD</span>
+                    </div>
+                    <Link href={`/editor/${editor.id}`} className="text-primary hover:text-[#0056B3] font-medium text-sm">
+                      Ver perfil
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         
         <div className="text-center mt-12">
           <Link href="/search" className="inline-flex items-center text-primary font-medium hover:text-[#0056B3]">
