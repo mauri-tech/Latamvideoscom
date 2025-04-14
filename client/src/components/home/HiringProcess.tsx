@@ -25,8 +25,8 @@ const HiringProcess = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-12">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="flex items-start">
-              <div className="bg-[#2A9D8F] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <Search className="h-6 w-6 text-[#2A9D8F]" />
+              <div className="bg-[#007AFF] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
+                <Search className="h-6 w-6 text-[#007AFF]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Busca con filtros precisos</h3>
@@ -37,8 +37,8 @@ const HiringProcess = () => {
             </div>
             
             <div className="flex items-start">
-              <div className="bg-[#2A9D8F] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <Eye className="h-6 w-6 text-[#2A9D8F]" />
+              <div className="bg-[#007AFF] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
+                <Eye className="h-6 w-6 text-[#007AFF]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Revisa portafolios</h3>
@@ -49,8 +49,8 @@ const HiringProcess = () => {
             </div>
             
             <div className="flex items-start">
-              <div className="bg-[#2A9D8F] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <MessageSquare className="h-6 w-6 text-[#2A9D8F]" />
+              <div className="bg-[#007AFF] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
+                <MessageSquare className="h-6 w-6 text-[#007AFF]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Contacta directamente</h3>
@@ -159,7 +159,7 @@ const HiringProcess = () => {
                 </div>
                 
                 <Link href="/search">
-                  <Button className="w-full bg-[#2A9D8F] text-white px-4 py-2 rounded-md hover:bg-[#21867A] transition font-medium">
+                  <Button className="w-full bg-[#007AFF] text-white px-4 py-2 rounded-md hover:bg-[#0060CF] transition font-medium">
                     Buscar editores
                   </Button>
                 </Link>

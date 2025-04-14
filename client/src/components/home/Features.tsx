@@ -18,7 +18,7 @@ const Features = () => {
   ];
 
   return (
-    <section id="como-funciona" className="py-16 md:py-24">
+    <section id="como-funciona" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">¿Cómo funciona latamvideos.com?</h2>
@@ -40,7 +40,7 @@ const Features = () => {
             <ul className="space-y-3">
               {editorFeatures.map((feature, index) => (
                 <li key={index} className="flex items-start">
-                  <Check className="h-6 w-6 text-[#2A9D8F] mr-2 flex-shrink-0 mt-0.5" />
+                  <Check className="h-6 w-6 text-[#007AFF] mr-2 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -59,7 +59,7 @@ const Features = () => {
             <ul className="space-y-3">
               {clientFeatures.map((feature, index) => (
                 <li key={index} className="flex items-start">
-                  <Check className="h-6 w-6 text-[#2A9D8F] mr-2 flex-shrink-0 mt-0.5" />
+                  <Check className="h-6 w-6 text-[#007AFF] mr-2 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}
