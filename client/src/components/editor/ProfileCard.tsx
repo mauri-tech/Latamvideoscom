@@ -97,9 +97,11 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
               <h3 className="text-sm text-[#1c1c1e] font-medium mb-2">Software</h3>
               <div className="flex flex-wrap gap-2">
                 {editor.software.map((item, index) => (
-                  <Badge key={index} variant="secondary" className="bg-[#0050FF]/10 hover:bg-[#0050FF]/15 text-[#0050FF] border-none">
-                    {item}
-                  </Badge>
+                  <Link key={index} href={`/search?software=${encodeURIComponent(item)}`}>
+                    <Badge variant="secondary" className="bg-[#0050FF]/10 hover:bg-[#0050FF]/20 text-[#0050FF] border-none cursor-pointer transition-colors">
+                      {item}
+                    </Badge>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -108,9 +110,11 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
               <h3 className="text-sm text-[#1c1c1e] font-medium mb-2">Estilos de edición</h3>
               <div className="flex flex-wrap gap-2">
                 {editor.styles.map((style, index) => (
-                  <Badge key={index} variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-800 border-none">
-                    {style}
-                  </Badge>
+                  <Link key={index} href={`/search?style=${encodeURIComponent(style)}`}>
+                    <Badge variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-800 border-none cursor-pointer transition-colors">
+                      {style}
+                    </Badge>
+                  </Link>
                 ))}
               </div>
             </div>
