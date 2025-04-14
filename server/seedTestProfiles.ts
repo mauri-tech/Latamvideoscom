@@ -25,7 +25,7 @@ async function seedTestProfiles() {
       // Perfil 1: Editor principiante (3 años)
       user: {
         name: "[Prueba] Carlos Méndez",
-        email: "carlos.test@editoreslatam.com",
+        email: "carlos.test@latamvideos.com",
         password: "test123",
         country: "MX",
         bio: "Editor principiante con experiencia en contenido para redes sociales.",
@@ -60,7 +60,7 @@ async function seedTestProfiles() {
       // Perfil 2: Editor con experiencia media (5 años)
       user: {
         name: "[Prueba] Ana Gutiérrez",
-        email: "ana.test@editoreslatam.com",
+        email: "ana.test@latamvideos.com",
         password: "test123",
         country: "CO",
         bio: "Editora especializada en documentales y contenido narrativo.",
@@ -95,7 +95,7 @@ async function seedTestProfiles() {
       // Perfil 3: Editor senior (10+ años)
       user: {
         name: "[Prueba] Ricardo Vega",
-        email: "ricardo.test@editoreslatam.com",
+        email: "ricardo.test@latamvideos.com",
         password: "test123",
         country: "AR",
         bio: "Editor senior con experiencia en publicidad y cine.",
@@ -130,7 +130,7 @@ async function seedTestProfiles() {
       // Perfil 4: Editor freelance (7 años)
       user: {
         name: "[Prueba] Martina Rojas",
-        email: "martina.test@editoreslatam.com",
+        email: "martina.test@latamvideos.com",
         password: "test123",
         country: "CL",
         bio: "Editora freelance especializada en videos musicales y fashion films.",
@@ -165,7 +165,7 @@ async function seedTestProfiles() {
       // Perfil 5: Editor corporativo (6 años)
       user: {
         name: "[Prueba] Fernando Molina",
-        email: "fernando.test@editoreslatam.com",
+        email: "fernando.test@latamvideos.com",
         password: "test123",
         country: "PE",
         bio: "Editor especializado en videos corporativos y marketing de contenidos.",
@@ -200,7 +200,7 @@ async function seedTestProfiles() {
       // Perfil 6: Editor de eventos (4 años)
       user: {
         name: "[Prueba] Laura Soto",
-        email: "laura.test@editoreslatam.com",
+        email: "laura.test@latamvideos.com",
         password: "test123",
         country: "MX",
         bio: "Editora especializada en videos de eventos, bodas y celebraciones.",
@@ -235,7 +235,7 @@ async function seedTestProfiles() {
       // Perfil 7: Editor de contenido educativo (8 años)
       user: {
         name: "[Prueba] Andrés Herrera",
-        email: "andres.test@editoreslatam.com",
+        email: "andres.test@latamvideos.com",
         password: "test123",
         country: "CO",
         bio: "Editor especializado en contenido educativo y cursos online.",
@@ -270,7 +270,7 @@ async function seedTestProfiles() {
       // Perfil 8: Editor de deportes (5 años)
       user: {
         name: "[Prueba] Diego Ramírez",
-        email: "diego.test@editoreslatam.com",
+        email: "diego.test@latamvideos.com",
         password: "test123",
         country: "AR",
         bio: "Editor especializado en contenido deportivo y videos de acción.",
@@ -305,7 +305,7 @@ async function seedTestProfiles() {
       // Perfil 9: Editor de travel (2 años)
       user: {
         name: "[Prueba] Camila Blanco",
-        email: "camila.test@editoreslatam.com",
+        email: "camila.test@latamvideos.com",
         password: "test123",
         country: "UY",
         bio: "Editora de travel videos y contenido de estilo de vida.",
@@ -340,7 +340,7 @@ async function seedTestProfiles() {
       // Perfil 10: Editor senior de animación (15 años)
       user: {
         name: "[Prueba] Javier Montero",
-        email: "javier.test@editoreslatam.com",
+        email: "javier.test@latamvideos.com",
         password: "test123",
         country: "CL",
         bio: "Editor y animador con 15 años de experiencia en motion graphics y VFX.",

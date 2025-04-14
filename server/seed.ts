@@ -35,7 +35,7 @@ async function seedDatabase() {
 
     // Create test admin user
     await db.insert(users).values({
-      email: 'admin@editoreslatam.com',
+      email: 'admin@latamvideos.com',
       password: '$2b$10$OM.M2ON4MKJTrw2/CJSUJueJmKqlqjIXGZrECZ.TL7YhErCiQ1vVm', // password: adminpass
       name: 'Admin Usuario',
       userType: 'admin',

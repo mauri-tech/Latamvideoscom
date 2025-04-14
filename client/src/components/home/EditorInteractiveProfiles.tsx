@@ -120,7 +120,10 @@ const EditorInteractiveProfiles = () => {
     const x = e.pageX - (scrollContainerRef.current?.offsetLeft || 0);
     const walk = (x - startX) * 1.5; // Multiplicador de velocidad
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+      // Aplicamos límites para evitar que el scroll se bloquee
+      const maxScrollLeft = scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth;
+      const newScrollLeft = scrollLeft - walk;
+      scrollContainerRef.current.scrollLeft = Math.max(0, Math.min(maxScrollLeft, newScrollLeft));
     }
   };
   
@@ -136,7 +139,10 @@ const EditorInteractiveProfiles = () => {
     const x = e.touches[0].clientX - (scrollContainerRef.current?.offsetLeft || 0);
     const walk = (x - startX) * 1.5;
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+      // Aplicamos los mismos límites para dispositivos táctiles
+      const maxScrollLeft = scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth;
+      const newScrollLeft = scrollLeft - walk;
+      scrollContainerRef.current.scrollLeft = Math.max(0, Math.min(maxScrollLeft, newScrollLeft));
     }
   };
   

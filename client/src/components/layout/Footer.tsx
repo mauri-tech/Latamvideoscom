@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div>
             <Link href="/" className="flex items-center mb-4">
-              <span className="text-primary font-bold text-xl">editoreslatam</span>
+              <span className="text-primary font-bold text-xl">latamvideos</span>
               <span className="text-[#1c1c1e] font-light text-xl">.com</span>
             </Link>
             <p className="text-[#8E8E93] text-sm mb-4">
@@ -66,7 +66,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-200 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-[#8E8E93] text-sm mb-4 md:mb-0">
-            © 2023 editoreslatam.com. Todos los derechos reservados.
+            © 2023-2025 latamvideos.com. Todos los derechos reservados.
           </p>
           <div className="flex space-x-4 text-sm text-[#8E8E93]">
             <a href="#" className="hover:text-primary">Términos</a>
