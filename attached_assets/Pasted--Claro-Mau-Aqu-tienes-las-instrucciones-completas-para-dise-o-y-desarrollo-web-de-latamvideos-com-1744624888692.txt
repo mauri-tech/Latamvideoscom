@@ -1,0 +1,92 @@
+¡Claro, Mau! Aquí tienes las instrucciones completas para diseño y desarrollo web de latamvideos.com, sin tablas, todo en texto fluido y claro:
+
+⸻
+
+Actualización de Marca – latamvideos.com
+
+1. Nombre oficial del sitio
+
+Reemplazar cualquier mención a “editoreslatam.com” o nombres anteriores. El nuevo y único nombre oficial del sitio es: latamvideos.com
+Siempre debe escribirse en minúsculas, sin separadores ni símbolos adicionales.
+
+⸻
+
+2. Identidad Visual
+
+Tipografía:
+La fuente principal es Satoshi, una sans-serif moderna, limpia y geométrica.
+Usar estilos Regular, Medium o Bold según jerarquía. Mantener interlineado y tracking generosos para que respire bien.
+
+⸻
+
+Colores principales:
+	•	El fondo general del sitio debe ser blanco suave: #F9F9F9
+	•	El texto principal debe ir en gris oscuro: #1C1C1E
+	•	Los elementos secundarios como el .com o textos secundarios deben estar en gris claro: #B0B0B0
+	•	El color de acento y botón principal a partir de ahora es verde esmeralda: #2A9D8F
+	•	En estado hover o más oscuro: puede usarse #21867A
+
+⸻
+
+Colores por letras del logo:
+	•	La letra l debe ir en rojo vibrante: #E63946
+	•	La primera a en amarillo colombiano: #F4B400
+	•	La t en turquesa claro: #50BFA5
+	•	La segunda a en verde selva: #2D6A4F
+	•	La m en verde esmeralda: #2A9D8F
+	•	La palabra videos completa va en gris oscuro #1C1C1E
+	•	El .com se muestra más pequeño y en gris claro #B0B0B0
+
+⸻
+
+3. Logo
+
+Debe usarse siempre en una sola línea: latamvideos.com
+Todo en tipografía sans-serif (Satoshi).
+Colores aplicados por letra como se describe arriba.
+El .com debe tener menor peso visual, ya sea por tamaño más pequeño o por color más claro.
+
+⸻
+
+4. Actualización en Componentes UI
+
+Todos los botones principales que antes eran azules deben ahora usar el verde esmeralda #2A9D8F.
+Este color también debe aplicarse a los botones secundarios, links activos, tags de selección, etiquetas destacadas y elementos de interacción.
+Los fondos de tarjetas y secciones deben seguir siendo blancos (#FFFFFF).
+Los bordes deben ser sutiles, con un gris suave tipo #E0E0E0.
+
+⸻
+
+5. Spacing y Layout
+
+Seguir estilo tipo Swiss design: todo debe respirar.
+Mantener márgenes amplios entre secciones (mínimo 24px, ideal 32px o más).
+Inputs, botones y cards deben tener padding cómodo (16px a 20px).
+Usar bordes redondeados sutiles (4px a 6px como máximo).
+Nada de diseños apretados o densos. Todo tiene que sentirse ligero, elegante y fácil de navegar.
+
+⸻
+
+6. Responsive y scrolls
+
+La página debe ser mobile-first.
+Las secciones con perfiles o cards deben ser scrollables horizontalmente.
+El scroll debe tener efecto de física ligera, con snap y un pequeño rebote para que se sienta natural.
+No debe sentirse brusco ni robótico.
+
+⸻
+
+7. Transiciones
+
+Aplicar transiciones suaves de 0.3s ease-in-out en:
+	•	Hover de botones
+	•	Cambio entre tabs
+	•	Elementos de interacción visual como filtros o dropdowns
+
+Todo debe sentirse fluido, profesional y sin saturación.
+
+⸻
+
+8. Para el equipo de desarrollo (si usan Tailwind CSS)
+
+Agregar estos colores personalizados al archivo tailwind.config.js para que estén disponibles en todo el proyecto:
