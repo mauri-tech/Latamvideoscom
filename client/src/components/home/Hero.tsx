@@ -7,8 +7,8 @@ const Hero = () => {
   return (
     <div className="relative overflow-hidden py-16 md:py-20">
       {/* Fondo con el gradiente premium */}
-      <div className="absolute inset-0 bg-[#0A0A0A] z-0">
-        <div className="absolute inset-0 opacity-90 gradient-premium-blue"></div>
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 gradient-premium-blue"></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -30,29 +30,29 @@ const Hero = () => {
                 <Button 
                   className="bg-white text-[#0050FF] hover:bg-white/90 shadow-lg" 
                   size="lg"
-                  onClick={() => window.location.href = '/register'}
+                  asChild
                 >
-                  Registrarse
+                  <Link href="/register">Registrarse</Link>
                 </Button>
                 <Button 
                   variant="outline" 
                   className="border-white text-white hover:bg-white/10 backdrop-blur-sm"
                   size="lg"
-                  onClick={() => window.location.href = '/about'}
+                  asChild
                 >
-                  Conocer más
+                  <Link href="/about">Conocer más</Link>
                 </Button>
               </div>
             </div>
           </div>
           
-          {/* Imagen del editor trabajando */}
+          {/* Imagen del editor trabajando con DaVinci Resolve */}
           <div className="md:w-1/2">
             <div className="bg-black/30 backdrop-blur-md rounded-xl p-6 shadow-2xl border border-white/10">
-              <h3 className="font-medium text-lg mb-3 text-white">Software de edición profesional</h3>
+              <h3 className="font-medium text-lg mb-3 text-white">Editor trabajando en DaVinci Resolve</h3>
               <div className="aspect-video rounded-lg flex items-center justify-center overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80" 
+                  src="https://cdn.pixabay.com/photo/2022/05/06/20/32/video-editing-7178041_1280.jpg" 
                   alt="Interfaz de edición de video en DaVinci Resolve"
                   className="w-full h-full object-cover rounded-lg"
                 />
@@ -62,15 +62,14 @@ const Hero = () => {
         </div>
       </div>
       
-      {/* Sección Para Editores con gradiente suave */}
-      <div className="mt-20 py-16 relative">
-        <div className="absolute inset-0 bg-white z-0"></div>
-        <div className="container mx-auto px-4 relative z-10">
+      {/* Sección Para Editores con fondo claro */}
+      <div className="mt-20 py-16 relative bg-white">
+        <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">Para Editores</h2>
           
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
-              <div className="flex items-start mb-4">
+              <div className="flex items-start">
                 <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
                   <Check className="h-5 w-5 text-[#0050FF]" />
                 </div>
@@ -84,7 +83,7 @@ const Hero = () => {
             </div>
             
             <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
-              <div className="flex items-start mb-4">
+              <div className="flex items-start">
                 <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
                   <Check className="h-5 w-5 text-[#0050FF]" />
                 </div>
@@ -98,7 +97,7 @@ const Hero = () => {
             </div>
             
             <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
-              <div className="flex items-start mb-4">
+              <div className="flex items-start">
                 <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
                   <Check className="h-5 w-5 text-[#0050FF]" />
                 </div>
@@ -112,7 +111,7 @@ const Hero = () => {
             </div>
             
             <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
-              <div className="flex items-start mb-4">
+              <div className="flex items-start">
                 <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
                   <Check className="h-5 w-5 text-[#0050FF]" />
                 </div>
