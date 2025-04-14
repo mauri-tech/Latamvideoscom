@@ -50,6 +50,16 @@ export interface IStorage {
   getEditingStyle(id: number): Promise<EditingStyle | undefined>;
   createEditingStyle(data: InsertEditingStyle): Promise<EditingStyle>;
   
+  // Messaging Methods
+  getConversationsByUserId(userId: number): Promise<any[]>; // We'll change 'any' to proper type
+  getConversation(id: number): Promise<any | undefined>;
+  getConversationMessages(conversationId: number): Promise<any[]>;
+  createConversation(data: any): Promise<any>; // Use proper type
+  addParticipantToConversation(conversationId: number, userId: number): Promise<any>;
+  createMessage(data: any): Promise<any>; // Use proper type
+  markConversationAsRead(conversationId: number, userId: number): Promise<void>;
+  getUnreadMessageCountForUser(userId: number): Promise<number>;
+  
   // Editor Profile Methods
   getEditorProfile(id: number): Promise<EditorProfile | undefined>;
   getEditorProfileByUserId(userId: number): Promise<EditorProfile | undefined>;
@@ -213,6 +223,11 @@ export class MemStorage implements IStorage {
   private currentCourseLessonId = 1;
   private currentCourseEnrollmentId = 1;
   private currentLessonProgressId = 1;
+  
+  // Message counters
+  private currentConversationId = 1;
+  private currentConversationParticipantId = 1;
+  private currentMessageId = 1;
   
   public sessionStore: session.Store;
   
