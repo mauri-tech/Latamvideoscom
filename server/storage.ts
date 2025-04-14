@@ -18,8 +18,9 @@ import {
   courseEnrollments, CourseEnrollment, InsertCourseEnrollment,
   lessonProgress, LessonProgress, InsertLessonProgress,
   // Messages imports
-  conversations, InsertConversation, conversationParticipants, InsertConversationParticipant,
-  messages, InsertMessage
+  conversations, Conversation, InsertConversation,
+  conversationParticipants, ConversationParticipant, InsertConversationParticipant,
+  messages, Message, InsertMessage
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, inArray, lte, desc, sql } from "drizzle-orm";
@@ -51,14 +52,14 @@ export interface IStorage {
   createEditingStyle(data: InsertEditingStyle): Promise<EditingStyle>;
   
   // Messaging Methods
-  getConversationsByUserId(userId: number): Promise<any[]>; // We'll change 'any' to proper type
-  getConversation(id: number): Promise<any | undefined>;
-  getConversationMessages(conversationId: number): Promise<any[]>;
-  createConversation(data: any): Promise<any>; // Use proper type
-  addParticipantToConversation(conversationId: number, userId: number): Promise<any>;
-  createMessage(data: any): Promise<any>; // Use proper type
-  markConversationAsRead(conversationId: number, userId: number): Promise<void>;
-  getUnreadMessageCountForUser(userId: number): Promise<number>;
+  getConversationsByUserId(userId: number): Promise<Conversation[]>;
+  getConversation(id: number): Promise<Conversation | undefined>;
+  getConversationMessages(conversationId: number): Promise<Message[]>;
+  createConversation(subject: string, participants: number[]): Promise<Conversation>;
+  addUserToConversation(conversationId: number, userId: number): Promise<ConversationParticipant>;
+  sendMessage(conversationId: number, senderId: number, content: string): Promise<Message>;
+  markConversationAsRead(conversationId: number, userId: number): Promise<boolean>;
+  getUsersDirectory(excludeUserId?: number): Promise<User[]>;
   
   // Editor Profile Methods
   getEditorProfile(id: number): Promise<EditorProfile | undefined>;
@@ -163,16 +164,6 @@ export interface IStorage {
   updateLessonProgress(lessonId: number, userId: number, completed: boolean): Promise<LessonProgress>;
   getUserLessonProgress(userId: number, lessonId: number): Promise<LessonProgress | undefined>;
   getUserCourseProgress(userId: number, courseId: number): Promise<{total: number, completed: number}>;
-  
-  // Messages Methods
-  getConversationsByUserId(userId: number): Promise<any[]>;
-  getConversation(id: number): Promise<any | undefined>;
-  getConversationMessages(conversationId: number): Promise<any[]>;
-  createConversation(subject: string, participants: number[]): Promise<any>;
-  addUserToConversation(conversationId: number, userId: number): Promise<any>;
-  sendMessage(conversationId: number, senderId: number, content: string): Promise<any>;
-  markConversationAsRead(conversationId: number, userId: number): Promise<boolean>;
-  getUsersDirectory(excludeUserId?: number): Promise<any[]>;
 }
 
 // Memory Storage Implementation
@@ -199,9 +190,9 @@ export class MemStorage implements IStorage {
   private lessonProgress: Map<number, LessonProgress>;
   
   // Messages data
-  private conversations: Map<number, any>;
-  private conversationParticipants: Map<number, any>;
-  private messages: Map<number, any>;
+  private conversations: Map<number, Conversation>;
+  private conversationParticipants: Map<number, ConversationParticipant>;
+  private messages: Map<number, Message>;
   
   private currentUserId = 1;
   private currentSoftwareId = 1;
