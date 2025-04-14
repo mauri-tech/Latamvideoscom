@@ -339,6 +339,122 @@ const EditorProfilePage = () => {
               </div>
             </TabsContent>
             
+            {/* Reviews Tab */}
+            <TabsContent value="reviews" className="mt-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-semibold">Reseñas</h3>
+                  {user && user.id !== profileData?.userId && (
+                    <Button 
+                      onClick={() => {
+                        if (!user) {
+                          toast({
+                            title: "Necesitas iniciar sesión",
+                            description: "Para dejar una reseña, primero debes iniciar sesión o registrarte.",
+                            variant: "destructive"
+                          });
+                          return;
+                        }
+                        
+                        // Here you would open a modal for review submission
+                        // For now, let's use a simple prompt
+                        const rating = prompt("Calificación (1-5):");
+                        const comment = prompt("Comentario:");
+                        
+                        if (rating && comment && !isNaN(parseInt(rating)) && parseInt(rating) >= 1 && parseInt(rating) <= 5) {
+                          createReviewMutation.mutate({
+                            editorProfileId: editorId,
+                            clientId: user.id,
+                            rating: parseInt(rating),
+                            comment: comment
+                          });
+                        } else {
+                          toast({
+                            title: "Datos inválidos",
+                            description: "Por favor proporciona una calificación válida (1-5) y un comentario.",
+                            variant: "destructive"
+                          });
+                        }
+                      }}
+                      className="bg-primary text-white hover:bg-primary/90"
+                    >
+                      Escribir reseña
+                    </Button>
+                  )}
+                </div>
+                
+                {reviewsLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <Skeleton key={i} className="w-full h-[100px] rounded-lg" />
+                    ))}
+                  </div>
+                ) : reviews.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-[#8E8E93]">Este profesional aún no tiene reseñas. ¡Sé el primero en compartir tu experiencia!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {reviews.map((review: any) => (
+                      <div key={review.id} className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                        <div className="flex justify-between mb-2">
+                          <div className="flex items-center">
+                            <div className="flex">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star 
+                                  key={i} 
+                                  className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
+                                />
+                              ))}
+                            </div>
+                            <span className="ml-2 text-sm font-medium">{review.rating}/5</span>
+                          </div>
+                          <span className="text-xs text-[#8E8E93]">
+                            {review.createdAt ? format(new Date(review.createdAt), 'dd/MM/yyyy') : ''}
+                          </span>
+                        </div>
+                        <p className="text-sm mb-2">{review.comment}</p>
+                        <div className="text-xs text-[#8E8E93] flex items-center mt-3">
+                          <ThumbsUp className="h-3 w-3 mr-1" /> Útil
+                        </div>
+                        
+                        {/* Only show delete option for admin or the review author */}
+                        {user && (user.id === review.clientId || user.userType === "admin") && (
+                          <div className="mt-3 text-right">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-red-500 hover:text-red-600 hover:bg-red-50 text-xs"
+                              onClick={async () => {
+                                if (window.confirm("¿Seguro que deseas eliminar esta reseña?")) {
+                                  try {
+                                    await apiRequest('DELETE', `/api/reviews/${review.id}`);
+                                    toast({
+                                      title: "Reseña eliminada",
+                                      description: "La reseña ha sido eliminada exitosamente."
+                                    });
+                                    refetchReviews();
+                                  } catch (error) {
+                                    toast({
+                                      title: "Error",
+                                      description: "No se pudo eliminar la reseña.",
+                                      variant: "destructive"
+                                    });
+                                  }
+                                }
+                              }}
+                            >
+                              Eliminar
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+            
             {/* Equipment Tab */}
             <TabsContent value="equipment" className="mt-6">
               <div className="bg-white rounded-lg shadow-sm p-6">
