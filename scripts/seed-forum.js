@@ -2,7 +2,7 @@
  * Script para crear categorías y temas de prueba en el foro
  */
 
-import { pool } from '../server/db.js';
+import { pool } from '../server/db.ts';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from 'ws';
 import { neonConfig } from '@neondatabase/serverless';
@@ -11,7 +11,7 @@ import { hashPassword } from './utils.js';
 neonConfig.webSocketConstructor = ws;
 
 // Importar esquemas necesarios
-import * as schema from '../shared/schema.js';
+import * as schema from '../shared/schema.ts';
 const { users, forumCategories, forumTopics, forumPosts } = schema;
 
 // Configuración de la base de datos
@@ -81,7 +81,8 @@ async function seedForum() {
     }
 
     // 2. Obtener usuario para crear temas
-    const [admin] = await db.select().from(users).where({ email: 'admin@latamvideos.com' });
+    const adminUsers = await db.select().from(users);
+    const admin = adminUsers.find(user => user.email === 'admin@latamvideos.com');
     let authorId;
 
     if (admin) {
