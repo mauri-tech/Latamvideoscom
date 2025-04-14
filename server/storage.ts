@@ -55,6 +55,80 @@ export interface IStorage {
   getBriefsByEditorId(editorId: number): Promise<Brief[]>;
   createBrief(data: InsertBrief): Promise<Brief>;
   updateBriefStatus(id: number, status: string): Promise<Brief | undefined>;
+  
+  // Forum Methods
+  // Categories
+  getAllForumCategories(): Promise<ForumCategory[]>;
+  getForumCategory(id: number): Promise<ForumCategory | undefined>;
+  getForumCategoryBySlug(slug: string): Promise<ForumCategory | undefined>;
+  createForumCategory(data: InsertForumCategory): Promise<ForumCategory>;
+  updateForumCategory(id: number, data: Partial<ForumCategory>): Promise<ForumCategory | undefined>;
+  deleteForumCategory(id: number): Promise<boolean>;
+  
+  // Topics
+  getForumTopics(categoryId?: number): Promise<ForumTopic[]>;
+  getForumTopic(id: number): Promise<ForumTopic | undefined>;
+  getForumTopicBySlug(slug: string): Promise<ForumTopic | undefined>;
+  getForumTopicsByAuthor(authorId: number): Promise<ForumTopic[]>;
+  createForumTopic(data: InsertForumTopic): Promise<ForumTopic>;
+  updateForumTopic(id: number, data: Partial<ForumTopic>): Promise<ForumTopic | undefined>;
+  deleteForumTopic(id: number): Promise<boolean>;
+  incrementTopicView(id: number): Promise<void>;
+  togglePinTopic(id: number, isPinned: boolean): Promise<ForumTopic | undefined>;
+  toggleCloseTopic(id: number, isClosed: boolean): Promise<ForumTopic | undefined>;
+  
+  // Posts
+  getForumPosts(topicId: number): Promise<ForumPost[]>;
+  getForumPost(id: number): Promise<ForumPost | undefined>;
+  getForumPostsByAuthor(authorId: number): Promise<ForumPost[]>;
+  createForumPost(data: InsertForumPost): Promise<ForumPost>;
+  updateForumPost(id: number, data: Partial<ForumPost>): Promise<ForumPost | undefined>;
+  deleteForumPost(id: number): Promise<boolean>;
+  markPostAsAcceptedAnswer(id: number, isAccepted: boolean): Promise<ForumPost | undefined>;
+  
+  // Course Methods
+  // Categories
+  getAllCourseCategories(): Promise<CourseCategory[]>;
+  getCourseCategory(id: number): Promise<CourseCategory | undefined>;
+  getCourseCategoryBySlug(slug: string): Promise<CourseCategory | undefined>;
+  createCourseCategory(data: InsertCourseCategory): Promise<CourseCategory>;
+  updateCourseCategory(id: number, data: Partial<CourseCategory>): Promise<CourseCategory | undefined>;
+  deleteCourseCategory(id: number): Promise<boolean>;
+  
+  // Courses
+  getCourses(categoryId?: number): Promise<Course[]>;
+  getCourse(id: number): Promise<Course | undefined>;
+  getCourseBySlug(slug: string): Promise<Course | undefined>;
+  getCoursesByInstructor(instructorId: number): Promise<Course[]>;
+  createCourse(data: InsertCourse): Promise<Course>;
+  updateCourse(id: number, data: Partial<Course>): Promise<Course | undefined>;
+  deleteCourse(id: number): Promise<boolean>;
+  toggleCoursePublished(id: number, isPublished: boolean): Promise<Course | undefined>;
+  
+  // Modules
+  getCourseModules(courseId: number): Promise<CourseModule[]>;
+  getCourseModule(id: number): Promise<CourseModule | undefined>;
+  createCourseModule(data: InsertCourseModule): Promise<CourseModule>;
+  updateCourseModule(id: number, data: Partial<CourseModule>): Promise<CourseModule | undefined>;
+  deleteCourseModule(id: number): Promise<boolean>;
+  
+  // Lessons
+  getCourseLessons(moduleId: number): Promise<CourseLesson[]>;
+  getCourseLesson(id: number): Promise<CourseLesson | undefined>;
+  createCourseLesson(data: InsertCourseLesson): Promise<CourseLesson>;
+  updateCourseLesson(id: number, data: Partial<CourseLesson>): Promise<CourseLesson | undefined>;
+  deleteCourseLesson(id: number): Promise<boolean>;
+  
+  // Enrollments
+  enrollUserInCourse(courseId: number, userId: number): Promise<CourseEnrollment>;
+  getUserEnrollments(userId: number): Promise<CourseEnrollment[]>;
+  getCourseEnrollments(courseId: number): Promise<CourseEnrollment[]>;
+  markCourseAsCompleted(courseId: number, userId: number): Promise<CourseEnrollment | undefined>;
+  
+  // Progress
+  updateLessonProgress(lessonId: number, userId: number, completed: boolean): Promise<LessonProgress>;
+  getUserLessonProgress(userId: number, lessonId: number): Promise<LessonProgress | undefined>;
+  getUserCourseProgress(userId: number, courseId: number): Promise<{total: number, completed: number}>;
 }
 
 // Memory Storage Implementation
@@ -66,12 +140,38 @@ export class MemStorage implements IStorage {
   private portfolioItems: Map<number, PortfolioItem>;
   private briefs: Map<number, Brief>;
   
+  // Forum data
+  private forumCategories: Map<number, ForumCategory>;
+  private forumTopics: Map<number, ForumTopic>;
+  private forumPosts: Map<number, ForumPost>;
+  
+  // Course data
+  private courseCategories: Map<number, CourseCategory>;
+  private courses: Map<number, Course>;
+  private courseModules: Map<number, CourseModule>;
+  private courseLessons: Map<number, CourseLesson>;
+  private courseEnrollments: Map<number, CourseEnrollment>;
+  private lessonProgress: Map<number, LessonProgress>;
+  
   private currentUserId = 1;
   private currentSoftwareId = 1;
   private currentStyleId = 1;
   private currentProfileId = 1;
   private currentPortfolioId = 1;
   private currentBriefId = 1;
+  
+  // Forum counters
+  private currentForumCategoryId = 1;
+  private currentForumTopicId = 1;
+  private currentForumPostId = 1;
+  
+  // Course counters
+  private currentCourseCategoryId = 1;
+  private currentCourseId = 1;
+  private currentCourseModuleId = 1;
+  private currentCourseLessonId = 1;
+  private currentCourseEnrollmentId = 1;
+  private currentLessonProgressId = 1;
   
   public sessionStore: session.Store;
   
@@ -82,6 +182,19 @@ export class MemStorage implements IStorage {
     this.editorProfiles = new Map();
     this.portfolioItems = new Map();
     this.briefs = new Map();
+    
+    // Inicializar colecciones del foro
+    this.forumCategories = new Map();
+    this.forumTopics = new Map();
+    this.forumPosts = new Map();
+    
+    // Inicializar colecciones de cursos
+    this.courseCategories = new Map();
+    this.courses = new Map();
+    this.courseModules = new Map();
+    this.courseLessons = new Map();
+    this.courseEnrollments = new Map();
+    this.lessonProgress = new Map();
     
     // Setup session store
     const MemoryStore = createMemoryStore(session);

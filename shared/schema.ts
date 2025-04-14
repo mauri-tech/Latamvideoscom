@@ -432,9 +432,7 @@ export const courseEnrollments = pgTable("course_enrollments", {
   userId: integer("user_id").notNull(),
   enrolledAt: timestamp("enrolled_at").defaultNow(),
   completedAt: timestamp("completed_at"),
-}, (t) => ({
-  uniqueEnrollment: primaryKey({ columns: [t.courseId, t.userId] })
-}));
+});
 
 export const insertCourseEnrollmentSchema = createInsertSchema(courseEnrollments).pick({
   courseId: true,
@@ -448,9 +446,7 @@ export const lessonProgress = pgTable("lesson_progress", {
   userId: integer("user_id").notNull(),
   completed: boolean("completed").notNull().default(false),
   lastAccessedAt: timestamp("last_accessed_at").defaultNow(),
-}, (t) => ({
-  uniqueProgress: primaryKey({ columns: [t.lessonId, t.userId] })
-}));
+});
 
 export const insertLessonProgressSchema = createInsertSchema(lessonProgress).pick({
   lessonId: true,
