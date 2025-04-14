@@ -25,6 +25,7 @@ import PrivacyPage from "@/pages/PrivacyPage";
 import CookiesPage from "@/pages/CookiesPage";
 import TestimonialsPage from "@/pages/TestimonialsPage";
 import ComoFuncionaPage from "@/pages/ComoFuncionaPage";
+import MessagesPage from "@/pages/MessagesPage";
 
 function Router() {
   return (
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/cookies" component={CookiesPage} />
       <Route path="/testimonials" component={TestimonialsPage} />
       <Route path="/como-funciona" component={ComoFuncionaPage} />
+      <ProtectedRoute path="/mensajes" component={MessagesPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/admin" component={AdminPanel} />
       <ProtectedRoute path="/admin/test-data" component={AdminPage} />

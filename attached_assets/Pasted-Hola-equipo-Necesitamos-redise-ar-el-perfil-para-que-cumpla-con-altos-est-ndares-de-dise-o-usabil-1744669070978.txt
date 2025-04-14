@@ -1,0 +1,81 @@
+Hola equipo,
+
+Necesitamos rediseñar el perfil para que cumpla con altos estándares de diseño, usabilidad y adaptabilidad. A continuación, las instrucciones claras:
+
+1. Estructura del Perfil
+Diseño con Tabs:
+Implementar tabs con íconos/emojis en lugar de íconos tradicionales, para facilitar la identificación visual rápida de cada sección. Ejemplos de tabs:
+
+🧑‍💼 Acerca de (o “Perfil”)
+
+🎞️ Portafolio
+
+💰 Tarifas
+
+⚙️ Equipamiento
+
+Layout limpio y minimalista:
+
+Fondos blancos (#FFFFFF o #F9F9F9) con suficiente espacio en blanco (padding y márgenes generosos al estilo de Apple/Notion).
+
+Tipografía Satoshi, legible y moderna, con jerarquía clara (títulos y subtítulos distinguidos).
+
+Botones y campos interactivos con feedback visual: efectos de hover suaves y transiciones de al menos 0.3s.
+
+2. Funcionalidades Esenciales del Perfil
+Campos Editables:
+Actualmente enfrentamos problemas donde ningún campo es editable. Es imprescindible que se creen formularios o campos inline editables para que el usuario pueda actualizar:
+
+Información básica (nombre, país, especialidad).
+
+Bio y experiencia.
+
+Datos del portafolio (enlaces a videos, imágenes).
+
+Tarifas por nivel (básico, estándar, premium).
+
+Equipamiento (detallado y con datos reales).
+
+Interacción y Accesibilidad:
+
+Todos los campos deben desplegarse de manera organizada, permitiendo la edición rápida.
+
+Incluir validaciones en tiempo real para asegurar la integridad de los datos.
+
+Diseño responsivo para móviles y desktop.
+
+Visualización Dinámica:
+Al completar o editar datos, la información se debe desplegar de manera instantánea en la versión "vista previa" del perfil. Este comportamiento puede ser similar a la edición inline de Notion, donde el contenido se actualiza sin necesidad de recargar la página.
+
+3. Buenas Prácticas de Diseño (UI/UX)
+Consistencia Visual:
+Mantener consistencia en tipografías, botones y colores (usar el azul principal #007AFF en elementos interactivos, y mantener la paleta de colores homogénea en todo el perfil).
+
+Feedback del Usuario:
+Proveer retroalimentación inmediata al realizar una acción (ejemplo: mensajes de "Datos actualizados correctamente" o "Error, revise el campo…").
+Utilizar microinteracciones y animaciones sutiles en clics y ediciones.
+
+Navegación Intuitiva:
+La estructura en tabs debe permitir al usuario cambiar de sección fácilmente, con una transición suave y un efecto de “snap” en el scroll horizontal si se usa carrusel.
+
+Diseño Inspirado en Apple y Notion:
+
+Look minimalista, sin elementos innecesarios.
+
+Uso estratégico de espacios, bordes redondeados mínimos y sombras suaves para crear profundidad.
+
+Interfaz limpia, donde el contenido sea el protagonista.
+
+4. Tareas Urgentes
+Rediseñar el panel de perfil de manera que se divida en las secciones indicadas (Acerca de, Portafolio, Tarifas, Equipamiento) usando tabs con emojis.
+
+Crear campos editables para cada sección, permitiendo al usuario actualizar su información de forma directa y en tiempo real.
+
+Implementar validaciones y feedback visual en la edición de datos (mensajes, cambios de colores o íconos de verificación).
+
+Realizar pruebas de usabilidad para asegurar que el flujo de edición es intuitivo, tanto en desktop como en dispositivos móviles.
+
+Este rediseño debe reflejar profesionalismo y alta usabilidad, haciendo que el perfil se sienta robusto, interactivo y fácil de usar, acorde a la estética premium que buscamos en latamvideos.com.
+
+Quedo atento a cualquier consulta o detalle adicional que necesiten para proceder.
+
