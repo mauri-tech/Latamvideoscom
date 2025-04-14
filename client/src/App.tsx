@@ -16,6 +16,12 @@ import AdminPage from "@/pages/AdminPage";
 import ForumPage from "@/pages/ForumPage";
 import FAQPage from "@/pages/FAQPage";
 import TermsPage from "@/pages/TermsPage";
+import AboutPage from "@/pages/AboutPage";
+import BlogPage from "@/pages/BlogPage";
+import ContactPage from "@/pages/ContactPage";
+import PrivacyPage from "@/pages/PrivacyPage";
+import CookiesPage from "@/pages/CookiesPage";
+import TestimonialsPage from "@/pages/TestimonialsPage";
 
 function Router() {
   return (
@@ -28,6 +34,12 @@ function Router() {
       <Route path="/forum" component={ForumPage} />
       <Route path="/faq" component={FAQPage} />
       <Route path="/terms" component={TermsPage} />
+      <Route path="/about" component={AboutPage} />
+      <Route path="/blog" component={BlogPage} />
+      <Route path="/contact" component={ContactPage} />
+      <Route path="/privacy" component={PrivacyPage} />
+      <Route path="/cookies" component={CookiesPage} />
+      <Route path="/testimonials" component={TestimonialsPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/admin" component={AdminPanel} />
       <ProtectedRoute path="/admin/test-data" component={AdminPage} />
