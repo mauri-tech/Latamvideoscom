@@ -256,7 +256,7 @@ const EditorProfilePage = () => {
             <ProfileCard editor={editor} onContactClick={handleContactClick} />
           </div>
           
-          {/* Tabs for Portfolio, Reviews, Equipment, Team, Rates */}
+          {/* Tabs for Portfolio, Reviews, Equipment, Rates */}
           <Tabs defaultValue="portfolio" className="mb-6">
             <TabsList className="w-full border-b-0 rounded-t-lg bg-[#F2F2F7] p-1">
               <TabsTrigger 
@@ -273,12 +273,6 @@ const EditorProfilePage = () => {
               </TabsTrigger>
               <TabsTrigger 
                 value="equipment" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
-              >
-                Equipo Técnico
-              </TabsTrigger>
-              <TabsTrigger 
-                value="team" 
                 className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
               >
                 Equipo
@@ -504,104 +498,6 @@ const EditorProfilePage = () => {
                     Todos mis equipos son de alta calidad y están actualizados para garantizar un trabajo profesional. 
                     Realizo mantenimiento periódico para asegurar el mejor rendimiento en cada proyecto.
                   </p>
-                </div>
-              </div>
-            </TabsContent>
-            
-            {/* Team Tab */}
-            <TabsContent value="team" className="mt-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold mb-6">Nuestro Equipo</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {/* Miembro del equipo 1 */}
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                    <div className="relative h-56 bg-gray-100">
-                      <img 
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
-                        alt="Director de Fotografía" 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h4 className="text-white font-semibold">Ricardo Méndez</h4>
-                        <p className="text-white/80 text-sm">Director de Fotografía</p>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-sm text-gray-600">
-                        Con 8 años de experiencia en cinematografía, especializado en iluminación y composición visual para diferentes géneros.
-                      </p>
-                      <div className="mt-4 flex gap-2">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">ARRI</span>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">RED</span>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Sony</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Miembro del equipo 2 */}
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                    <div className="relative h-56 bg-gray-100">
-                      <img 
-                        src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
-                        alt="Ingeniera de Sonido" 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h4 className="text-white font-semibold">Laura Torres</h4>
-                        <p className="text-white/80 text-sm">Ingeniera de Sonido</p>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-sm text-gray-600">
-                        Experta en grabación de audio en campo y postproducción de sonido, con amplia experiencia en cine documental.
-                      </p>
-                      <div className="mt-4 flex gap-2">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Sennheiser</span>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Rode</span>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Pro Tools</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Miembro del equipo 3 */}
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                    <div className="relative h-56 bg-gray-100">
-                      <img 
-                        src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" 
-                        alt="Colorista" 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h4 className="text-white font-semibold">Daniel Quiroz</h4>
-                        <p className="text-white/80 text-sm">Colorista</p>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-sm text-gray-600">
-                        Especialista en corrección de color y creación de looks visuales para publicidad, videos musicales y largometrajes.
-                      </p>
-                      <div className="mt-4 flex gap-2">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">DaVinci</span>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Premiere</span>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">ACES</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-10">
-                  <h4 className="text-lg font-semibold mb-4">Proyectos colaborativos</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow">
-                      <h5 className="font-medium mb-2">Campañas para Marca Global</h5>
-                      <p className="text-sm text-gray-600">Equipo completo para producción de videos publicitarios para redes sociales y TV.</p>
-                    </div>
-                    <div className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow">
-                      <h5 className="font-medium mb-2">Serie Documental</h5>
-                      <p className="text-sm text-gray-600">Producción completa con equipo especializado para filmación en locaciones remotas.</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </TabsContent>
