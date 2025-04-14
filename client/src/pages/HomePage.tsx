@@ -32,14 +32,14 @@ const HomePage: React.FC = () => {
           {/* 1. Hero Section */}
           <Hero />
           
-          {/* 2. Features */}
+          {/* 2. Business Section */}
+          <BusinessSection />
+          
+          {/* 3. Features */}
           <Features />
           
-          {/* 3. Editor Interactive Profile */}
+          {/* 4. Editor Interactive Profile */}
           <EditorInteractiveProfile />
-          
-          {/* 4. Business Section */}
-          <BusinessSection />
           
           {/* 5. Featured Editors */}
           <FeaturedEditors />

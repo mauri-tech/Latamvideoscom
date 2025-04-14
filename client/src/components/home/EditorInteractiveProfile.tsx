@@ -102,9 +102,9 @@ const EditorInteractiveProfile = () => {
     <div className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold">Perfil de Editor Destacado</h2>
+          <h2 className="text-2xl md:text-3xl font-bold">Explora perfiles únicos</h2>
           <p className="text-gray-600 mt-2">
-            Explora el perfil de este editor profesional y descubre por qué nuestros perfiles destacan en el mercado
+            Descubre por qué nuestros perfiles destacan en el mercado con información detallada y verificada
           </p>
         </div>
         

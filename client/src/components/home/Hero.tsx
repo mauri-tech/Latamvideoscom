@@ -35,7 +35,7 @@ const Hero = () => {
                   size="lg"
                   asChild
                 >
-                  <Link href="/about">Conocer más</Link>
+                  <Link href="#faq">Conocer más</Link>
                 </Button>
               </div>
             </div>
