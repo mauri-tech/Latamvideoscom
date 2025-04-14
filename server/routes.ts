@@ -181,32 +181,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Extract filter parameters
       const filters: Record<string, any> = {};
       
+      // Software filter
       if (req.query.software) {
         filters.software = (req.query.software as string).split(',').map(Number);
       }
       
+      // Editing styles filter
       if (req.query.editingStyles) {
         filters.editingStyles = (req.query.editingStyles as string).split(',').map(Number);
       }
       
+      // Rate filter
       if (req.query.maxRate) {
         filters.maxRate = parseFloat(req.query.maxRate as string);
       }
       
+      // Experience level filter
+      if (req.query.experienceLevel) {
+        filters.experienceLevel = req.query.experienceLevel as string;
+      }
+      
+      // Country filter
+      if (req.query.country) {
+        filters.country = (req.query.country as string).split(',');
+      }
+      
+      // Languages filter
+      if (req.query.languages) {
+        filters.languages = (req.query.languages as string).split(',');
+      }
+      
+      // Expertise areas filter
+      if (req.query.expertise) {
+        filters.expertise = (req.query.expertise as string).split(',');
+      }
+      
+      // Delivery time filter
+      if (req.query.deliveryTime) {
+        filters.deliveryTime = req.query.deliveryTime as string;
+      }
+      
+      // Rating filter
+      if (req.query.minRating) {
+        filters.minRating = parseFloat(req.query.minRating as string);
+      }
+      
+      // Sort by parameter
+      if (req.query.sortBy) {
+        filters.sortBy = req.query.sortBy as string;
+      }
+      
+      // Pagination parameters
+      if (req.query.page) {
+        filters.page = parseInt(req.query.page as string);
+      }
+      
+      if (req.query.limit) {
+        filters.limit = parseInt(req.query.limit as string);
+      }
+      
       const profiles = await storage.searchEditorProfiles(filters);
+      
+      // Apply pagination if specified
+      let paginatedProfiles = profiles;
+      if (filters.page && filters.limit) {
+        const startIndex = (filters.page - 1) * filters.limit;
+        const endIndex = filters.page * filters.limit;
+        paginatedProfiles = profiles.slice(startIndex, endIndex);
+      }
       
       // Get user data for each profile
       const profilesWithUserData = await Promise.all(
-        profiles.map(async (profile) => {
+        paginatedProfiles.map(async (profile) => {
           const user = await storage.getUser(profile.userId);
           if (!user) return null; // Should not happen
           
           // Don't return password
           const { password, ...userData } = user;
           
+          // Get portfolio items for this profile
+          const portfolioItems = await storage.getPortfolioItems(profile.id);
+          
+          // Featured portfolio item (first one)
+          const featuredPortfolio = portfolioItems.length > 0 ? portfolioItems[0] : null;
+          
           return {
             profile,
-            user: userData
+            user: userData,
+            featuredPortfolio
           };
         })
       );
@@ -214,8 +276,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Filter out nulls
       const validProfiles = profilesWithUserData.filter(Boolean);
       
-      res.json(validProfiles);
+      // Return pagination metadata along with results
+      const response = {
+        results: validProfiles,
+        pagination: {
+          total: profiles.length,
+          page: filters.page || 1,
+          limit: filters.limit || profiles.length,
+          totalPages: filters.limit ? Math.ceil(profiles.length / filters.limit) : 1
+        }
+      };
+      
+      res.json(response);
     } catch (error) {
+      console.error("Error in search editor profiles:", error);
       res.status(500).json({ message: "Server error" });
     }
   });

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -14,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 interface EditorListProps {
   filters: any;
+  onFilterChange: (filters: any) => void;
 }
 
 const EditorList = ({ filters }: EditorListProps) => {
@@ -35,10 +37,12 @@ const EditorList = ({ filters }: EditorListProps) => {
   const queryString = filterParams.toString();
   const queryKey = queryString ? `/api/editor-profiles?${queryString}` : '/api/editor-profiles';
   
-  const { data: editors = [], isLoading, error } = useQuery({
+  const { data: response, isLoading, error } = useQuery({
     queryKey: [queryKey],
     staleTime: 60000, // 1 minute
   });
+  
+  const editors = response?.results || [];
   
   // Function to get country name from country code
   const getCountryName = (countryCode: string) => {
@@ -147,6 +151,10 @@ const EditorList = ({ filters }: EditorListProps) => {
     },
   ];
   
+  // Estados para paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  
   // Manejo de tipo de datos
   interface EditorData {
     id: number;
@@ -161,21 +169,47 @@ const EditorList = ({ filters }: EditorListProps) => {
     basicRate: number;
   }
   
+  // Obtener información de paginación del API
+  const totalItems = response?.pagination?.total || 0;
+  const totalPages = response?.pagination?.totalPages || 1;
+  
+  // Manejar cambio de página
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    
+    // Agregar el parámetro de página a los filtros
+    const newParams = new URLSearchParams(filterParams.toString());
+    newParams.set('page', page.toString());
+    newParams.set('limit', itemsPerPage.toString());
+    
+    // Triggering a new search with the updated page
+    onFilterChange({
+      ...filters,
+      page,
+      limit: itemsPerPage
+    });
+  };
+  
   // Convertir datos de API a formato esperado o usar datos de ejemplo
   const displayEditors: EditorData[] = editors && Array.isArray(editors) && editors.length > 0 ? 
     editors.map((editor: any) => {
       if (editor.profile) {
+        // Extraer información de software y estilos de API
+        const softwareItems = (editor.profile.software || []) as any[]; 
+        const styleItems = (editor.profile.editingStyles || []) as any[];
+        
         // Si hay datos de perfil de API, formatearlos
         return {
           id: editor.profile.id,
           name: editor.user.name,
-          location: editor.user.country || "Internacional",
+          location: editor.user.country ? getCountryName(editor.user.country) : "Internacional",
           country: editor.user.country || "",
           profilePicture: editor.user.profilePicture || "https://via.placeholder.com/96",
-          software: ["Premiere Pro"], // Estos datos deberían venir de la API
-          styles: ["Edición General"], // Estos datos deberían venir de la API
+          software: Array.isArray(softwareItems) ? softwareItems.map((item: any) => typeof item === 'object' ? item.name : 'Software') : ["Premier Pro"],
+          styles: Array.isArray(styleItems) ? styleItems.map((item: any) => typeof item === 'object' ? item.name : 'Edición General') : ["Edición General"],
           bio: editor.user.bio || "Editor profesional",
-          thumbnailUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&h=337&q=80",
+          thumbnailUrl: editor.featuredPortfolio?.thumbnailUrl || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&h=337&q=80",
           basicRate: editor.profile.basicRate || 75,
         };
       }

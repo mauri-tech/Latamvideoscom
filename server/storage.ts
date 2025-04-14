@@ -1126,19 +1126,117 @@ export class DatabaseStorage implements IStorage {
     let queryBuilder = db.select().from(editorProfiles);
     
     // Apply filters
+    // Filter by maximum rate
     if (filters.maxRate && typeof filters.maxRate === 'number') {
       queryBuilder = queryBuilder.where(lte(editorProfiles.basicRate, filters.maxRate));
     }
     
-    // Execute the query
+    // Execute the query to get all profiles that match rate filter
     const results = await queryBuilder.execute();
     
-    // Sort by view count (most popular first)
-    return results.sort((a, b) => {
-      const aCount = a.viewCount || 0;
-      const bCount = b.viewCount || 0;
-      return bCount - aCount;
-    });
+    // Apply filters that need post-processing (JSONB fields)
+    let filteredResults = [...results];
+    
+    // Filter by software
+    if (filters.software && Array.isArray(filters.software) && filters.software.length > 0) {
+      filteredResults = filteredResults.filter(profile => {
+        const profileSoftware = profile.software as number[];
+        // Match if the profile has ANY of the requested software (OR condition)
+        return filters.software.some((id: number) => profileSoftware.includes(id));
+      });
+    }
+    
+    // Filter by editing styles
+    if (filters.editingStyles && Array.isArray(filters.editingStyles) && filters.editingStyles.length > 0) {
+      filteredResults = filteredResults.filter(profile => {
+        const profileStyles = profile.editingStyles as number[];
+        // Match if the profile has ANY of the requested styles (OR condition)
+        return filters.editingStyles.some((id: number) => profileStyles.includes(id));
+      });
+    }
+    
+    // Filter by expertise areas
+    if (filters.expertise && Array.isArray(filters.expertise) && filters.expertise.length > 0) {
+      filteredResults = filteredResults.filter(profile => {
+        const profileExpertise = profile.expertise as string[];
+        // Match if the profile has ANY of the requested expertise areas (OR condition)
+        return filters.expertise.some((area: string) => 
+          profileExpertise.some(exp => exp.toLowerCase().includes(area.toLowerCase()))
+        );
+      });
+    }
+    
+    // Filter by experience level
+    if (filters.experienceLevel) {
+      // Fetch all users to get years of experience
+      const allUsers = await db.select().from(users);
+      const userMap = new Map(allUsers.map(user => [user.id, user]));
+      
+      filteredResults = filteredResults.filter(profile => {
+        const user = userMap.get(profile.userId);
+        if (!user || !user.yearsOfExperience) return false;
+        
+        switch (filters.experienceLevel) {
+          case 'beginner':
+            return user.yearsOfExperience <= 2;
+          case 'intermediate':
+            return user.yearsOfExperience > 2 && user.yearsOfExperience <= 5;
+          case 'expert':
+            return user.yearsOfExperience > 5;
+          default:
+            return true;
+        }
+      });
+    }
+    
+    // Filter by country
+    if (filters.country && filters.country.length > 0) {
+      // Fetch all users to get countries
+      const allUsers = await db.select().from(users);
+      const userMap = new Map(allUsers.map(user => [user.id, user]));
+      
+      filteredResults = filteredResults.filter(profile => {
+        const user = userMap.get(profile.userId);
+        if (!user || !user.country) return false;
+        
+        return filters.country.includes(user.country);
+      });
+    }
+    
+    // Sort by different criteria
+    const sortBy = filters.sortBy || 'popularity';
+    switch (sortBy) {
+      case 'price_low':
+        filteredResults.sort((a, b) => (a.basicRate || 0) - (b.basicRate || 0));
+        break;
+      case 'price_high':
+        filteredResults.sort((a, b) => (b.basicRate || 0) - (a.basicRate || 0));
+        break;
+      case 'experience':
+        // Fetch all users to get experience for sorting
+        const allUsers = await db.select().from(users);
+        const userMap = new Map(allUsers.map(user => [user.id, user]));
+        
+        filteredResults.sort((a, b) => {
+          const userA = userMap.get(a.userId);
+          const userB = userMap.get(b.userId);
+          const expA = userA?.yearsOfExperience || 0;
+          const expB = userB?.yearsOfExperience || 0;
+          return expB - expA; // Most experienced first
+        });
+        break;
+      case 'popularity':
+      default:
+        // Sort by view count (most popular first)
+        filteredResults.sort((a, b) => {
+          const aCount = a.viewCount || 0;
+          const bCount = b.viewCount || 0;
+          return bCount - aCount;
+        });
+        break;
+    }
+    
+    return filteredResults;
   }
   
   async incrementProfileView(id: number): Promise<void> {
