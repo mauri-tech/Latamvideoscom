@@ -99,30 +99,30 @@ const ForumPage: React.FC = () => {
   
   // Consulta para obtener categorías
   const { 
-    data: categories, 
+    data: categories = [], 
     isLoading: categoriesLoading 
-  } = useQuery({
+  } = useQuery<ForumCategory[]>({
     queryKey: ['/api/forum/categories'],
     staleTime: 1000 * 60 * 5, // 5 minutos
   });
   
   // Consulta para obtener temas según filtro
   const { 
-    data: topics, 
+    data: topics = [], 
     isLoading: topicsLoading 
-  } = useQuery({
+  } = useQuery<ForumTopic[]>({
     queryKey: ['/api/forum/topics', { filter: activeTab, page: currentPage }],
     staleTime: 1000 * 60, // 1 minuto
   });
   
   // Filtrar temas según búsqueda
-  const filteredTopics = topics ? topics.filter((topic: ForumTopic) => 
+  const filteredTopics = topics.filter((topic: ForumTopic) => 
     topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     topic.content.toLowerCase().includes(searchQuery.toLowerCase())
-  ) : [];
+  );
   
   // Calcular paginación
-  const totalPages = Math.ceil((filteredTopics?.length || 0) / topicsPerPage);
+  const totalPages = Math.ceil((filteredTopics.length || 0) / topicsPerPage);
   const currentTopics = filteredTopics.slice(
     (currentPage - 1) * topicsPerPage,
     currentPage * topicsPerPage

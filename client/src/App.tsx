@@ -13,6 +13,8 @@ import SearchPage from "@/pages/SearchPage";
 import DashboardPage from "@/pages/DashboardPage";
 import AdminPanel from "@/pages/AdminPanel";
 import ForumPage from "@/pages/ForumPage";
+import FAQPage from "@/pages/FAQPage";
+import TermsPage from "@/pages/TermsPage";
 
 function Router() {
   return (
@@ -23,6 +25,8 @@ function Router() {
       <Route path="/editor/:id" component={EditorProfilePage} />
       <Route path="/search" component={SearchPage} />
       <Route path="/forum" component={ForumPage} />
+      <Route path="/faq" component={FAQPage} />
+      <Route path="/terms" component={TermsPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/admin" component={AdminPanel} />
       <Route component={NotFound} />

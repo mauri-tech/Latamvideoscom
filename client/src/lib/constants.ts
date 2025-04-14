@@ -1,25 +1,25 @@
-// Country list for Latin America
+// Country list for Latin America with flag emojis
 export const countries = [
-  { code: "AR", name: "Argentina" },
-  { code: "BO", name: "Bolivia" },
-  { code: "BR", name: "Brasil" },
-  { code: "CL", name: "Chile" },
-  { code: "CO", name: "Colombia" },
-  { code: "CR", name: "Costa Rica" },
-  { code: "CU", name: "Cuba" },
-  { code: "DO", name: "República Dominicana" },
-  { code: "EC", name: "Ecuador" },
-  { code: "SV", name: "El Salvador" },
-  { code: "GT", name: "Guatemala" },
-  { code: "HN", name: "Honduras" },
-  { code: "MX", name: "México" },
-  { code: "NI", name: "Nicaragua" },
-  { code: "PA", name: "Panamá" },
-  { code: "PY", name: "Paraguay" },
-  { code: "PE", name: "Perú" },
-  { code: "PR", name: "Puerto Rico" },
-  { code: "UY", name: "Uruguay" },
-  { code: "VE", name: "Venezuela" }
+  { code: "AR", name: "Argentina", flag: "🇦🇷" },
+  { code: "BO", name: "Bolivia", flag: "🇧🇴" },
+  { code: "BR", name: "Brasil", flag: "🇧🇷" },
+  { code: "CL", name: "Chile", flag: "🇨🇱" },
+  { code: "CO", name: "Colombia", flag: "🇨🇴" },
+  { code: "CR", name: "Costa Rica", flag: "🇨🇷" },
+  { code: "CU", name: "Cuba", flag: "🇨🇺" },
+  { code: "DO", name: "República Dominicana", flag: "🇩🇴" },
+  { code: "EC", name: "Ecuador", flag: "🇪🇨" },
+  { code: "SV", name: "El Salvador", flag: "🇸🇻" },
+  { code: "GT", name: "Guatemala", flag: "🇬🇹" },
+  { code: "HN", name: "Honduras", flag: "🇭🇳" },
+  { code: "MX", name: "México", flag: "🇲🇽" },
+  { code: "NI", name: "Nicaragua", flag: "🇳🇮" },
+  { code: "PA", name: "Panamá", flag: "🇵🇦" },
+  { code: "PY", name: "Paraguay", flag: "🇵🇾" },
+  { code: "PE", name: "Perú", flag: "🇵🇪" },
+  { code: "PR", name: "Puerto Rico", flag: "🇵🇷" },
+  { code: "UY", name: "Uruguay", flag: "🇺🇾" },
+  { code: "VE", name: "Venezuela", flag: "🇻🇪" }
 ];
 
 // Project Types
