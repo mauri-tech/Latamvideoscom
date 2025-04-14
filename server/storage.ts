@@ -6,9 +6,18 @@ import {
   portfolioItems, PortfolioItem, InsertPortfolioItem,
   briefs, Brief, InsertBrief
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, and, inArray, lte, desc } from "drizzle-orm";
+import connectPg from "connect-pg-simple";
+import session from "express-session";
+import { pool } from "./db";
+import createMemoryStore from "memorystore";
 
 // Storage interface
 export interface IStorage {
+  // Session Store para autenticación
+  sessionStore: session.Store;
+  
   // User Methods
   getUser(id: number): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
@@ -64,6 +73,8 @@ export class MemStorage implements IStorage {
   private currentPortfolioId = 1;
   private currentBriefId = 1;
   
+  public sessionStore: session.Store;
+  
   constructor() {
     this.users = new Map();
     this.software = new Map();
@@ -71,6 +82,12 @@ export class MemStorage implements IStorage {
     this.editorProfiles = new Map();
     this.portfolioItems = new Map();
     this.briefs = new Map();
+    
+    // Setup session store
+    const MemoryStore = createMemoryStore(session);
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    });
     
     // Seed initial data
     this.seedInitialData();
@@ -295,4 +312,224 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage Implementation
+export class DatabaseStorage implements IStorage {
+  public sessionStore: session.Store;
+  
+  constructor() {
+    const PostgresSessionStore = connectPg(session);
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
+    });
+  }
+  
+  // User Methods
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+  
+  async createUser(userData: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(userData).returning();
+    return user;
+  }
+  
+  async updateUser(id: number, data: Partial<User>): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+  
+  // Software Methods
+  async getAllSoftware(): Promise<Software[]> {
+    return db.select().from(software);
+  }
+  
+  async getSoftware(id: number): Promise<Software | undefined> {
+    const [sw] = await db.select().from(software).where(eq(software.id, id));
+    return sw;
+  }
+  
+  async createSoftware(data: InsertSoftware): Promise<Software> {
+    const [sw] = await db.insert(software).values(data).returning();
+    return sw;
+  }
+  
+  // Editing Styles Methods
+  async getAllEditingStyles(): Promise<EditingStyle[]> {
+    return db.select().from(editingStyles);
+  }
+  
+  async getEditingStyle(id: number): Promise<EditingStyle | undefined> {
+    const [style] = await db.select().from(editingStyles).where(eq(editingStyles.id, id));
+    return style;
+  }
+  
+  async createEditingStyle(data: InsertEditingStyle): Promise<EditingStyle> {
+    const [style] = await db.insert(editingStyles).values(data).returning();
+    return style;
+  }
+  
+  // Editor Profile Methods
+  async getEditorProfile(id: number): Promise<EditorProfile | undefined> {
+    const [profile] = await db
+      .select()
+      .from(editorProfiles)
+      .where(eq(editorProfiles.id, id));
+    return profile;
+  }
+  
+  async getEditorProfileByUserId(userId: number): Promise<EditorProfile | undefined> {
+    const [profile] = await db
+      .select()
+      .from(editorProfiles)
+      .where(eq(editorProfiles.userId, userId));
+    return profile;
+  }
+  
+  async createEditorProfile(data: InsertEditorProfile): Promise<EditorProfile> {
+    const [profile] = await db
+      .insert(editorProfiles)
+      .values({
+        ...data,
+        viewCount: 0,
+        contactClickCount: 0,
+        verified: false
+      })
+      .returning();
+    return profile;
+  }
+  
+  async updateEditorProfile(id: number, data: Partial<EditorProfile>): Promise<EditorProfile | undefined> {
+    const [profile] = await db
+      .update(editorProfiles)
+      .set(data)
+      .where(eq(editorProfiles.id, id))
+      .returning();
+    return profile;
+  }
+  
+  async searchEditorProfiles(filters: Record<string, any>): Promise<EditorProfile[]> {
+    let query = db.select().from(editorProfiles);
+    
+    // Apply filters
+    if (filters.maxRate && typeof filters.maxRate === 'number') {
+      query = query.where(lte(editorProfiles.basicRate, filters.maxRate));
+    }
+    
+    // Sort by view count (most popular first)
+    query = query.orderBy(desc(editorProfiles.viewCount));
+    
+    return query;
+  }
+  
+  async incrementProfileView(id: number): Promise<void> {
+    await db
+      .update(editorProfiles)
+      .set({
+        viewCount: db.raw(`view_count + 1`)
+      })
+      .where(eq(editorProfiles.id, id));
+  }
+  
+  async incrementContactClick(id: number): Promise<void> {
+    await db
+      .update(editorProfiles)
+      .set({
+        contactClickCount: db.raw(`contact_click_count + 1`)
+      })
+      .where(eq(editorProfiles.id, id));
+  }
+  
+  // Portfolio Methods
+  async getPortfolioItems(editorProfileId: number): Promise<PortfolioItem[]> {
+    return db
+      .select()
+      .from(portfolioItems)
+      .where(eq(portfolioItems.editorProfileId, editorProfileId))
+      .orderBy(portfolioItems.order);
+  }
+  
+  async createPortfolioItem(data: InsertPortfolioItem): Promise<PortfolioItem> {
+    const [item] = await db
+      .insert(portfolioItems)
+      .values(data)
+      .returning();
+    return item;
+  }
+  
+  async updatePortfolioItem(id: number, data: Partial<PortfolioItem>): Promise<PortfolioItem | undefined> {
+    const [item] = await db
+      .update(portfolioItems)
+      .set(data)
+      .where(eq(portfolioItems.id, id))
+      .returning();
+    return item;
+  }
+  
+  async deletePortfolioItem(id: number): Promise<boolean> {
+    const result = await db
+      .delete(portfolioItems)
+      .where(eq(portfolioItems.id, id));
+    return result.rowCount > 0;
+  }
+  
+  // Brief Methods
+  async getBrief(id: number): Promise<Brief | undefined> {
+    const [brief] = await db
+      .select()
+      .from(briefs)
+      .where(eq(briefs.id, id));
+    return brief;
+  }
+  
+  async getBriefsByClientId(clientId: number): Promise<Brief[]> {
+    return db
+      .select()
+      .from(briefs)
+      .where(eq(briefs.clientId, clientId))
+      .orderBy(desc(briefs.createdAt));
+  }
+  
+  async getBriefsByEditorId(editorId: number): Promise<Brief[]> {
+    return db
+      .select()
+      .from(briefs)
+      .where(eq(briefs.editorId, editorId))
+      .orderBy(desc(briefs.createdAt));
+  }
+  
+  async createBrief(data: InsertBrief): Promise<Brief> {
+    const [brief] = await db
+      .insert(briefs)
+      .values({
+        ...data,
+        status: "pending"
+      })
+      .returning();
+    return brief;
+  }
+  
+  async updateBriefStatus(id: number, status: string): Promise<Brief | undefined> {
+    const [brief] = await db
+      .update(briefs)
+      .set({ status })
+      .where(eq(briefs.id, id))
+      .returning();
+    return brief;
+  }
+}
+
+// Choose the storage implementation
+export const storage = process.env.DATABASE_URL
+  ? new DatabaseStorage()
+  : new MemStorage();

@@ -203,62 +203,35 @@ export type InsertBrief = z.infer<typeof insertBriefSchema>;
 
 // Relations - after all tables have been defined
 export const usersRelations = relations(users, ({ one, many }) => ({
-  editorProfile: one(editorProfiles, {
-    fields: [users.id],
-    references: [editorProfiles.userId],
-  }),
-  sentBriefs: many(briefs, {
-    relationName: "user_briefs",
-  }),
+  editorProfile: one(editorProfiles),
+  sentBriefs: many(briefs, { relationName: "user_briefs" }),
 }));
 
 export const editorProfilesRelations = relations(editorProfiles, ({ one, many }) => ({
-  user: one(users, {
-    fields: [editorProfiles.userId],
-    references: [users.id],
-  }),
-  portfolioItems: many(portfolioItems, {
-    fields: [editorProfiles.id],
-    references: [portfolioItems.editorProfileId],
-  }),
-  receivedBriefs: many(briefs, {
-    fields: [editorProfiles.id],
-    references: [briefs.editorId],
-    relationName: "editor_briefs",
-  }),
-  reviews: many(reviews, {
-    fields: [editorProfiles.id],
-    references: [reviews.editorProfileId],
-  }),
+  user: one(users),
+  portfolioItems: many(portfolioItems),
+  receivedBriefs: many(briefs, { relationName: "editor_briefs" }),
+  reviews: many(reviews),
 }));
 
 export const portfolioItemsRelations = relations(portfolioItems, ({ one }) => ({
-  editorProfile: one(editorProfiles, {
-    fields: [portfolioItems.editorProfileId],
-    references: [editorProfiles.id],
-  }),
+  editorProfile: one(editorProfiles),
 }));
 
 export const reviewsRelations = relations(reviews, ({ one }) => ({
-  editorProfile: one(editorProfiles, {
-    fields: [reviews.editorProfileId],
-    references: [editorProfiles.id],
-  }),
-  client: one(users, {
-    fields: [reviews.clientId],
-    references: [users.id],
-  }),
+  editorProfile: one(editorProfiles),
+  client: one(users),
 }));
 
 export const briefsRelations = relations(briefs, ({ one }) => ({
   client: one(users, {
     fields: [briefs.clientId],
     references: [users.id],
-    relationName: "user_briefs",
+    relationName: "user_briefs"
   }),
   editor: one(editorProfiles, {
     fields: [briefs.editorId],
     references: [editorProfiles.id],
-    relationName: "editor_briefs",
+    relationName: "editor_briefs"
   }),
 }));
