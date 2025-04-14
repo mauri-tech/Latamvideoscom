@@ -4,7 +4,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
 import Features from '@/components/home/Features';
-import EditorInteractiveProfiles from '@/components/home/EditorInteractiveProfiles';
+import EditorInteractiveProfile from '@/components/home/EditorInteractiveProfile';
 import BusinessSection from '@/components/home/BusinessSection';
 import FeaturedEditors from '@/components/home/FeaturedEditors';
 import HiringProcess from '@/components/home/HiringProcess';
@@ -35,8 +35,8 @@ const HomePage: React.FC = () => {
           {/* 2. Features */}
           <Features />
           
-          {/* 3. Editor Interactive Profiles */}
-          <EditorInteractiveProfiles />
+          {/* 3. Editor Interactive Profile */}
+          <EditorInteractiveProfile />
           
           {/* 4. Business Section */}
           <BusinessSection />

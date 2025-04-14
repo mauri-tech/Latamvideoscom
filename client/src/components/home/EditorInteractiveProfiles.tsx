@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, CheckCircle, Briefcase, Clock, Monitor, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, CheckCircle, Briefcase, Clock, Monitor, MessageSquare } from 'lucide-react';
 
-// Tipo para los editores recomendados
+// Tipo para el editor de demostración
 interface Editor {
   id: number;
   name: string;
@@ -23,41 +23,60 @@ interface Editor {
   experience: number;
 }
 
-// Datos de editores recomendados
-const recommendedEditors: Editor[] = [
+// Tipo para reseñas
+interface Review {
+  id: number;
+  author: string;
+  company: string;
+  rating: number;
+  date: string;
+  comment: string;
+}
+
+// Datos del perfil de demostración interactivo (solo Mauricio Treviño)
+const editorProfile: Editor = {
+  id: 1,
+  name: "Mauricio Treviño B.",
+  profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+  location: "🇲🇽 Ciudad de México",
+  verified: true,
+  rating: 4.9,
+  reviewCount: 127,
+  specialties: ["Editor de video", "Videógrafo"],
+  tags: ["Reels", "YouTube", "Documental", "Bodas"],
+  portfolioCount: 23,
+  price: {
+    min: 200,
+    currency: "USD"
+  },
+  experience: 5
+};
+
+// Reseñas para el perfil interactivo
+const editorReviews: Review[] = [
   {
     id: 1,
-    name: "Mauricio Treviño B.",
-    profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-    location: "🇲🇽 Ciudad de México",
-    verified: true,
-    rating: 4.9,
-    reviewCount: 127,
-    specialties: ["Editor de video", "Videógrafo"],
-    tags: ["Reels", "YouTube", "Documental", "Bodas"],
-    portfolioCount: 23,
-    price: {
-      min: 200,
-      currency: "USD"
-    },
-    experience: 5
+    author: "Carlos Mendoza",
+    company: "NexTech Media",
+    rating: 5,
+    date: "12 de marzo, 2025",
+    comment: "Excelente trabajo en la edición de nuestro video corporativo. Mauricio entendió perfectamente nuestra visión y entregó un resultado excepcional. Definitivamente volveremos a trabajar juntos."
   },
   {
     id: 2,
-    name: "Valentina Quiroga",
-    profilePicture: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-    location: "🇨🇴 Bogotá",
-    verified: true,
-    rating: 4.8,
-    reviewCount: 94,
-    specialties: ["Motion graphics", "Colorista"],
-    tags: ["Comerciales", "Moda", "Lujo", "Viajes"],
-    portfolioCount: 42,
-    price: {
-      min: 300,
-      currency: "USD"
-    },
-    experience: 7
+    author: "Ana Gutiérrez",
+    company: "Freelance",
+    rating: 5,
+    date: "27 de febrero, 2025",
+    comment: "Mauricio tiene un gran ojo para el detalle y la narrativa visual. La edición de mi documental quedó impecable y captó exactamente la emoción que buscaba transmitir."
+  },
+  {
+    id: 3,
+    author: "Miguel Torres",
+    company: "StartupLATAM",
+    rating: 4,
+    date: "5 de febrero, 2025",
+    comment: "Muy profesional y entregó antes del plazo acordado. La comunicación fue fluida y las revisiones se realizaron sin problemas. Recomendado para cualquier proyecto."
   }
 ];
 

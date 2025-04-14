@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, CheckCircle, Briefcase, Clock, Monitor, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, CheckCircle, Briefcase, Clock, Monitor, MessageSquare } from 'lucide-react';
 
-// Tipo para el editor
+// Tipo para el editor de demostración
 interface Editor {
   id: number;
   name: string;
@@ -23,12 +23,22 @@ interface Editor {
   experience: number;
 }
 
-// Datos del editor de muestra
+// Tipo para reseñas
+interface Review {
+  id: number;
+  author: string;
+  company: string;
+  rating: number;
+  date: string;
+  comment: string;
+}
+
+// Datos del perfil de demostración interactivo (solo Mauricio Treviño)
 const editorProfile: Editor = {
   id: 1,
   name: "Mauricio Treviño B.",
   profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-  location: "Ciudad de México",
+  location: "🇲🇽 Ciudad de México",
   verified: true,
   rating: 4.9,
   reviewCount: 127,
@@ -42,8 +52,36 @@ const editorProfile: Editor = {
   experience: 5
 };
 
+// Reseñas para el perfil interactivo
+const editorReviews: Review[] = [
+  {
+    id: 1,
+    author: "Carlos Mendoza",
+    company: "NexTech Media",
+    rating: 5,
+    date: "12 de marzo, 2025",
+    comment: "Excelente trabajo en la edición de nuestro video corporativo. Mauricio entendió perfectamente nuestra visión y entregó un resultado excepcional. Definitivamente volveremos a trabajar juntos."
+  },
+  {
+    id: 2,
+    author: "Ana Gutiérrez",
+    company: "Freelance",
+    rating: 5,
+    date: "27 de febrero, 2025",
+    comment: "Mauricio tiene un gran ojo para el detalle y la narrativa visual. La edición de mi documental quedó impecable y captó exactamente la emoción que buscaba transmitir."
+  },
+  {
+    id: 3,
+    author: "Miguel Torres",
+    company: "StartupLATAM",
+    rating: 4,
+    date: "5 de febrero, 2025",
+    comment: "Muy profesional y entregó antes del plazo acordado. La comunicación fue fluida y las revisiones se realizaron sin problemas. Recomendado para cualquier proyecto."
+  }
+];
+
 const EditorInteractiveProfile = () => {
-  const [activeTab, setActiveTab] = useState<string>('portafolio');
+  const [activeTab, setActiveTab] = useState<'portafolio' | 'equipamiento' | 'tarifas' | 'reseñas'>('portafolio');
 
   // Renderizar estrellas para el rating
   const renderRating = (rating: number) => {
@@ -61,16 +99,21 @@ const EditorInteractiveProfile = () => {
   };
 
   return (
-    <section className="py-20 bg-white">
+    <div className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Así se ve tu perfil aquí</h2>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold">Perfil de Editor Destacado</h2>
+          <p className="text-gray-600 mt-2">
+            Explora el perfil de este editor profesional y descubre por qué nuestros perfiles destacan en el mercado
+          </p>
+        </div>
         
         {/* Área del perfil interactivo */}
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden mb-10 border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-10 border border-gray-200 max-w-5xl mx-auto">
           {/* Cabecera del perfil */}
           <div className="flex flex-col md:flex-row">
             {/* Foto de perfil y detalles básicos */}
-            <div className="md:w-1/3 flex flex-col items-center p-6 text-center border-r border-gray-200 bg-gradient-to-b from-[#F9F9F9] to-white">
+            <div className="md:w-1/3 flex flex-col items-center p-6 text-center border-r border-gray-200">
               <img 
                 src={editorProfile.profilePicture} 
                 alt={editorProfile.name}
@@ -101,15 +144,15 @@ const EditorInteractiveProfile = () => {
               
               <div className="grid grid-cols-3 gap-2 w-full">
                 <div className="bg-gray-50 rounded p-2 text-center">
-                  <p className="text-sm font-bold text-[#007AFF]">{editorProfile.portfolioCount}</p>
+                  <p className="text-sm font-bold text-[#0050FF]">{editorProfile.portfolioCount}</p>
                   <p className="text-xs text-gray-500">Proyectos</p>
                 </div>
                 <div className="bg-gray-50 rounded p-2 text-center">
-                  <p className="text-sm font-bold text-[#007AFF]">${editorProfile.price.min}</p>
+                  <p className="text-sm font-bold text-[#0050FF]">${editorProfile.price.min}</p>
                   <p className="text-xs text-gray-500">Desde</p>
                 </div>
                 <div className="bg-gray-50 rounded p-2 text-center">
-                  <p className="text-sm font-bold text-[#007AFF]">{editorProfile.experience}</p>
+                  <p className="text-sm font-bold text-[#0050FF]">{editorProfile.experience}</p>
                   <p className="text-xs text-gray-500">Años exp.</p>
                 </div>
               </div>
@@ -120,7 +163,7 @@ const EditorInteractiveProfile = () => {
               {/* Barra de pestañas */}
               <div className="flex border-b border-gray-200">
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#007AFF] border-b-2 border-[#007AFF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setActiveTab('portafolio')}
                 >
                   <div className="flex items-center gap-2">
@@ -129,7 +172,7 @@ const EditorInteractiveProfile = () => {
                   </div>
                 </button>
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#007AFF] border-b-2 border-[#007AFF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setActiveTab('equipamiento')}
                 >
                   <div className="flex items-center gap-2">
@@ -138,12 +181,21 @@ const EditorInteractiveProfile = () => {
                   </div>
                 </button>
                 <button 
-                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#007AFF] border-b-2 border-[#007AFF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
                   onClick={() => setActiveTab('tarifas')}
                 >
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     <span>Tarifas</span>
+                  </div>
+                </button>
+                <button 
+                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'reseñas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  onClick={() => setActiveTab('reseñas')}
+                >
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Reseñas</span>
                   </div>
                 </button>
               </div>
@@ -175,19 +227,19 @@ const EditorInteractiveProfile = () => {
                     <h4 className="text-lg font-medium mb-4">Equipo de trabajo</h4>
                     <ul className="space-y-2">
                       <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#007AFF]"></div>
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
                         <span>MacBook Pro M1 Max</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#007AFF]"></div>
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
                         <span>Cámara Sony A7III</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#007AFF]"></div>
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
                         <span>Micrófono Rode PodMic</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#007AFF]"></div>
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
                         <span>Iluminación Aputure</span>
                       </li>
                     </ul>
@@ -200,19 +252,47 @@ const EditorInteractiveProfile = () => {
                     <div className="space-y-4">
                       <div className="border border-gray-200 rounded-lg p-4">
                         <h5 className="font-medium">Paquete Básico</h5>
-                        <p className="text-[#007AFF] font-bold">${editorProfile.price.min}</p>
+                        <p className="text-[#0050FF] font-bold">${editorProfile.price.min}</p>
                         <p className="text-sm text-gray-600">Edición básica de video, hasta 5 minutos de duración.</p>
                       </div>
                       <div className="border border-gray-200 rounded-lg p-4">
                         <h5 className="font-medium">Paquete Estándar</h5>
-                        <p className="text-[#007AFF] font-bold">${editorProfile.price.min * 2}</p>
+                        <p className="text-[#0050FF] font-bold">${editorProfile.price.min * 2}</p>
                         <p className="text-sm text-gray-600">Edición profesional con efectos básicos, hasta 10 minutos.</p>
                       </div>
                       <div className="border border-gray-200 rounded-lg p-4">
                         <h5 className="font-medium">Paquete Premium</h5>
-                        <p className="text-[#007AFF] font-bold">${editorProfile.price.min * 3}</p>
+                        <p className="text-[#0050FF] font-bold">${editorProfile.price.min * 3}</p>
                         <p className="text-sm text-gray-600">Edición avanzada con efectos, corrección de color y hasta 20 minutos.</p>
                       </div>
+                    </div>
+                  </div>
+                )}
+                
+                {activeTab === 'reseñas' && (
+                  <div>
+                    <h4 className="text-lg font-medium mb-4">Lo que dicen los clientes</h4>
+                    <div className="space-y-6">
+                      {editorReviews.map(review => (
+                        <div key={review.id} className="border-b border-gray-200 pb-5 last:border-0">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <h5 className="font-medium">{review.author}</h5>
+                              <p className="text-xs text-gray-500">{review.company}</p>
+                            </div>
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <Star 
+                                  key={i} 
+                                  className={`w-3.5 h-3.5 ${i < Math.floor(review.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                                />
+                              ))}
+                              <span className="ml-1 text-xs text-gray-600">{review.date}</span>
+                            </div>
+                          </div>
+                          <p className="text-sm text-gray-600">{review.comment}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -223,7 +303,7 @@ const EditorInteractiveProfile = () => {
           {/* Botones de acción */}
           <div className="p-4 bg-gray-50 flex justify-end">
             <Button 
-              className="bg-[#007AFF] hover:bg-[#007AFF]/80 text-white"
+              className="bg-[#0050FF] hover:bg-[#0069d9] text-white"
               asChild
             >
               <Link href={`/editor/${editorProfile.id}`}>Ver perfil completo</Link>
@@ -231,15 +311,18 @@ const EditorInteractiveProfile = () => {
           </div>
         </div>
         
-        {/* Texto informativo */}
-        <div className="text-center max-w-2xl mx-auto">
-          <p className="text-gray-600">
-            Un perfil profesional interactivo que destaca tu experiencia, especialidades y equipamiento técnico, 
-            permitiendo a los potenciales clientes ver exactamente lo que ofreces.
-          </p>
+        {/* Botón para explorar más */}
+        <div className="text-center">
+          <Button 
+            variant="outline" 
+            className="border-[#0050FF] text-[#0050FF] hover:bg-[#0050FF]/5"
+            asChild
+          >
+            <Link href="/search">Explorar todos los editores</Link>
+          </Button>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
