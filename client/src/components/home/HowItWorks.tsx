@@ -1,60 +1,105 @@
-import React from 'react';
-import { Search, Filter, MessageSquare } from 'lucide-react';
+import React, { useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, Search, UserCheck, Video } from 'lucide-react';
+
+// Interfaz para los pasos
+interface Step {
+  id: number;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+// Datos de los pasos para "Cómo funciona"
+const steps: Step[] = [
+  {
+    id: 1,
+    title: "Encuentra al editor perfecto",
+    description: "Busca utilizando filtros avanzados por especialidad, estilo, equipamiento y presupuesto para encontrar el profesional indicado.",
+    icon: <Search className="h-8 w-8" />,
+    color: "bg-blue-100 text-blue-700"
+  },
+  {
+    id: 2,
+    title: "Revisa perfiles detallados",
+    description: "Explora portafolios, reseñas verificadas, equipamiento y experiencia del profesional para estar seguro de tu elección.",
+    icon: <UserCheck className="h-8 w-8" />,
+    color: "bg-purple-100 text-purple-700"
+  },
+  {
+    id: 3,
+    title: "Obtén resultados profesionales",
+    description: "Recibe un producto de calidad, con la posibilidad de solicitar revisiones según el paquete contratado.",
+    icon: <Video className="h-8 w-8" />,
+    color: "bg-green-100 text-green-700"
+  }
+];
 
 const HowItWorks = () => {
+  const scrollContainer = useRef<HTMLDivElement>(null);
+
+  // Función para desplazamiento manual
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainer.current) {
+      const scrollAmount = direction === 'left' ? -300 : 300;
+      scrollContainer.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+  
   return (
-    <section className="py-20 bg-gray-50">
+    <section id="how-it-works" className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Así de fácil es formar parte</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Un proceso simple para conectar con oportunidades profesionales o encontrar el talento que necesitas.</p>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Cómo funciona en 3 pasos simples</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Encuentra el talento que necesitas y concreta tu proyecto audiovisual en minutos
+          </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {/* Paso 1 */}
-          <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 relative">
-            <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-[#007AFF] text-white flex items-center justify-center text-lg font-bold">1</div>
-            <div className="flex flex-col items-center text-center h-full">
-              <div className="bg-[#007AFF]/10 p-4 rounded-full mb-6">
-                <Search className="w-8 h-8 text-[#007AFF]" />
-              </div>
-              <h3 className="text-xl font-bold mb-4">Explora perfiles profesionales</h3>
-              <p className="text-gray-600 mb-4 flex-grow">Navega por nuestra colección de editores y videógrafos destacados de toda Latinoamérica.</p>
-              <div className="w-16 h-1 bg-[#007AFF] rounded-full mt-auto"></div>
-            </div>
-          </div>
-          
-          {/* Paso 2 */}
-          <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 relative">
-            <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-[#007AFF] text-white flex items-center justify-center text-lg font-bold">2</div>
-            <div className="flex flex-col items-center text-center h-full">
-              <div className="bg-[#007AFF]/10 p-4 rounded-full mb-6">
-                <Filter className="w-8 h-8 text-[#007AFF]" />
-              </div>
-              <h3 className="text-xl font-bold mb-4">Filtra por estilos, software y precios</h3>
-              <p className="text-gray-600 mb-4 flex-grow">Personaliza tu búsqueda según tus necesidades específicas y encuentra el profesional ideal.</p>
-              <div className="w-16 h-1 bg-[#007AFF] rounded-full mt-auto"></div>
-            </div>
-          </div>
-          
-          {/* Paso 3 */}
-          <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 relative">
-            <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-[#007AFF] text-white flex items-center justify-center text-lg font-bold">3</div>
-            <div className="flex flex-col items-center text-center h-full">
-              <div className="bg-[#007AFF]/10 p-4 rounded-full mb-6">
-                <MessageSquare className="w-8 h-8 text-[#007AFF]" />
-              </div>
-              <h3 className="text-xl font-bold mb-4">Contacta directo al talento</h3>
-              <p className="text-gray-600 mb-4 flex-grow">Comunícate directamente con los profesionales sin intermediarios ni comisiones.</p>
-              <div className="w-16 h-1 bg-[#007AFF] rounded-full mt-auto"></div>
-            </div>
-          </div>
+        {/* Controles de navegación en pantallas grandes */}
+        <div className="hidden md:flex justify-end mb-6 space-x-2">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => scroll('left')}
+            className="rounded-full"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => scroll('right')}
+            className="rounded-full"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
         
-        {/* Decoración de formas orgánicas */}
-        <div className="relative max-w-6xl mx-auto mt-16">
-          <div className="absolute -bottom-10 left-1/4 w-64 h-16 bg-gradient-to-r from-[#A0C4FF]/20 to-transparent rounded-full blur-xl -z-10 transform -rotate-12"></div>
-          <div className="absolute -bottom-16 right-1/4 w-64 h-16 bg-gradient-to-r from-transparent to-[#007AFF]/10 rounded-full blur-xl -z-10 transform rotate-12"></div>
+        {/* Contenedor con scroll horizontal */}
+        <div 
+          ref={scrollContainer}
+          className="flex overflow-x-auto space-x-6 pb-8 scrollbar-hide snap-x"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {steps.map((step) => (
+            <div 
+              key={step.id}
+              className="flex-shrink-0 w-[300px] md:w-1/3 snap-center"
+            >
+              <div className="bg-white rounded-xl p-6 shadow-md h-full border border-gray-100 transition-all hover:shadow-lg">
+                <div className="flex items-center mb-4">
+                  <div className={`${step.color} p-4 rounded-xl mr-4`}>
+                    {step.icon}
+                  </div>
+                  <span className="text-2xl font-bold text-[#0050FF]">{step.id}</span>
+                </div>
+                <h3 className="text-xl font-medium mb-3">{step.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{step.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

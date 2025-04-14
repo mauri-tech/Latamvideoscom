@@ -99,7 +99,7 @@ const EditorInteractiveProfile = () => {
   };
 
   return (
-    <div className="py-16 bg-white">
+    <div id="editor-profile" className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold">Explora perfiles únicos</h2>

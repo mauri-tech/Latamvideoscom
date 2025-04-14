@@ -259,7 +259,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
               <SelectValue placeholder="Todos los países" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="todos">Todos los países</SelectItem>
+              <SelectItem value="all">Todos los países</SelectItem>
               {countries.map((country) => (
                 <SelectItem key={country.code} value={country.code}>
                   {country.name}
@@ -327,14 +327,14 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
           </label>
           <Slider
             defaultValue={[filters.maxRate]}
-            max={300}
-            min={30}
+            max={500}
+            min={0}
             step={10}
             onValueChange={handleSliderChange}
           />
           <div className="flex justify-between text-xs text-[#8E8E93] mt-2">
-            <span>$30</span>
-            <span>$300+</span>
+            <span>$0</span>
+            <span>$500</span>
           </div>
         </div>
         

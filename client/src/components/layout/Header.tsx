@@ -19,13 +19,13 @@ const Header = () => {
         </Link>
         
         <nav className="hidden md:flex space-x-8">
-          <Link href="/#como-funciona" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
+          <Link href="#features" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
             Cómo funciona
           </Link>
-          <Link href="/#para-editores" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
+          <Link href="#editor-profile" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
             Para editores
           </Link>
-          <Link href="/#para-marcas" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
+          <Link href="#business" className="text-[#1c1c1e] hover:text-[#007AFF] transition">
             Para marcas
           </Link>
         </nav>
@@ -49,13 +49,13 @@ const Header = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white w-full py-2 px-4">
           <nav className="flex flex-col space-y-3">
-            <Link href="/#como-funciona" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
+            <Link href="#features" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
               Cómo funciona
             </Link>
-            <Link href="/#para-editores" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
+            <Link href="#editor-profile" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
               Para editores
             </Link>
-            <Link href="/#para-marcas" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
+            <Link href="#business" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
               Para marcas
             </Link>
             <Link href="/login" className="text-[#1c1c1e] hover:text-[#007AFF] py-2">
