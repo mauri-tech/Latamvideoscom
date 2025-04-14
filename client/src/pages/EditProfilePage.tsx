@@ -134,7 +134,7 @@ const EditProfilePage = () => {
   
   // Obtener perfil profesional del usuario
   const { data: editorProfile, isLoading: isLoadingProfile } = useQuery({
-    queryKey: ['/api/editor-profiles/user', currentUser?.id],
+    queryKey: [currentUser ? `/api/editor-profiles/user/${currentUser.id}` : null],
     enabled: !!currentUser?.id,
     onError: (error: Error) => {
       if ((error as any).status !== 404) {
@@ -217,7 +217,7 @@ const EditProfilePage = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/editor-profiles/user'] });
+      queryClient.invalidateQueries({ queryKey: [currentUser ? `/api/editor-profiles/user/${currentUser.id}` : null] });
       toast({
         title: "¡Éxito!",
         description: "Perfil profesional actualizado correctamente",

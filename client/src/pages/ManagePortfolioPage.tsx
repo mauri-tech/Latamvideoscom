@@ -102,7 +102,7 @@ const ManagePortfolioPage = () => {
   
   // Obtener perfil profesional del usuario
   const { data: editorProfile, isLoading: isLoadingProfile } = useQuery({
-    queryKey: ['/api/editor-profiles/user', currentUser?.id],
+    queryKey: [currentUser ? `/api/editor-profiles/user/${currentUser.id}` : null],
     enabled: !!currentUser?.id,
     onError: (error: Error) => {
       if ((error as any).status !== 404) {
