@@ -15,18 +15,18 @@ const Footer = () => {
               El portafolio inteligente para editores de video en Latinoamérica.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-[#8E8E93] hover:text-[#007AFF]">
+              <Link href="https://twitter.com" className="text-[#8E8E93] hover:text-[#007AFF]">
                 <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-[#8E8E93] hover:text-[#007AFF]">
+              </Link>
+              <Link href="https://facebook.com" className="text-[#8E8E93] hover:text-[#007AFF]">
                 <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-[#8E8E93] hover:text-[#007AFF]">
+              </Link>
+              <Link href="https://instagram.com" className="text-[#8E8E93] hover:text-[#007AFF]">
                 <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-[#8E8E93] hover:text-[#007AFF]">
+              </Link>
+              <Link href="https://linkedin.com" className="text-[#8E8E93] hover:text-[#007AFF]">
                 <Linkedin className="h-5 w-5" />
-              </a>
+              </Link>
             </div>
           </div>
           
@@ -34,7 +34,7 @@ const Footer = () => {
             <h4 className="font-semibold text-lg mb-4">Editores</h4>
             <ul className="space-y-2 text-sm text-[#8E8E93]">
               <li><Link href="/register" className="hover:text-[#007AFF]">Crear perfil</Link></li>
-              <li><Link href="/#como-funciona" className="hover:text-[#007AFF]">Cómo funciona</Link></li>
+              <li><Link href="/#how-it-works" className="hover:text-[#007AFF]">Cómo funciona</Link></li>
               <li><a href="#" className="hover:text-[#007AFF]">Precios y planes</a></li>
               <li><a href="#" className="hover:text-[#007AFF]">Tips para tu portafolio</a></li>
               <li><a href="#" className="hover:text-[#007AFF]">Historias de éxito</a></li>
@@ -44,22 +44,22 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-4">Marcas</h4>
             <ul className="space-y-2 text-sm text-[#8E8E93]">
-              <li><Link href="/search" className="hover:text-[#007AFF]">Buscar editores</Link></li>
-              <li><a href="#" className="hover:text-[#007AFF]">Publicar proyecto</a></li>
-              <li><a href="#" className="hover:text-[#007AFF]">Solicitar recomendación</a></li>
-              <li><a href="#" className="hover:text-[#007AFF]">Casos de éxito</a></li>
-              <li><a href="#" className="hover:text-[#007AFF]">FAQ para contratantes</a></li>
+              <li><Link href="/editors" className="hover:text-[#007AFF]">Buscar editores</Link></li>
+              <li><Link href="/#business" className="hover:text-[#007AFF]">Para negocios</Link></li>
+              <li><Link href="/#features" className="hover:text-[#007AFF]">¿Por qué elegirnos?</Link></li>
+              <li><Link href="/testimonials" className="hover:text-[#007AFF]">Testimonios</Link></li>
+              <li><Link href="/#faq" className="hover:text-[#007AFF]">FAQ para contratantes</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-semibold text-lg mb-4">Compañía</h4>
             <ul className="space-y-2 text-sm text-[#8E8E93]">
-              <li><a href="#" className="hover:text-[#007AFF]">Sobre nosotros</a></li>
-              <li><a href="#" className="hover:text-[#007AFF]">Blog</a></li>
-              <li><a href="#" className="hover:text-[#007AFF]">Contacto</a></li>
-              <li><a href="#" className="hover:text-[#007AFF]">Términos y condiciones</a></li>
-              <li><a href="#" className="hover:text-[#007AFF]">Política de privacidad</a></li>
+              <li><Link href="/about" className="hover:text-[#007AFF]">Sobre nosotros</Link></li>
+              <li><Link href="/blog" className="hover:text-[#007AFF]">Blog</Link></li>
+              <li><Link href="/contact" className="hover:text-[#007AFF]">Contacto</Link></li>
+              <li><Link href="/terms" className="hover:text-[#007AFF]">Términos y condiciones</Link></li>
+              <li><Link href="/privacy" className="hover:text-[#007AFF]">Política de privacidad</Link></li>
             </ul>
           </div>
         </div>
@@ -69,9 +69,9 @@ const Footer = () => {
             © 2023-2025 latamvideos.com. Todos los derechos reservados.
           </p>
           <div className="flex space-x-4 text-sm text-[#8E8E93]">
-            <a href="#" className="hover:text-[#007AFF]">Términos</a>
-            <a href="#" className="hover:text-[#007AFF]">Privacidad</a>
-            <a href="#" className="hover:text-[#007AFF]">Cookies</a>
+            <Link href="/terms" className="hover:text-[#007AFF]">Términos</Link>
+            <Link href="/privacy" className="hover:text-[#007AFF]">Privacidad</Link>
+            <Link href="/cookies" className="hover:text-[#007AFF]">Cookies</Link>
           </div>
         </div>
       </div>
