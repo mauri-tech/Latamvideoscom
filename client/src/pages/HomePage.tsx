@@ -2,9 +2,10 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import Hero from '@/components/home/Hero';
 
 /**
- * HomePage test component - Para probar renderización
+ * HomePage - Agregando componentes uno a uno
  */
 const HomePage: React.FC = () => {
   return (
@@ -21,12 +22,8 @@ const HomePage: React.FC = () => {
         <Header />
         
         <main>
-          <div className="container mx-auto py-20 px-4">
-            <h1 className="text-3xl font-bold text-center mb-8">Página de Prueba</h1>
-            <p className="text-center text-lg mb-8">
-              Esta es una página de prueba para verificar si el componente HomePage está cargando correctamente.
-            </p>
-          </div>
+          {/* 1. Hero Section */}
+          <Hero />
         </main>
         
         <Footer />
