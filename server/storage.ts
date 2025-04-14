@@ -419,33 +419,46 @@ export class DatabaseStorage implements IStorage {
   }
   
   async searchEditorProfiles(filters: Record<string, any>): Promise<EditorProfile[]> {
-    let query = db.select().from(editorProfiles);
+    let queryBuilder = db.select().from(editorProfiles);
     
     // Apply filters
     if (filters.maxRate && typeof filters.maxRate === 'number') {
-      query = query.where(lte(editorProfiles.basicRate, filters.maxRate));
+      queryBuilder = queryBuilder.where(lte(editorProfiles.basicRate, filters.maxRate));
     }
     
-    // Sort by view count (most popular first)
-    query = query.orderBy(desc(editorProfiles.viewCount));
+    // Execute the query
+    const results = await queryBuilder.execute();
     
-    return query;
+    // Sort by view count (most popular first)
+    return results.sort((a, b) => {
+      const aCount = a.viewCount || 0;
+      const bCount = b.viewCount || 0;
+      return bCount - aCount;
+    });
   }
   
   async incrementProfileView(id: number): Promise<void> {
+    const profile = await this.getEditorProfile(id);
+    if (!profile) return;
+    
+    const newCount = (profile.viewCount || 0) + 1;
     await db
       .update(editorProfiles)
       .set({
-        viewCount: db.raw(`view_count + 1`)
+        viewCount: newCount
       })
       .where(eq(editorProfiles.id, id));
   }
   
   async incrementContactClick(id: number): Promise<void> {
+    const profile = await this.getEditorProfile(id);
+    if (!profile) return;
+    
+    const newCount = (profile.contactClickCount || 0) + 1;
     await db
       .update(editorProfiles)
       .set({
-        contactClickCount: db.raw(`contact_click_count + 1`)
+        contactClickCount: newCount
       })
       .where(eq(editorProfiles.id, id));
   }
@@ -477,10 +490,15 @@ export class DatabaseStorage implements IStorage {
   }
   
   async deletePortfolioItem(id: number): Promise<boolean> {
-    const result = await db
-      .delete(portfolioItems)
-      .where(eq(portfolioItems.id, id));
-    return result.rowCount > 0;
+    try {
+      await db
+        .delete(portfolioItems)
+        .where(eq(portfolioItems.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting portfolio item:', error);
+      return false;
+    }
   }
   
   // Brief Methods
@@ -493,19 +511,31 @@ export class DatabaseStorage implements IStorage {
   }
   
   async getBriefsByClientId(clientId: number): Promise<Brief[]> {
-    return db
+    const results = await db
       .select()
       .from(briefs)
-      .where(eq(briefs.clientId, clientId))
-      .orderBy(desc(briefs.createdAt));
+      .where(eq(briefs.clientId, clientId));
+    
+    // Sort manually by createdAt in descending order
+    return results.sort((a, b) => {
+      const dateA = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+      const dateB = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+      return dateB - dateA;
+    });
   }
   
   async getBriefsByEditorId(editorId: number): Promise<Brief[]> {
-    return db
+    const results = await db
       .select()
       .from(briefs)
-      .where(eq(briefs.editorId, editorId))
-      .orderBy(desc(briefs.createdAt));
+      .where(eq(briefs.editorId, editorId));
+    
+    // Sort manually by createdAt in descending order
+    return results.sort((a, b) => {
+      const dateA = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+      const dateB = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+      return dateB - dateA;
+    });
   }
   
   async createBrief(data: InsertBrief): Promise<Brief> {
