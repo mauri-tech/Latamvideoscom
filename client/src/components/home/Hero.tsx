@@ -64,7 +64,7 @@ const Hero = () => {
             </div>
           </div>
           
-          <h1 className="text-2xl font-bold text-center tracking-tight mb-4">
+          <h1 className="text-2xl font-bold text-center tracking-tight mb-2 leading-tight">
             Encuentra a profesionales en video de LATAM
           </h1>
           
@@ -108,23 +108,7 @@ const Hero = () => {
             </div>
           </div>
           
-          <div className="flex flex-col gap-3">
-            <Button 
-              className="bg-[#0050FF] hover:bg-[#0040E0] text-white" 
-              size="lg"
-              asChild
-            >
-              <Link href="/register">Registrarse</Link>
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-[#0050FF] text-[#0050FF] hover:bg-blue-50"
-              size="lg"
-              asChild
-            >
-              <Link href="/search">Ver todos</Link>
-            </Button>
-          </div>
+          {/* Botones removidos por petición del usuario */}
         </div>
 
         {/* Versión desktop */}
@@ -132,7 +116,7 @@ const Hero = () => {
           {/* Contenido del texto */}
           <div className="md:w-1/2 mb-12 md:mb-0 pr-8">
             <div className="max-w-lg">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 leading-tight">
                 <span>Encuentra a profesionales</span><br />
                 <span className="text-[#0050FF]">en video de LATAM</span>
               </h1>
@@ -211,23 +195,7 @@ const Hero = () => {
                 </Button>
               </div>
               
-              <div className="flex flex-row gap-4">
-                <Button 
-                  className="bg-[#0050FF] hover:bg-[#0040E0] text-white" 
-                  size="lg"
-                  asChild
-                >
-                  <Link href="/register">Registrarse</Link>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="border-[#0050FF] text-[#0050FF] hover:bg-blue-50"
-                  size="lg"
-                  asChild
-                >
-                  <Link href="/search">Ver todos</Link>
-                </Button>
-              </div>
+              {/* Botones removidos por petición del usuario */}
             </div>
           </div>
           
