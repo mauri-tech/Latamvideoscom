@@ -10,6 +10,7 @@ import FeaturedEditors from '@/components/home/FeaturedEditors';
 import HiringProcess from '@/components/home/HiringProcess';
 import Testimonials from '@/components/home/Testimonials';
 import CTASection from '@/components/home/CTASection';
+import HowItWorks from '@/components/home/HowItWorks';
 
 /**
  * HomePage - Agregando componentes uno a uno
@@ -35,8 +36,8 @@ const HomePage: React.FC = () => {
           {/* 2. Business Section */}
           <BusinessSection />
           
-          {/* 3. Features */}
-          <Features />
+          {/* 3. How It Works */}
+          <HowItWorks />
           
           {/* 4. Editor Interactive Profile */}
           <EditorInteractiveProfile />

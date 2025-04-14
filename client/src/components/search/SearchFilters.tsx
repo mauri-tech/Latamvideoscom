@@ -269,32 +269,32 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
           </Select>
         </div>
         
+        <div>
+          <label htmlFor="software" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+            Software preferido
+          </label>
+          <Select
+            value={filters.software.length > 0 ? filters.software[0].toString() : ""}
+            onValueChange={(value) => {
+              const softwareId = parseInt(value);
+              updateFilter('software', value ? [softwareId] : []);
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Selecciona software" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Cualquier software</SelectItem>
+              {software.map((item) => (
+                <SelectItem key={item.id} value={item.id.toString()}>
+                  {item.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="software">
-            <AccordionTrigger className="text-sm font-medium text-[#1c1c1e]">
-              Software
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="grid grid-cols-1 gap-2 pt-2">
-                {software.map((item) => (
-                  <div key={item.id} className="flex items-center space-x-2">
-                    <Checkbox 
-                      id={`software-${item.id}`}
-                      checked={filters.software.includes(item.id)}
-                      onCheckedChange={() => toggleSoftware(item.id)}
-                    />
-                    <label
-                      htmlFor={`software-${item.id}`}
-                      className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                    >
-                      {item.name}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          
           <AccordionItem value="styles">
             <AccordionTrigger className="text-sm font-medium text-[#1c1c1e]">
               Estilos de edición

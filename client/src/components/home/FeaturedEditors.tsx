@@ -136,7 +136,7 @@ const FeaturedEditors = () => {
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Algunos de los talentos en la plataforma</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">Algunos de los talentos de la plataforma</h2>
           
           <div className="hidden md:flex items-center space-x-2">
             <button 
@@ -249,7 +249,7 @@ const FeaturedEditors = () => {
             size="lg"
             asChild
           >
-            <Link href="/search">Ver todos los talentos</Link>
+            <Link href="/editors">Ver todos los talentos</Link>
           </Button>
         </div>
       </div>
