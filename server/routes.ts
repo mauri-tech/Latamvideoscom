@@ -1951,6 +1951,140 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Messaging API Routes
+  
+  // Get all conversations for current user
+  app.get("/api/conversations", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const currentUser = req.user as Express.User;
+      const conversations = await storage.getConversationsByUserId(currentUser.id);
+      
+      res.json(conversations);
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  // Get a specific conversation with messages
+  app.get("/api/conversations/:id", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const conversationId = parseInt(req.params.id);
+      const currentUser = req.user as Express.User;
+      
+      // Get the conversation
+      const conversation = await storage.getConversation(conversationId);
+      
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Get the messages for this conversation
+      const messages = await storage.getConversationMessages(conversationId);
+      
+      // Mark conversation as read for current user
+      await storage.markConversationAsRead(conversationId, currentUser.id);
+      
+      res.json({
+        conversation,
+        messages
+      });
+    } catch (error) {
+      console.error("Error fetching conversation:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  // Create a new conversation
+  app.post("/api/conversations", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const { subject, participants, initialMessage } = req.body;
+      
+      if (!subject || !participants || !Array.isArray(participants) || participants.length === 0) {
+        return res.status(400).json({ message: "Invalid request: Subject and participants are required" });
+      }
+      
+      const currentUser = req.user as Express.User;
+      
+      // Make sure current user is included in participants
+      const allParticipants = [...new Set([...participants, currentUser.id])].map(id => Number(id));
+      
+      // Create the conversation
+      const conversation = await storage.createConversation(subject, allParticipants);
+      
+      // If there's an initial message, send it
+      if (initialMessage && typeof initialMessage === 'string') {
+        await storage.sendMessage(conversation.id, currentUser.id, initialMessage);
+      }
+      
+      res.status(201).json(conversation);
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  // Send a message in a conversation
+  app.post("/api/conversations/:id/messages", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const conversationId = parseInt(req.params.id);
+      const { content } = req.body;
+      
+      if (!content || typeof content !== 'string') {
+        return res.status(400).json({ message: "Invalid request: Message content is required" });
+      }
+      
+      const currentUser = req.user as Express.User;
+      
+      // Check if conversation exists
+      const conversation = await storage.getConversation(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Send the message
+      const message = await storage.sendMessage(conversationId, currentUser.id, content);
+      
+      res.status(201).json(message);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  // Get user directory (for creating new conversations)
+  app.get("/api/users/directory", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const currentUser = req.user as Express.User;
+      const users = await storage.getUsersDirectory(currentUser.id);
+      
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching user directory:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
   // Create HTTP server
   const httpServer = createServer(app);
   return httpServer;

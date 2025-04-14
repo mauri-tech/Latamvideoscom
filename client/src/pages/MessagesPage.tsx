@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'wouter';
+import { useLocation } from 'wouter';
 import { Helmet } from 'react-helmet';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { Loader2, PaperPlane, Search, RefreshCw } from 'lucide-react';
+import { Loader2, Send, Search, RefreshCw } from 'lucide-react';
 
 // Esquema para enviar mensajes
 const messageSchema = z.object({
@@ -36,7 +36,7 @@ const newConversationSchema = z.object({
 type NewConversationFormValues = z.infer<typeof newConversationSchema>;
 
 const MessagesPage = () => {
-  const navigate = useNavigate();
+  const [, navigate] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -78,17 +78,21 @@ const MessagesPage = () => {
   
   // Obtener conversaciones del usuario
   const { data: conversations, isLoading: isLoadingConversations } = useQuery({
-    queryKey: ['/api/messages/conversations'],
+    queryKey: ['/api/conversations'],
     enabled: !!currentUser?.id,
     refetchInterval: 30000, // Actualizar cada 30 segundos
   });
   
   // Obtener mensajes de una conversación
-  const { data: messages, isLoading: isLoadingMessages } = useQuery({
-    queryKey: ['/api/messages/conversation', activeConversation],
+  const { data: conversationData, isLoading: isLoadingMessages } = useQuery({
+    queryKey: ['/api/conversations', activeConversation],
     enabled: !!activeConversation,
     refetchInterval: 10000, // Actualizar cada 10 segundos
   });
+  
+  // Extraer los mensajes de los datos de la conversación
+  const messages = conversationData?.messages || [];
+  const conversation = conversationData?.conversation;
   
   // Obtener usuarios para nueva conversación
   const { data: users, isLoading: isLoadingUsers } = useQuery({
@@ -96,25 +100,14 @@ const MessagesPage = () => {
     enabled: showNewConversation,
   });
   
-  // Marcar como leído
-  const markAsReadMutation = useMutation({
-    mutationFn: async (conversationId: number) => {
-      const res = await apiRequest('POST', `/api/messages/conversations/${conversationId}/read`);
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages/conversations'] });
-    },
-  });
-  
   // Enviar mensaje
   const sendMessageMutation = useMutation({
     mutationFn: async ({ conversationId, content }: { conversationId: number, content: string }) => {
-      const res = await apiRequest('POST', `/api/messages/conversations/${conversationId}/reply`, { content });
+      const res = await apiRequest('POST', `/api/conversations/${conversationId}/messages`, { content });
       return await res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages/conversation', activeConversation] });
+      queryClient.invalidateQueries({ queryKey: ['/api/conversations', activeConversation] });
       messageForm.reset();
     },
     onError: (error: Error) => {
@@ -128,12 +121,17 @@ const MessagesPage = () => {
   
   // Crear nueva conversación
   const createConversationMutation = useMutation({
-    mutationFn: async (data: NewConversationFormValues) => {
-      const res = await apiRequest('POST', '/api/messages/conversations', data);
+    mutationFn: async (values: NewConversationFormValues) => {
+      const data = {
+        subject: values.subject,
+        participants: [values.recipientId],
+        initialMessage: values.message
+      };
+      const res = await apiRequest('POST', '/api/conversations', data);
       return await res.json();
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages/conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/conversations'] });
       setActiveConversation(data.id);
       setShowNewConversation(false);
       newConversationForm.reset();
@@ -158,10 +156,11 @@ const MessagesPage = () => {
     }
   }, [messages]);
   
-  // Marcar conversación como leída al seleccionarla
+  // Actualizar conversación actual cuando cambia
   useEffect(() => {
     if (activeConversation) {
-      markAsReadMutation.mutate(activeConversation);
+      // La conversación se marcará como leída automáticamente
+      // cuando obtenemos sus mensajes
     }
   }, [activeConversation]);
   
@@ -445,7 +444,7 @@ const MessagesPage = () => {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/messages/conversation', activeConversation] })}
+                      onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/conversations', activeConversation] })}
                     >
                       <RefreshCw className="h-4 w-4 mr-1" />
                       Actualizar
