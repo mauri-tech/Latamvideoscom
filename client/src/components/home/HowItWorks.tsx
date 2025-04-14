@@ -48,7 +48,7 @@ const HowItWorks = () => {
   };
   
   return (
-    <section id="how-it-works" className="py-16 bg-white">
+    <section id="como-funciona" className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Cómo funciona en 3 pasos simples</h2>

@@ -354,8 +354,8 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             Tipo de profesional
           </label>
           <Select
-            value={filters.professionalType || ""}
-            onValueChange={(value) => updateFilter('professionalType', value)}
+            value={filters.professionalType || "all"}
+            onValueChange={(value) => updateFilter('professionalType', value === "all" ? "" : value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Todos los profesionales" />
@@ -376,7 +376,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
           </label>
           <Select
             value={filters.projectType || "todos"}
-            onValueChange={(value) => updateFilter('projectType', value)}
+            onValueChange={(value) => updateFilter('projectType', value === "todos" ? "" : value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Todos los tipos" />
@@ -397,7 +397,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
           </label>
           <Select
             value={filters.country || "all"}
-            onValueChange={(value) => updateFilter('country', value)}
+            onValueChange={(value) => updateFilter('country', value === "all" ? "" : value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Todos los países" />
