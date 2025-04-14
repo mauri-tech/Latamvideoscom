@@ -25,8 +25,8 @@ const HiringProcess = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-12">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="flex items-start">
-              <div className="bg-primary bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <Search className="h-6 w-6 text-primary" />
+              <div className="bg-[#2A9D8F] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
+                <Search className="h-6 w-6 text-[#2A9D8F]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Busca con filtros precisos</h3>
@@ -37,8 +37,8 @@ const HiringProcess = () => {
             </div>
             
             <div className="flex items-start">
-              <div className="bg-primary bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <Eye className="h-6 w-6 text-primary" />
+              <div className="bg-[#2A9D8F] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
+                <Eye className="h-6 w-6 text-[#2A9D8F]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Revisa portafolios</h3>
@@ -49,8 +49,8 @@ const HiringProcess = () => {
             </div>
             
             <div className="flex items-start">
-              <div className="bg-primary bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <MessageSquare className="h-6 w-6 text-primary" />
+              <div className="bg-[#2A9D8F] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
+                <MessageSquare className="h-6 w-6 text-[#2A9D8F]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Contacta directamente</h3>
@@ -74,7 +74,7 @@ const HiringProcess = () => {
                   </label>
                   <select 
                     id="projectType" 
-                    className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]"
                     defaultValue=""
                   >
                     <option value="">Todos los tipos</option>
@@ -92,7 +92,7 @@ const HiringProcess = () => {
                   </label>
                   <select 
                     id="country" 
-                    className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]"
                     defaultValue=""
                   >
                     <option value="">Todos los países</option>
@@ -111,27 +111,27 @@ const HiringProcess = () => {
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" className="rounded text-primary focus:ring-primary" />
+                      <input type="checkbox" className="rounded text-[#2A9D8F] focus:ring-[#2A9D8F]" />
                       <span>Premiere Pro</span>
                     </label>
                     <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" className="rounded text-primary focus:ring-primary" />
+                      <input type="checkbox" className="rounded text-[#2A9D8F] focus:ring-[#2A9D8F]" />
                       <span>Final Cut Pro</span>
                     </label>
                     <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" className="rounded text-primary focus:ring-primary" />
+                      <input type="checkbox" className="rounded text-[#2A9D8F] focus:ring-[#2A9D8F]" />
                       <span>DaVinci Resolve</span>
                     </label>
                     <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" className="rounded text-primary focus:ring-primary" />
+                      <input type="checkbox" className="rounded text-[#2A9D8F] focus:ring-[#2A9D8F]" />
                       <span>After Effects</span>
                     </label>
                     <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" className="rounded text-primary focus:ring-primary" />
+                      <input type="checkbox" className="rounded text-[#2A9D8F] focus:ring-[#2A9D8F]" />
                       <span>CapCut</span>
                     </label>
                     <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" className="rounded text-primary focus:ring-primary" />
+                      <input type="checkbox" className="rounded text-[#2A9D8F] focus:ring-[#2A9D8F]" />
                       <span>iMovie</span>
                     </label>
                   </div>
@@ -159,14 +159,14 @@ const HiringProcess = () => {
                 </div>
                 
                 <Link href="/search">
-                  <Button className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-[#0056B3] transition font-medium">
+                  <Button className="w-full bg-[#2A9D8F] text-white px-4 py-2 rounded-md hover:bg-[#21867A] transition font-medium">
                     Buscar editores
                   </Button>
                 </Link>
               </form>
             </div>
             
-            <div className="bg-primary text-white p-8 md:p-12 flex flex-col justify-center">
+            <div className="bg-[#2A9D8F] text-white p-8 md:p-12 flex flex-col justify-center">
               <h3 className="text-2xl font-semibold mb-6">¿Necesitas ayuda con tu búsqueda?</h3>
               <p className="mb-6">
                 Si prefieres que nosotros te ayudemos a encontrar al editor perfecto para tu proyecto, cuéntanos qué necesitas y te conectaremos con los mejores talentos.
@@ -174,7 +174,7 @@ const HiringProcess = () => {
               <Link href="/contact" className="inline-block">
                 <Button 
                   variant="secondary" 
-                  className="px-6 py-3 bg-white text-primary font-medium rounded-md hover:bg-gray-100 transition w-fit"
+                  className="px-6 py-3 bg-white text-[#2A9D8F] font-medium rounded-md hover:bg-gray-100 transition w-fit"
                 >
                   Solicitar recomendación
                 </Button>
