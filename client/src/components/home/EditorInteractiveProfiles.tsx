@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, ChevronLeft, ChevronRight, CheckCircle, Clock } from 'lucide-react';
+import { Star, CheckCircle, Briefcase, Clock, Monitor } from 'lucide-react';
 
 // Tipo para los editores recomendados
 interface Editor {
@@ -58,104 +58,13 @@ const recommendedEditors: Editor[] = [
       currency: "USD"
     },
     experience: 7
-  },
-  {
-    id: 3,
-    name: "Gabriel Fernández",
-    profilePicture: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-    location: "Buenos Aires",
-    verified: true,
-    rating: 4.9,
-    reviewCount: 73,
-    specialties: ["Editor de cine", "Montajista"],
-    tags: ["Largometrajes", "Series", "Documental"],
-    portfolioCount: 18,
-    price: {
-      min: 450,
-      currency: "USD"
-    },
-    experience: 12
-  },
-  {
-    id: 4,
-    name: "Sofía Ramírez",
-    profilePicture: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-    location: "Santiago",
-    verified: true,
-    rating: 4.7,
-    reviewCount: 85,
-    specialties: ["VFX", "3D Animation"],
-    tags: ["Películas", "Videojuegos", "Publicidad"],
-    portfolioCount: 31,
-    price: {
-      min: 350,
-      currency: "USD"
-    },
-    experience: 8
-  },
-  {
-    id: 5,
-    name: "Carlos Mendoza",
-    profilePicture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-    location: "Lima",
-    verified: false,
-    rating: 4.5,
-    reviewCount: 42,
-    specialties: ["Editor deportivo", "Videógrafo"],
-    tags: ["Deportes extremos", "Eventos", "Documentales"],
-    portfolioCount: 15,
-    price: {
-      min: 180,
-      currency: "USD"
-    },
-    experience: 4
   }
 ];
 
 const EditorInteractiveProfiles = () => {
-  const [startIndex, setStartIndex] = useState(0);
-  const [itemsToShow, setItemsToShow] = useState(3);
-  const [visibleItems, setVisibleItems] = useState<Editor[]>([]);
-  
-  // Determinar el número de items a mostrar basado en el ancho de la pantalla
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width > 1024) {
-        setItemsToShow(3);
-      } else if (width > 640) {
-        setItemsToShow(2);
-      } else {
-        setItemsToShow(1);
-      }
-    };
-    
-    // Ejecutar al montar y en cada cambio de tamaño
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    
-    // Limpiar event listener al desmontar
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  // Actualizar los items visibles cuando cambia el índice de inicio o los items a mostrar
-  useEffect(() => {
-    setVisibleItems(recommendedEditors.slice(startIndex, startIndex + itemsToShow));
-  }, [startIndex, itemsToShow]);
-  
-  // Navegar por el carrusel
-  const next = () => {
-    setStartIndex(prev => 
-      prev + itemsToShow >= recommendedEditors.length ? 0 : prev + 1
-    );
-  };
-  
-  const prev = () => {
-    setStartIndex(prev => 
-      prev === 0 ? Math.max(0, recommendedEditors.length - itemsToShow) : prev - 1
-    );
-  };
-  
+  const [selectedEditor, setSelectedEditor] = useState<Editor>(recommendedEditors[0]);
+  const [activeTab, setActiveTab] = useState<string>('portafolio');
+
   // Renderizar estrellas para el rating
   const renderRating = (rating: number) => {
     return (
@@ -170,154 +79,209 @@ const EditorInteractiveProfiles = () => {
       </div>
     );
   };
-  
+
   return (
-    <div className="py-20 bg-[#F8FAFF]">
+    <div className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-          <div>
-            <h2 className="text-3xl font-bold text-[#041C32] relative">
-              Editores Recomendados
-              <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-gradient-to-r from-[#0050FF] to-[#A0C4FF]"></span>
-            </h2>
-            <p className="text-[#6B7280] mt-4 max-w-2xl">
-              Descubre a los mejores editores de video en Latinoamérica, seleccionados por su calidad, experiencia y reputación.
-            </p>
+        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Perfiles de Editores Destacados</h2>
+        
+        {/* Área del perfil interactivo */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-10 border border-gray-200">
+          {/* Cabecera del perfil */}
+          <div className="flex flex-col md:flex-row">
+            {/* Foto de perfil y detalles básicos */}
+            <div className="md:w-1/3 flex flex-col items-center p-6 text-center border-r border-gray-200">
+              <img 
+                src={selectedEditor.profilePicture} 
+                alt={selectedEditor.name}
+                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg mb-4"
+              />
+              <h3 className="text-xl font-bold flex items-center gap-1">
+                {selectedEditor.name}
+                {selectedEditor.verified && (
+                  <span className="text-[#007AFF]" title="Perfil verificado">
+                    <CheckCircle className="w-4 h-4 fill-[#007AFF]" />
+                  </span>
+                )}
+              </h3>
+              <p className="text-gray-600 text-sm mb-3">{selectedEditor.location}</p>
+              
+              <div className="flex justify-center mb-4">
+                {renderRating(selectedEditor.rating)}
+                <span className="text-gray-500 text-sm ml-1">({selectedEditor.reviewCount})</span>
+              </div>
+              
+              <div className="flex flex-wrap gap-2 justify-center mb-4">
+                {selectedEditor.specialties.map((specialty, idx) => (
+                  <Badge key={idx} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
+                    {specialty}
+                  </Badge>
+                ))}
+              </div>
+              
+              <div className="grid grid-cols-3 gap-2 w-full">
+                <div className="bg-gray-50 rounded p-2 text-center">
+                  <p className="text-sm font-bold text-[#0050FF]">{selectedEditor.portfolioCount}</p>
+                  <p className="text-xs text-gray-500">Proyectos</p>
+                </div>
+                <div className="bg-gray-50 rounded p-2 text-center">
+                  <p className="text-sm font-bold text-[#0050FF]">${selectedEditor.price.min}</p>
+                  <p className="text-xs text-gray-500">Desde</p>
+                </div>
+                <div className="bg-gray-50 rounded p-2 text-center">
+                  <p className="text-sm font-bold text-[#0050FF]">{selectedEditor.experience}</p>
+                  <p className="text-xs text-gray-500">Años exp.</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Contenido de las pestañas */}
+            <div className="md:w-2/3 flex flex-col">
+              {/* Barra de pestañas */}
+              <div className="flex border-b border-gray-200">
+                <button 
+                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  onClick={() => setActiveTab('portafolio')}
+                >
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="w-4 h-4" />
+                    <span>Portafolio</span>
+                  </div>
+                </button>
+                <button 
+                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  onClick={() => setActiveTab('equipamiento')}
+                >
+                  <div className="flex items-center gap-2">
+                    <Monitor className="w-4 h-4" />
+                    <span>Equipamiento</span>
+                  </div>
+                </button>
+                <button 
+                  className={`px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                  onClick={() => setActiveTab('tarifas')}
+                >
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    <span>Tarifas</span>
+                  </div>
+                </button>
+              </div>
+              
+              {/* Contenido de la pestaña */}
+              <div className="p-6">
+                {activeTab === 'portafolio' && (
+                  <div>
+                    <h4 className="text-lg font-medium mb-4">Proyectos destacados</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
+                        <p className="text-gray-400">Proyecto 1</p>
+                      </div>
+                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
+                        <p className="text-gray-400">Proyecto 2</p>
+                      </div>
+                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
+                        <p className="text-gray-400">Proyecto 3</p>
+                      </div>
+                      <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
+                        <p className="text-gray-400">Proyecto 4</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {activeTab === 'equipamiento' && (
+                  <div>
+                    <h4 className="text-lg font-medium mb-4">Equipo de trabajo</h4>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                        <span>MacBook Pro M1 Max</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                        <span>Cámara Sony A7III</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                        <span>Micrófono Rode PodMic</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                        <span>Iluminación Aputure</span>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+                
+                {activeTab === 'tarifas' && (
+                  <div>
+                    <h4 className="text-lg font-medium mb-4">Paquetes y tarifas</h4>
+                    <div className="space-y-4">
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h5 className="font-medium">Paquete Básico</h5>
+                        <p className="text-[#0050FF] font-bold">${selectedEditor.price.min}</p>
+                        <p className="text-sm text-gray-600">Edición básica de video, hasta 5 minutos de duración.</p>
+                      </div>
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h5 className="font-medium">Paquete Estándar</h5>
+                        <p className="text-[#0050FF] font-bold">${selectedEditor.price.min * 2}</p>
+                        <p className="text-sm text-gray-600">Edición profesional con efectos básicos, hasta 10 minutos.</p>
+                      </div>
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h5 className="font-medium">Paquete Premium</h5>
+                        <p className="text-[#0050FF] font-bold">${selectedEditor.price.min * 3}</p>
+                        <p className="text-sm text-gray-600">Edición avanzada con efectos, corrección de color y hasta 20 minutos.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           
-          <div className="flex items-center space-x-3">
-            <button 
-              onClick={prev}
-              className="p-3 rounded-full border border-[#E5E5EA] bg-white hover:border-[#0050FF]/30 transition-colors shadow-sm"
-              aria-label="Anterior"
+          {/* Botones de acción */}
+          <div className="p-4 bg-gray-50 flex justify-end">
+            <Button 
+              className="bg-[#0050FF] hover:bg-[#0069d9] text-white"
+              asChild
             >
-              <ChevronLeft className="w-5 h-5 text-[#0050FF]" />
-            </button>
-            <button 
-              onClick={next}
-              className="p-3 rounded-full border border-[#E5E5EA] bg-white hover:border-[#0050FF]/30 transition-colors shadow-sm"
-              aria-label="Siguiente"
-            >
-              <ChevronRight className="w-5 h-5 text-[#0050FF]" />
-            </button>
+              <Link href={`/editor/${selectedEditor.id}`}>Ver perfil completo</Link>
+            </Button>
           </div>
         </div>
         
-        {/* Carrusel de editores */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {visibleItems.map((editor, index) => (
-            <div 
-              key={editor.id} 
-              className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 h-full flex flex-col transition-all duration-500 opacity-0 animate-fade-in"
-              style={{ 
-                animationDelay: `${index * 150}ms`,
-                animationFillMode: 'forwards'
-              }}
+        {/* Selector de perfiles */}
+        <div className="flex justify-center mb-10 gap-3">
+          {recommendedEditors.map((editor) => (
+            <button
+              key={editor.id}
+              className={`relative overflow-hidden rounded-full transition-all ${selectedEditor.id === editor.id ? 'ring-2 ring-[#0050FF] ring-offset-2' : 'opacity-60 hover:opacity-100'}`}
+              onClick={() => setSelectedEditor(editor)}
             >
-              {/* Cabecera */}
-              <div className="relative">
-                <div className="gradient-premium-blue h-28 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[#0A0A0A]/30"></div>
-                </div>
-                <div className="absolute top-14 left-0 w-full flex flex-col items-center">
-                  <img 
-                    src={editor.profilePicture} 
-                    alt={editor.name}
-                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl"
-                  />
-                </div>
-              </div>
-              
-              {/* Información del editor */}
-              <div className="pt-16 px-4 pb-4 flex-1 flex flex-col">
-                <div className="text-center mb-2">
-                  <div className="flex items-center justify-center">
-                    <h3 className="font-bold text-lg">{editor.name}</h3>
-                    {editor.verified && (
-                      <div className="ml-1 text-[#007AFF]" title="Perfil verificado">
-                        <CheckCircle className="w-4 h-4 fill-[#007AFF]" />
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-gray-600 text-sm">{editor.location}</p>
-                </div>
-                
-                <div className="flex justify-center mb-4">
-                  {renderRating(editor.rating)}
-                  <span className="text-gray-500 text-sm ml-1">({editor.reviewCount})</span>
-                </div>
-                
-                {/* Especialidades */}
-                <div className="mb-3">
-                  <div className="flex flex-wrap gap-1 justify-center">
-                    {editor.specialties.map((specialty, idx) => (
-                      <Badge key={idx} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
-                        {specialty}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Tags */}
-                <div className="mb-4">
-                  <div className="flex flex-wrap gap-1 justify-center">
-                    {editor.tags.map((tag, idx) => (
-                      <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Información destacada */}
-                <div className="grid grid-cols-3 gap-2 mb-4 text-center mt-auto">
-                  <div className="gradient-card-soft p-2 rounded-lg shadow-sm border border-[#E5E5EA]">
-                    <p className="text-sm font-bold text-[#0050FF]">{editor.portfolioCount}</p>
-                    <p className="text-xs text-gray-600">Proyectos</p>
-                  </div>
-                  <div className="gradient-card-soft p-2 rounded-lg shadow-sm border border-[#E5E5EA]">
-                    <p className="text-sm font-bold text-[#0050FF]">
-                      ${editor.price.min}
-                    </p>
-                    <p className="text-xs text-gray-600">Desde</p>
-                  </div>
-                  <div className="gradient-card-soft p-2 rounded-lg shadow-sm border border-[#E5E5EA]">
-                    <div className="flex items-center justify-center">
-                      <Clock className="w-3 h-3 text-[#0050FF] mr-1" />
-                      <p className="text-sm font-bold text-[#0050FF]">{editor.experience}</p>
-                    </div>
-                    <p className="text-xs text-gray-600">Años exp.</p>
-                  </div>
-                </div>
-                
-                {/* CTA */}
-                <Button 
-                  className="w-full bg-gradient-to-r from-[#0050FF] to-[#0093E9] hover:opacity-90 text-white shadow-md"
-                  asChild
-                >
-                  <Link href={`/editor/${editor.id}`}>Ver perfil</Link>
-                </Button>
-              </div>
-            </div>
+              <img 
+                src={editor.profilePicture} 
+                alt={editor.name}
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              {editor.verified && (
+                <span className="absolute bottom-0 right-0 text-[#007AFF] bg-white rounded-full p-0.5 shadow">
+                  <CheckCircle className="w-3 h-3 fill-[#007AFF]" />
+                </span>
+              )}
+            </button>
           ))}
         </div>
         
         {/* Botón para explorar todos */}
-        <div className="mt-16 text-center">
-          <div className="relative inline-block">
-            <Button 
-              variant="outline" 
-              className="border-[#0050FF] text-[#0050FF] hover:bg-[#0050FF]/5 text-base px-8 py-6 relative z-10 overflow-hidden shadow-sm"
-              asChild
-            >
-              <Link href="/search">
-                <span className="relative z-10">Explorar todos los editores</span>
-                <span className="absolute inset-0 bg-gradient-to-r from-[#0050FF]/10 to-[#80D0C7]/10 opacity-0 hover:opacity-100 transition-opacity"></span>
-              </Link>
-            </Button>
-            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-r from-[#0050FF] to-[#80D0C7] rounded-full opacity-20 blur-md"></div>
-            <div className="absolute -top-2 -left-2 w-10 h-10 bg-gradient-to-r from-[#0050FF] to-[#80D0C7] rounded-full opacity-20 blur-md"></div>
-          </div>
+        <div className="text-center">
+          <Button 
+            variant="outline" 
+            className="border-[#0050FF] text-[#0050FF] hover:bg-[#0050FF]/5"
+            asChild
+          >
+            <Link href="/search">Explorar todos los editores</Link>
+          </Button>
         </div>
       </div>
     </div>
