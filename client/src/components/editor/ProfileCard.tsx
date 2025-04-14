@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, EyeIcon, MailIcon } from 'lucide-react';
+import { CalendarDays, MapPin, EyeIcon, MailIcon, UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,6 +14,7 @@ interface ProfileCardProps {
     software: string[];
     styles: string[];
     experience: string;
+    bio?: string;
     basicRate: number;
     viewCount: number;
     country: string;
@@ -81,6 +82,16 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
           </div>
           
           <div className="md:w-2/3">
+            <div className="mb-6 border-b pb-4">
+              <h3 className="text-md font-medium mb-2 flex items-center">
+                <UserIcon className="h-4 w-4 mr-2 text-primary" />
+                Acerca de mí
+              </h3>
+              <p className="text-sm leading-relaxed text-[#1c1c1e]">
+                {editor.bio || `Soy editor de video con ${editor.experience}. Especializado en crear contenido visual impactante para diversas plataformas.`}
+              </p>
+            </div>
+            
             <div className="mb-4">
               <h3 className="text-sm uppercase text-[#8E8E93] font-medium mb-2">Software</h3>
               <div className="flex flex-wrap gap-2">

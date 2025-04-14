@@ -71,12 +71,13 @@ const EditorProfilePage = () => {
   const mockEditorData = {
     id: editorId,
     name: "Carlos Mendoza",
-    profilePicture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=96&h=96&q=80",
+    profilePicture: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=600",
     location: "Ciudad de México, México",
     country: "México",
     software: ["Premiere Pro", "After Effects"],
     styles: ["YouTube", "Reels"],
     experience: "5 años de experiencia en edición de videos para marcas y creadores de contenido.",
+    bio: "Editor de video profesional especializado en contenido para redes sociales y plataformas digitales. Mi enfoque se centra en contar historias cautivadoras mediante una edición dinámica y visualmente atractiva.",
     equipment: [
       { type: "Computadora", description: "MacBook Pro M1, 16GB RAM, 1TB SSD" },
       { type: "Cámara", description: "Sony A7III" },
@@ -91,24 +92,24 @@ const EditorProfilePage = () => {
   const mockPortfolioItems = [
     {
       id: 1,
-      title: "Campaña de marketing digital",
-      description: "Serie de videos para redes sociales de una reconocida marca de ropa deportiva.",
-      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      thumbnailUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=337&q=80",
+      title: "Campaña Viral para Marca Internacional",
+      description: "Edición de video de alta calidad con efectos visuales y transiciones optimizadas para redes sociales.",
+      videoUrl: "https://www.youtube.com/watch?v=Gt21qy7m15k",
+      thumbnailUrl: "https://i3.ytimg.com/vi/Gt21qy7m15k/maxresdefault.jpg",
     },
     {
       id: 2,
-      title: "Intro para canal de YouTube",
-      description: "Animación de logotipo e intro para canal de tecnología con más de 500K suscriptores.",
-      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      thumbnailUrl: "https://images.unsplash.com/photo-1626379591937-29b8b9653261?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=337&q=80",
+      title: "Contenido de Formato Corto - Reels y TikTok",
+      description: "Serie de clips virales con edición dinámica y efectos visuales impactantes para maximizar engagement.",
+      videoUrl: "https://www.youtube.com/watch?v=hlRa5XSNDfA",
+      thumbnailUrl: "https://i3.ytimg.com/vi/hlRa5XSNDfA/maxresdefault.jpg",
     },
     {
       id: 3,
-      title: "Resumen de evento corporativo",
-      description: "Video resumen de una conferencia internacional de tecnología.",
-      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      thumbnailUrl: "https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=337&q=80",
+      title: "Resumen de Evento Corporativo Premium",
+      description: "Edición profesional de evento empresarial con múltiples ángulos de cámara y gráficos corporativos.",
+      videoUrl: "https://www.youtube.com/watch?v=dyBrdZRgFqU",
+      thumbnailUrl: "https://i3.ytimg.com/vi/dyBrdZRgFqU/maxresdefault.jpg",
     }
   ];
   
