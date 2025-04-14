@@ -1961,7 +1961,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const currentUser = req.user as Express.User;
+      console.log("Fetching conversations for user:", currentUser.id);
       const conversations = await storage.getConversationsByUserId(currentUser.id);
+      console.log("Conversations found:", conversations.length);
       
       res.json(conversations);
     } catch (error) {
