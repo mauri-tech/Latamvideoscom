@@ -70,48 +70,16 @@ const DashboardPage = () => {
     enabled: !!user && user.userType === 'client',
   });
   
-  // Mock data for stats
-  const mockProfile = {
-    id: 1,
-    viewCount: 253,
-    contactClickCount: 47,
+  // Default empty data structures
+  const emptyProfile = {
+    id: 0,
+    viewCount: 0,
+    contactClickCount: 0,
   };
   
-  const mockPortfolioItems = [
-    { id: 1, title: "Campaña de marketing digital", videoUrl: "https://youtube.com/watch?v=abc123" },
-    { id: 2, title: "Intro para canal de YouTube", videoUrl: "https://youtube.com/watch?v=def456" },
-    { id: 3, title: "Resumen de evento corporativo", videoUrl: "https://youtube.com/watch?v=ghi789" }
-  ];
+  const emptyPortfolioItems: any[] = [];
   
-  const mockBriefs = [
-    { 
-      id: 1, 
-      clientName: "Agencia Digital XYZ",
-      projectType: "comercial", 
-      description: "Video promocional para campaña de verano", 
-      budget: 300, 
-      status: "pending",
-      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) // 2 days ago
-    },
-    { 
-      id: 2, 
-      clientName: "Canal de YouTube",
-      projectType: "youtube", 
-      description: "Edición semanal de video de gaming", 
-      budget: 100, 
-      status: "accepted",
-      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
-    },
-    { 
-      id: 3, 
-      clientName: "Startup Tech",
-      projectType: "corporativo", 
-      description: "Video explicativo de producto SaaS", 
-      budget: 500, 
-      status: "completed",
-      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) // 15 days ago
-    }
-  ];
+  const emptyBriefs: any[] = [];
   
   // Chart data
   const viewsData = [
@@ -124,12 +92,12 @@ const DashboardPage = () => {
     { name: 'Dom', views: 39 },
   ];
   
-  // Use real data if available, otherwise use mock data
-  const profile = editorProfile || mockProfile;
-  const portfolio = portfolioItems.length > 0 ? portfolioItems : mockPortfolioItems;
+  // Use real data if available, otherwise use empty data
+  const profile = editorProfile || emptyProfile;
+  const portfolio = portfolioItems.length > 0 ? portfolioItems : emptyPortfolioItems;
   const briefs = user?.userType === 'editor' 
-    ? (editorBriefs.length > 0 ? editorBriefs : mockBriefs)
-    : (clientBriefs.length > 0 ? clientBriefs : mockBriefs);
+    ? (editorBriefs.length > 0 ? editorBriefs : emptyBriefs)
+    : (clientBriefs.length > 0 ? clientBriefs : emptyBriefs);
   
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('es-ES', {

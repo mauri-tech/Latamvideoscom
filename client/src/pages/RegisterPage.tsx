@@ -20,6 +20,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import MultiStepForm from '@/components/editor/MultiStepForm';
 import { useAuth, type RegisterData } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 import { Helmet } from 'react-helmet';
 
 // Validation schema
