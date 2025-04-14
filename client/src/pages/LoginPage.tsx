@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,10 +14,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth, type LoginData } from '@/hooks/useAuth';
 import { Helmet } from 'react-helmet';
 
 // Validation schema
@@ -29,10 +29,15 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
-  const [submitting, setSubmitting] = useState(false);
-  const { toast } = useToast();
   const [_, navigate] = useLocation();
-  const { login } = useAuth();
+  const { user, loginMutation } = useAuth();
+  
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
   
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -43,39 +48,16 @@ const LoginPage = () => {
   });
   
   const onSubmit = async (values: LoginFormValues) => {
-    setSubmitting(true);
+    const loginData: LoginData = {
+      email: values.email,
+      password: values.password
+    };
     
-    try {
-      // In a real implementation, this would make an API call to authenticate
-      // For MVP, we'll simulate a successful login
-      
-      // Fake login - in production this would be a real API call
-      setTimeout(() => {
-        // Simulate successful login
-        login({
-          id: 1,
-          email: values.email,
-          name: 'Usuario de Prueba',
-          userType: 'editor',
-        });
-        
-        toast({
-          title: "Inicio de sesión exitoso",
-          description: "Bienvenido de nuevo a EditoresLATAM",
-        });
-        
-        // Redirect to dashboard
+    loginMutation.mutate(loginData, {
+      onSuccess: () => {
         navigate('/dashboard');
-        setSubmitting(false);
-      }, 1500);
-    } catch (error) {
-      toast({
-        title: "Error al iniciar sesión",
-        description: "Las credenciales son incorrectas. Verifica tu correo y contraseña.",
-        variant: "destructive"
-      });
-      setSubmitting(false);
-    }
+      }
+    });
   };
 
   return (
