@@ -152,24 +152,26 @@ const mockStats = [
 
 const AdminPanel: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState("overview");
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   // Estado para el modo autenticado (en producción esto vendría de un hook de autenticación)
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   // Simulación de verificación de autenticación
-  React.useEffect(() => {
+  useEffect(() => {
     // En un caso real, aquí verificaríamos si el usuario tiene rol de administrador
     // Si no lo tiene, redirigiríamos
     if (!isAuthenticated) {
-      navigate('/');
+      setLocation('/');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, setLocation]);
 
   // Badge de estado con colores según el valor
   const getStatusBadge = (status: string) => {
-    let variant: "default" | "secondary" | "destructive" | "outline" = "default";
+    type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
+    let variant: BadgeVariant = "default";
     let bgColor = "bg-blue-100 text-blue-800 hover:bg-blue-100";
+    let useCustomBg = true;
     
     switch(status.toLowerCase()) {
       case 'activo':
@@ -177,6 +179,7 @@ const AdminPanel: React.FC = () => {
         break;
       case 'suspendido':
         variant = "destructive";
+        useCustomBg = false;
         break;
       case 'pendiente':
         bgColor = "bg-amber-100 text-amber-800 hover:bg-amber-100";
@@ -189,10 +192,11 @@ const AdminPanel: React.FC = () => {
         break;
       case 'retrasado':
         variant = "destructive";
+        useCustomBg = false;
         break;
     }
     
-    if (variant === "default" || variant === "secondary") {
+    if (useCustomBg) {
       return <Badge className={bgColor}>{status}</Badge>;
     }
     

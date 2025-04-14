@@ -31,6 +31,12 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
     software: initialFilters.software || [],
     styles: initialFilters.styles || [],
     maxRate: initialFilters.maxRate || 150,
+    experienceLevel: initialFilters.experienceLevel || '',
+    languages: initialFilters.languages || [],
+    camera: initialFilters.camera || [],
+    availability: initialFilters.availability || '',
+    deliveryTime: initialFilters.deliveryTime || '',
+    rating: initialFilters.rating || 0,
   });
   
   const [isExpanded, setIsExpanded] = useState(false);
@@ -69,6 +75,46 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
     { value: "corporativo", label: "Video corporativo" }
   ];
   
+  const experienceLevels = [
+    { value: "", label: "Cualquier nivel" },
+    { value: "junior", label: "Junior (1-2 años)" },
+    { value: "mid", label: "Intermedio (3-5 años)" },
+    { value: "senior", label: "Senior (5+ años)" },
+    { value: "expert", label: "Experto (10+ años)" }
+  ];
+  
+  const languages = [
+    { id: 1, name: "Español" },
+    { id: 2, name: "Inglés" },
+    { id: 3, name: "Portugués" },
+    { id: 4, name: "Francés" }
+  ];
+  
+  const cameraEquipment = [
+    { id: 1, name: "Sony Alpha" },
+    { id: 2, name: "Canon EOS" },
+    { id: 3, name: "Blackmagic" },
+    { id: 4, name: "DJI (Drones)" },
+    { id: 5, name: "GoPro" }
+  ];
+  
+  const availabilityOptions = [
+    { value: "", label: "Cualquier disponibilidad" },
+    { value: "fulltime", label: "Tiempo completo" },
+    { value: "parttime", label: "Tiempo parcial" },
+    { value: "weekends", label: "Fines de semana" },
+    { value: "evenings", label: "Tardes/Noches" }
+  ];
+  
+  const deliveryTimeOptions = [
+    { value: "", label: "Cualquier plazo" },
+    { value: "24h", label: "24 horas o menos" },
+    { value: "3days", label: "1-3 días" },
+    { value: "week", label: "1 semana" },
+    { value: "2weeks", label: "2 semanas" },
+    { value: "custom", label: "Personalizado" }
+  ];
+  
   const updateFilter = (key: string, value: any) => {
     // Si el valor es "todos" para el país, convertirlo a string vacío para mantener la lógica existente
     const processedValue = key === 'country' && value === 'todos' ? '' : value;
@@ -103,6 +149,32 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
     updateFilter('styles', currentStyles);
   };
   
+  const toggleLanguage = (id: number) => {
+    const currentLangs = [...filters.languages];
+    const index = currentLangs.indexOf(id);
+    
+    if (index === -1) {
+      currentLangs.push(id);
+    } else {
+      currentLangs.splice(index, 1);
+    }
+    
+    updateFilter('languages', currentLangs);
+  };
+  
+  const toggleCamera = (id: number) => {
+    const currentCameras = [...filters.camera];
+    const index = currentCameras.indexOf(id);
+    
+    if (index === -1) {
+      currentCameras.push(id);
+    } else {
+      currentCameras.splice(index, 1);
+    }
+    
+    updateFilter('camera', currentCameras);
+  };
+  
   const resetFilters = () => {
     const resetValues = {
       projectType: '',
@@ -110,6 +182,12 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
       software: [],
       styles: [],
       maxRate: 150,
+      experienceLevel: '',
+      languages: [],
+      camera: [],
+      availability: '',
+      deliveryTime: '',
+      rating: 0,
     };
     
     setFilters(resetValues);
@@ -258,6 +336,121 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             <span>$30</span>
             <span>$300+</span>
           </div>
+        </div>
+        
+        <div>
+          <label htmlFor="experienceLevel" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+            Nivel de experiencia
+          </label>
+          <Select
+            value={filters.experienceLevel}
+            onValueChange={(value) => updateFilter('experienceLevel', value)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Cualquier nivel" />
+            </SelectTrigger>
+            <SelectContent>
+              {experienceLevels.map((level) => (
+                <SelectItem key={level.value} value={level.value}>
+                  {level.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <Accordion type="multiple" className="w-full">
+          <AccordionItem value="languages">
+            <AccordionTrigger className="text-sm font-medium text-[#1c1c1e]">
+              Idiomas
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="grid grid-cols-1 gap-2 pt-2">
+                {languages.map((language) => (
+                  <div key={language.id} className="flex items-center space-x-2">
+                    <Checkbox 
+                      id={`language-${language.id}`}
+                      checked={filters.languages.includes(language.id)}
+                      onCheckedChange={() => toggleLanguage(language.id)}
+                    />
+                    <label
+                      htmlFor={`language-${language.id}`}
+                      className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      {language.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          
+          <AccordionItem value="camera">
+            <AccordionTrigger className="text-sm font-medium text-[#1c1c1e]">
+              Equipo de cámara
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="grid grid-cols-1 gap-2 pt-2">
+                {cameraEquipment.map((camera) => (
+                  <div key={camera.id} className="flex items-center space-x-2">
+                    <Checkbox 
+                      id={`camera-${camera.id}`}
+                      checked={filters.camera.includes(camera.id)}
+                      onCheckedChange={() => toggleCamera(camera.id)}
+                    />
+                    <label
+                      htmlFor={`camera-${camera.id}`}
+                      className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      {camera.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
+        <div>
+          <label htmlFor="availability" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+            Disponibilidad
+          </label>
+          <Select
+            value={filters.availability}
+            onValueChange={(value) => updateFilter('availability', value)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Cualquier disponibilidad" />
+            </SelectTrigger>
+            <SelectContent>
+              {availabilityOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div>
+          <label htmlFor="deliveryTime" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+            Tiempo de entrega
+          </label>
+          <Select
+            value={filters.deliveryTime}
+            onValueChange={(value) => updateFilter('deliveryTime', value)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Cualquier plazo" />
+            </SelectTrigger>
+            <SelectContent>
+              {deliveryTimeOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         
         <Button 

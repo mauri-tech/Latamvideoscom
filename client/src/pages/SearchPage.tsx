@@ -12,6 +12,12 @@ const SearchPage = () => {
     software: [],
     styles: [],
     maxRate: 150,
+    experienceLevel: '',
+    languages: [],
+    camera: [],
+    availability: '',
+    deliveryTime: '',
+    rating: 0,
   });
 
   const handleFilterChange = (newFilters: any) => {
