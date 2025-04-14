@@ -3,15 +3,9 @@ import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
-import Features from '@/components/home/Features';
-import EditorInteractiveProfiles from '@/components/home/EditorInteractiveProfiles';
 import BusinessSection from '@/components/home/BusinessSection';
-import FeaturedEditors from '@/components/home/FeaturedEditors';
-import HiringProcess from '@/components/home/HiringProcess';
-import Testimonials from '@/components/home/Testimonials';
-import CTASection from '@/components/home/CTASection';
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
@@ -23,13 +17,7 @@ const HomePage: React.FC = () => {
       
       <main>
         <Hero />
-        <Features />
-        <EditorInteractiveProfiles />
         <BusinessSection />
-        <FeaturedEditors />
-        <HiringProcess />
-        <Testimonials />
-        <CTASection />
       </main>
       
       <Footer />
