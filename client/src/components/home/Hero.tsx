@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
+import editorImage from '../../assets/editor-profile.png';
 
 const Hero = () => {
   return (
@@ -45,7 +46,7 @@ const Hero = () => {
             <div className="bg-gradient-to-br from-[#F5F9FF] to-[#EAF2FF] rounded-xl p-4 shadow-lg">
               <div className="aspect-video rounded-lg overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1574717024453-354056afd6fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450&q=80" 
+                  src={editorImage} 
                   alt="Editor profesional trabajando"
                   className="w-full h-full object-cover"
                 />
