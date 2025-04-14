@@ -218,10 +218,25 @@ const EditorProfilePage = () => {
           
           {/* Tabs for Portfolio, Equipment, Rates */}
           <Tabs defaultValue="portfolio" className="mb-6">
-            <TabsList className="w-full">
-              <TabsTrigger value="portfolio" className="flex-1">Portfolio</TabsTrigger>
-              <TabsTrigger value="equipment" className="flex-1">Equipo</TabsTrigger>
-              <TabsTrigger value="rates" className="flex-1">Tarifas</TabsTrigger>
+            <TabsList className="w-full border-b-0 rounded-t-lg bg-[#F2F2F7] p-1">
+              <TabsTrigger 
+                value="portfolio" 
+                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+              >
+                Portfolio
+              </TabsTrigger>
+              <TabsTrigger 
+                value="equipment" 
+                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+              >
+                Equipo
+              </TabsTrigger>
+              <TabsTrigger 
+                value="rates" 
+                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+              >
+                Tarifas y Contacto
+              </TabsTrigger>
             </TabsList>
             
             {/* Portfolio Tab */}
@@ -239,14 +254,25 @@ const EditorProfilePage = () => {
                   </div>
                 ) : (
                   portfolio.map((item) => (
-                    <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="aspect-video bg-gray-100">
+                    <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all transform hover:translate-y-[-3px] duration-300">
+                      <div className="aspect-video bg-gray-100 relative">
                         {item.thumbnailUrl ? (
-                          <img 
-                            src={item.thumbnailUrl} 
-                            alt={item.title} 
-                            className="w-full h-full object-cover"
-                          />
+                          <>
+                            <img 
+                              src={item.thumbnailUrl} 
+                              alt={item.title} 
+                              className="w-full h-full object-cover"
+                            />
+                            <a 
+                              href={item.videoUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium flex items-center shadow-md hover:bg-primary/90 transition-colors"
+                            >
+                              Ver en YouTube
+                              <ExternalLink className="ml-1 h-3.5 w-3.5" />
+                            </a>
+                          </>
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-[#8E8E93]">
                             No preview available
@@ -254,22 +280,11 @@ const EditorProfilePage = () => {
                         )}
                       </div>
                       <div className="p-6">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                            {item.description && (
-                              <p className="text-[#8E8E93] mb-4">{item.description}</p>
-                            )}
-                          </div>
-                          <a 
-                            href={item.videoUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-primary hover:underline flex items-center"
-                          >
-                            Ver video
-                            <ExternalLink className="ml-1 h-4 w-4" />
-                          </a>
+                        <div>
+                          <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                          {item.description && (
+                            <p className="text-[#8E8E93] text-sm leading-relaxed">{item.description}</p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -281,20 +296,31 @@ const EditorProfilePage = () => {
             {/* Equipment Tab */}
             <TabsContent value="equipment" className="mt-6">
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold mb-4">Equipo técnico</h3>
+                <h3 className="text-xl font-semibold mb-6">Equipo técnico</h3>
                 
                 {editor.equipment.length === 0 ? (
-                  <p className="text-[#8E8E93] py-4">El editor aún no ha agregado información sobre su equipo.</p>
+                  <p className="text-[#8E8E93] py-8 text-center">El editor aún no ha agregado información sobre su equipo.</p>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {editor.equipment.map((item, index) => (
-                      <div key={index} className="border-b border-gray-100 last:border-0 pb-4 last:pb-0">
-                        <h4 className="font-medium">{item.type}</h4>
-                        <p className="text-[#8E8E93]">{item.description}</p>
+                      <div 
+                        key={index} 
+                        className="bg-gray-50 rounded-lg p-4 border border-gray-100 hover:shadow-sm transition-shadow"
+                      >
+                        <h4 className="font-medium text-primary mb-2">{item.type}</h4>
+                        <p className="text-[#8E8E93] text-sm">{item.description}</p>
                       </div>
                     ))}
                   </div>
                 )}
+                
+                <div className="mt-8 bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
+                  <h4 className="font-semibold mb-2 text-[#495057]">Acerca de mi equipo</h4>
+                  <p className="text-sm text-[#6C757D]">
+                    Todos mis equipos son de alta calidad y están actualizados para garantizar un trabajo profesional. 
+                    Realizo mantenimiento periódico para asegurar el mejor rendimiento en cada proyecto.
+                  </p>
+                </div>
               </div>
             </TabsContent>
             
@@ -304,30 +330,114 @@ const EditorProfilePage = () => {
                 <h3 className="text-xl font-semibold mb-6">Tarifas y Contacto</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                    <h4 className="text-lg font-medium mb-1">Básica</h4>
+                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-all bg-white hover:translate-y-[-3px] duration-300">
+                    <div className="mb-4">
+                      <h4 className="text-lg font-medium">Básica</h4>
+                      <div className="h-1 w-12 bg-blue-200 mx-auto mt-2"></div>
+                    </div>
                     <p className="text-sm text-[#8E8E93] mb-4">Edición simple, sin efectos complejos</p>
                     <div className="text-3xl font-bold text-primary mb-6">
                       ${editor.basicRate} <span className="text-sm font-normal text-[#8E8E93]">USD</span>
                     </div>
+                    <ul className="text-left mb-6 text-sm space-y-2">
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Cortes simples
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Ajustes básicos de audio
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Transiciones sencillas
+                      </li>
+                    </ul>
                     <BriefForm editorId={editorId} />
                   </div>
                   
-                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                    <h4 className="text-lg font-medium mb-1">Media</h4>
+                  <div className="border-2 border-primary rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all bg-white hover:translate-y-[-3px] duration-300 relative">
+                    <div className="absolute -top-3 left-0 right-0 mx-auto w-max px-3 py-1 bg-primary text-white text-xs rounded-full">
+                      Más popular
+                    </div>
+                    <div className="mb-4">
+                      <h4 className="text-lg font-medium">Media</h4>
+                      <div className="h-1 w-12 bg-primary mx-auto mt-2"></div>
+                    </div>
                     <p className="text-sm text-[#8E8E93] mb-4">Edición con efectos básicos, corrección de color</p>
                     <div className="text-3xl font-bold text-primary mb-6">
                       ${editor.mediumRate} <span className="text-sm font-normal text-[#8E8E93]">USD</span>
                     </div>
+                    <ul className="text-left mb-6 text-sm space-y-2">
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Todo lo básico
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Corrección de color
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Efectos de movimiento
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Mezcla de sonido
+                      </li>
+                    </ul>
                     <BriefForm editorId={editorId} />
                   </div>
                   
-                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                    <h4 className="text-lg font-medium mb-1">Avanzada</h4>
+                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-all bg-white hover:translate-y-[-3px] duration-300">
+                    <div className="mb-4">
+                      <h4 className="text-lg font-medium">Avanzada</h4>
+                      <div className="h-1 w-12 bg-blue-200 mx-auto mt-2"></div>
+                    </div>
                     <p className="text-sm text-[#8E8E93] mb-4">Edición compleja, animaciones, efectos especiales</p>
                     <div className="text-3xl font-bold text-primary mb-6">
                       ${editor.advancedRate} <span className="text-sm font-normal text-[#8E8E93]">USD</span>
                     </div>
+                    <ul className="text-left mb-6 text-sm space-y-2">
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Todo lo de tarifa media
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Animaciones personalizadas
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Efectos visuales avanzados
+                      </li>
+                      <li className="flex items-center">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Producción de alta calidad
+                      </li>
+                    </ul>
                     <BriefForm editorId={editorId} />
                   </div>
                 </div>

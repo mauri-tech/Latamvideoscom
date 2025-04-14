@@ -198,10 +198,8 @@ const ForumPage: React.FC = () => {
               <Card key={category.id} className="hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg">
-                    <Link href={`/forum/category/${category.slug}`}>
-                      <a className="hover:text-primary transition-colors">
-                        {category.name}
-                      </a>
+                    <Link href={`/forum/category/${category.slug}`} className="hover:text-primary transition-colors">
+                      {category.name}
                     </Link>
                   </CardTitle>
                   <CardDescription className="line-clamp-2">
@@ -344,10 +342,8 @@ const TopicList: React.FC<TopicListProps> = ({ topics, isLoading, emptyMessage }
             <div className="flex items-start justify-between gap-2">
               <div>
                 <CardTitle className="text-lg">
-                  <Link href={`/forum/topic/${topic.slug}`}>
-                    <a className="hover:text-primary transition-colors">
-                      {topic.title}
-                    </a>
+                  <Link href={`/forum/topic/${topic.slug}`} className="hover:text-primary transition-colors">
+                    {topic.title}
                   </Link>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {topic.isPinned && (
