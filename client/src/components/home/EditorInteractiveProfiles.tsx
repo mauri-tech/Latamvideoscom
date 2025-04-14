@@ -29,7 +29,7 @@ const recommendedEditors: Editor[] = [
     id: 1,
     name: "Mauricio Treviño B.",
     profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-    location: "Ciudad de México",
+    location: "🇲🇽 Ciudad de México",
     verified: true,
     rating: 4.9,
     reviewCount: 127,
@@ -46,7 +46,7 @@ const recommendedEditors: Editor[] = [
     id: 2,
     name: "Valentina Quiroga",
     profilePicture: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
-    location: "Bogotá",
+    location: "🇨🇴 Bogotá",
     verified: true,
     rating: 4.8,
     reviewCount: 94,
@@ -64,6 +64,8 @@ const recommendedEditors: Editor[] = [
 const EditorInteractiveProfiles = () => {
   const [selectedEditor, setSelectedEditor] = useState<Editor>(recommendedEditors[0]);
   const [activeTab, setActiveTab] = useState<string>('portafolio');
+  const [searchType, setSearchType] = useState<'editor' | 'videografo' | 'fotografo'>('editor');
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   // Renderizar estrellas para el rating
   const renderRating = (rating: number) => {
@@ -84,9 +86,30 @@ const EditorInteractiveProfiles = () => {
     <div className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold">Perfiles de Editores Destacados</h2>
+          <h2 className="text-2xl md:text-3xl font-bold">Encuentra a tu profesional ideal</h2>
           
           <div className="flex items-center space-x-3 mt-4 md:mt-0">
+            <div className="flex items-center border border-gray-300 rounded-full p-1 bg-white mr-4">
+              <button 
+                onClick={() => setSearchType('editor')}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${searchType === 'editor' ? 'bg-[#0050FF] text-white' : 'hover:bg-gray-100'}`}
+              >
+                Editor
+              </button>
+              <button 
+                onClick={() => setSearchType('videografo')}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${searchType === 'videografo' ? 'bg-[#0050FF] text-white' : 'hover:bg-gray-100'}`}
+              >
+                Videógrafo
+              </button>
+              <button 
+                onClick={() => setSearchType('fotografo')}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${searchType === 'fotografo' ? 'bg-[#0050FF] text-white' : 'hover:bg-gray-100'}`}
+              >
+                Fotógrafo
+              </button>
+            </div>
+          
             <button 
               onClick={() => {
                 const currentIndex = recommendedEditors.findIndex(e => e.id === selectedEditor.id);
@@ -267,14 +290,53 @@ const EditorInteractiveProfiles = () => {
             </div>
           </div>
           
-          {/* Botones de acción */}
-          <div className="p-4 bg-gray-50 flex justify-end">
-            <Button 
-              className="bg-[#0050FF] hover:bg-[#0069d9] text-white"
-              asChild
-            >
-              <Link href={`/editor/${selectedEditor.id}`}>Ver perfil completo</Link>
-            </Button>
+          {/* Barra de filtros avanzados */}
+          <div className="p-4 bg-gray-50 border-t border-gray-200">
+            <div className="flex flex-wrap items-center gap-4">
+              <div>
+                <p className="text-sm font-medium mb-1">País</p>
+                <select className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="">Todos los países</option>
+                  <option value="mexico">🇲🇽 México</option>
+                  <option value="argentina">🇦🇷 Argentina</option>
+                  <option value="colombia">🇨🇴 Colombia</option>
+                  <option value="chile">🇨🇱 Chile</option>
+                  <option value="peru">🇵🇪 Perú</option>
+                </select>
+              </div>
+              
+              <div>
+                <p className="text-sm font-medium mb-1">Especialidad</p>
+                <select className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="">Todas</option>
+                  <option value="comercial">Comerciales</option>
+                  <option value="documental">Documentales</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="eventos">Bodas y Eventos</option>
+                  <option value="motion">Motion Graphics</option>
+                </select>
+              </div>
+              
+              <div>
+                <p className="text-sm font-medium mb-1">Precio</p>
+                <select className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="">Cualquier precio</option>
+                  <option value="0-200">$0 - $200</option>
+                  <option value="200-500">$200 - $500</option>
+                  <option value="500-1000">$500 - $1000</option>
+                  <option value="1000+">$1000+</option>
+                </select>
+              </div>
+              
+              <div className="flex-grow"></div>
+              
+              <Button 
+                className="bg-[#0050FF] hover:bg-[#0069d9] text-white"
+                asChild
+              >
+                <Link href={`/editor/${selectedEditor.id}`}>Ver perfil completo</Link>
+              </Button>
+            </div>
           </div>
         </div>
         
