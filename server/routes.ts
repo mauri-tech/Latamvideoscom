@@ -19,6 +19,14 @@ import { ZodError } from "zod";
 import { createAdminUser } from "./createAdminUser";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Create admin user if it doesn't exist
+  try {
+    await createAdminUser();
+    console.log("Admin user setup completed");
+  } catch (error) {
+    console.error("Error creating admin user:", error);
+  }
+  
   // Setup authentication
   setupAuth(app);
   
