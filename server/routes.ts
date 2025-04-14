@@ -1851,6 +1851,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required" });
       }
 
+      // Imprimir datos para depuración
+      console.log("Received review data:", req.body);
+
       const reviewData = insertReviewSchema.parse(req.body);
 
       // Verificar que el perfil existe
@@ -1871,13 +1874,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Forbidden: You can only create reviews for yourself" });
       }
 
+      // Intentar crear la reseña
+      console.log("Creating review with data:", reviewData);
       const review = await storage.createReview(reviewData);
+      
+      console.log("Review created successfully:", review);
       res.status(201).json(review);
     } catch (error) {
+      console.error("Error creating review:", error);
       if (error instanceof ZodError) {
         res.status(400).json({ message: "Invalid data", errors: error.errors });
       } else {
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server error", error: error.message || String(error) });
       }
     }
   });

@@ -345,41 +345,57 @@ const EditorProfilePage = () => {
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="text-xl font-semibold">Reseñas</h3>
                   {user && user.id !== profileData?.userId && (
-                    <Button 
-                      onClick={() => {
-                        if (!user) {
-                          toast({
-                            title: "Necesitas iniciar sesión",
-                            description: "Para dejar una reseña, primero debes iniciar sesión o registrarte.",
-                            variant: "destructive"
-                          });
-                          return;
-                        }
-                        
-                        // Here you would open a modal for review submission
-                        // For now, let's use a simple prompt
-                        const rating = prompt("Calificación (1-5):");
-                        const comment = prompt("Comentario:");
-                        
-                        if (rating && comment && !isNaN(parseInt(rating)) && parseInt(rating) >= 1 && parseInt(rating) <= 5) {
-                          createReviewMutation.mutate({
-                            editorProfileId: editorId,
-                            clientId: user.id,
-                            rating: parseInt(rating),
-                            comment: comment
-                          });
-                        } else {
-                          toast({
-                            title: "Datos inválidos",
-                            description: "Por favor proporciona una calificación válida (1-5) y un comentario.",
-                            variant: "destructive"
-                          });
-                        }
-                      }}
-                      className="bg-primary text-white hover:bg-primary/90"
-                    >
-                      Escribir reseña
-                    </Button>
+                    <div>
+                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-6">
+                        <h4 className="text-sm font-medium mb-3">Escribe una reseña</h4>
+                        <div className="mb-3">
+                          <label className="block text-xs mb-1 text-gray-500">Calificación</label>
+                          <div className="flex space-x-2">
+                            {[1, 2, 3, 4, 5].map((value) => (
+                              <button
+                                key={value}
+                                type="button"
+                                onClick={() => {
+                                  const commentField = document.getElementById('reviewComment') as HTMLTextAreaElement;
+                                  const comment = commentField?.value || '';
+                                  
+                                  createReviewMutation.mutate({
+                                    editorProfileId: editorId,
+                                    clientId: user.id,
+                                    rating: value,
+                                    comment: comment
+                                  });
+                                  
+                                  // Limpiar el campo después de enviar
+                                  if (commentField) {
+                                    commentField.value = '';
+                                  }
+                                }}
+                                className="p-2 rounded hover:bg-gray-100"
+                              >
+                                <Star 
+                                  className={`h-6 w-6 cursor-pointer`} 
+                                  fill={value <= 5 ? "#FBBF24" : "none"}
+                                  color={value <= 5 ? "#FBBF24" : "#D1D5DB"}
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="reviewComment" className="block text-xs mb-1 text-gray-500">Comentario</label>
+                          <textarea 
+                            id="reviewComment"
+                            className="w-full p-2 border border-gray-200 rounded text-sm" 
+                            rows={3}
+                            placeholder="Comparte tu experiencia con este profesional..."
+                          />
+                        </div>
+                        <div className="text-xs text-gray-500 mb-3">
+                          Tu reseña ayuda a otros usuarios a encontrar los mejores profesionales.
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
                 
