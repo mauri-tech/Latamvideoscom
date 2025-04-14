@@ -23,7 +23,7 @@ import {
   messages, Message, InsertMessage
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, inArray, lte, desc, sql } from "drizzle-orm";
+import { eq, and, inArray, lte, desc, sql, ne, asc } from "drizzle-orm";
 import connectPg from "connect-pg-simple";
 import session from "express-session";
 import { pool } from "./db";
@@ -1092,6 +1092,138 @@ export class MemStorage implements IStorage {
     
     return { total: totalLessons, completed: completedLessons };
   }
+
+  // Messaging Methods
+  async getConversationsByUserId(userId: number): Promise<Conversation[]> {
+    const participantRecords = Array.from(this.conversationParticipants.values())
+      .filter(participant => participant.userId === userId);
+    
+    const conversationIds = participantRecords.map(p => p.conversationId);
+    
+    return Array.from(this.conversations.values())
+      .filter(conversation => conversationIds.includes(conversation.id))
+      .sort((a, b) => {
+        const aDate = a.lastMessageAt || a.createdAt;
+        const bDate = b.lastMessageAt || b.createdAt;
+        return bDate.getTime() - aDate.getTime();
+      });
+  }
+  
+  async getConversation(id: number): Promise<Conversation | undefined> {
+    return this.conversations.get(id);
+  }
+  
+  async getConversationMessages(conversationId: number): Promise<Message[]> {
+    return Array.from(this.messages.values())
+      .filter(message => message.conversationId === conversationId)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  }
+  
+  async createConversation(subject: string, participants: number[]): Promise<Conversation> {
+    const id = this.currentConversationId++;
+    const now = new Date();
+    
+    const conversation: Conversation = {
+      id,
+      subject,
+      createdAt: now,
+      updatedAt: now,
+      lastMessageAt: now
+    };
+    
+    this.conversations.set(id, conversation);
+    
+    // Add participants
+    for (const userId of participants) {
+      await this.addUserToConversation(id, userId);
+    }
+    
+    return conversation;
+  }
+  
+  async addUserToConversation(conversationId: number, userId: number): Promise<ConversationParticipant> {
+    const conversation = await this.getConversation(conversationId);
+    if (!conversation) {
+      throw new Error(`Conversation with id ${conversationId} not found`);
+    }
+    
+    const id = this.currentConversationParticipantId++;
+    const now = new Date();
+    
+    const participant: ConversationParticipant = {
+      id,
+      conversationId,
+      userId,
+      joinedAt: now,
+      lastReadAt: null
+    };
+    
+    this.conversationParticipants.set(id, participant);
+    return participant;
+  }
+  
+  async sendMessage(conversationId: number, senderId: number, content: string): Promise<Message> {
+    const conversation = await this.getConversation(conversationId);
+    if (!conversation) {
+      throw new Error(`Conversation with id ${conversationId} not found`);
+    }
+    
+    // Check if sender is a participant
+    const isParticipant = Array.from(this.conversationParticipants.values())
+      .some(p => p.conversationId === conversationId && p.userId === senderId);
+    
+    if (!isParticipant) {
+      throw new Error(`User ${senderId} is not a participant in conversation ${conversationId}`);
+    }
+    
+    const id = this.currentMessageId++;
+    const now = new Date();
+    
+    const message: Message = {
+      id,
+      conversationId,
+      senderId,
+      content,
+      createdAt: now
+    };
+    
+    this.messages.set(id, message);
+    
+    // Update conversation's lastMessageAt
+    conversation.updatedAt = now;
+    conversation.lastMessageAt = now;
+    this.conversations.set(conversationId, conversation);
+    
+    // Mark as read for sender
+    await this.markConversationAsRead(conversationId, senderId);
+    
+    return message;
+  }
+  
+  async markConversationAsRead(conversationId: number, userId: number): Promise<boolean> {
+    const participant = Array.from(this.conversationParticipants.values())
+      .find(p => p.conversationId === conversationId && p.userId === userId);
+    
+    if (!participant) {
+      return false;
+    }
+    
+    const now = new Date();
+    participant.lastReadAt = now;
+    this.conversationParticipants.set(participant.id, participant);
+    
+    return true;
+  }
+  
+  async getUsersDirectory(excludeUserId?: number): Promise<User[]> {
+    let users = Array.from(this.users.values());
+    
+    if (excludeUserId) {
+      users = users.filter(user => user.id !== excludeUserId);
+    }
+    
+    return users.sort((a, b) => a.name.localeCompare(b.name));
+  }
   
   // Seed initial data for demo purposes
   private seedInitialData() {
@@ -1200,6 +1332,182 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error("Error en deleteReview:", error);
       return false;
+    }
+  }
+  
+  // Messaging Methods
+  async getConversationsByUserId(userId: number): Promise<Conversation[]> {
+    try {
+      // First get all conversation participants for this user
+      const userParticipants = await db
+        .select()
+        .from(conversationParticipants)
+        .where(eq(conversationParticipants.userId, userId));
+      
+      if (userParticipants.length === 0) {
+        return [];
+      }
+      
+      // Get all conversation IDs
+      const conversationIds = userParticipants.map(p => p.conversationId);
+      
+      // Get the conversations
+      const userConversations = await db
+        .select()
+        .from(conversations)
+        .where(inArray(conversations.id, conversationIds))
+        .orderBy(desc(conversations.updatedAt));
+      
+      return userConversations;
+    } catch (error) {
+      console.error("Error getting conversations by userId:", error);
+      return [];
+    }
+  }
+  
+  async getConversation(id: number): Promise<Conversation | undefined> {
+    try {
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(eq(conversations.id, id));
+      return conversation;
+    } catch (error) {
+      console.error("Error getting conversation:", error);
+      return undefined;
+    }
+  }
+  
+  async getConversationMessages(conversationId: number): Promise<Message[]> {
+    try {
+      return await db
+        .select()
+        .from(messages)
+        .where(eq(messages.conversationId, conversationId))
+        .orderBy(messages.createdAt);
+    } catch (error) {
+      console.error("Error getting conversation messages:", error);
+      return [];
+    }
+  }
+  
+  async createConversation(subject: string, participants: number[]): Promise<Conversation> {
+    try {
+      // Create the conversation
+      const [conversation] = await db
+        .insert(conversations)
+        .values({ subject })
+        .returning();
+      
+      // Add participants
+      for (const userId of participants) {
+        await this.addUserToConversation(conversation.id, userId);
+      }
+      
+      return conversation;
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+      throw error;
+    }
+  }
+  
+  async addUserToConversation(conversationId: number, userId: number): Promise<ConversationParticipant> {
+    try {
+      const [participant] = await db
+        .insert(conversationParticipants)
+        .values({ conversationId, userId })
+        .returning();
+      
+      return participant;
+    } catch (error) {
+      console.error("Error adding user to conversation:", error);
+      throw error;
+    }
+  }
+  
+  async sendMessage(conversationId: number, senderId: number, content: string): Promise<Message> {
+    try {
+      // Check if conversation exists
+      const conversation = await this.getConversation(conversationId);
+      if (!conversation) {
+        throw new Error(`Conversation with id ${conversationId} not found`);
+      }
+      
+      // Check if sender is a participant
+      const [participant] = await db
+        .select()
+        .from(conversationParticipants)
+        .where(and(
+          eq(conversationParticipants.conversationId, conversationId),
+          eq(conversationParticipants.userId, senderId)
+        ));
+      
+      if (!participant) {
+        throw new Error(`User ${senderId} is not a participant in conversation ${conversationId}`);
+      }
+      
+      // Create the message
+      const [message] = await db
+        .insert(messages)
+        .values({ conversationId, senderId, content })
+        .returning();
+      
+      // Update conversation's lastMessageAt
+      await db
+        .update(conversations)
+        .set({ updatedAt: new Date(), lastMessageAt: new Date() })
+        .where(eq(conversations.id, conversationId));
+      
+      // Mark as read for sender
+      await this.markConversationAsRead(conversationId, senderId);
+      
+      return message;
+    } catch (error) {
+      console.error("Error sending message:", error);
+      throw error;
+    }
+  }
+  
+  async markConversationAsRead(conversationId: number, userId: number): Promise<boolean> {
+    try {
+      const result = await db
+        .update(conversationParticipants)
+        .set({ lastReadAt: new Date() })
+        .where(and(
+          eq(conversationParticipants.conversationId, conversationId),
+          eq(conversationParticipants.userId, userId)
+        ));
+      
+      return true;
+    } catch (error) {
+      console.error("Error marking conversation as read:", error);
+      return false;
+    }
+  }
+  
+  async getUsersDirectory(excludeUserId?: number): Promise<User[]> {
+    try {
+      let query = db.select().from(users);
+      
+      if (excludeUserId) {
+        query = query.where(ne(users.id, excludeUserId));
+      }
+      
+      const usersList = await query.orderBy(asc(users.name));
+      return usersList;
+    } catch (error) {
+      console.error("Error getting users directory:", error);
+      return [];
+    }
+  }
+  
+  // Additional methods to satisfy IStorage
+  async getAllUsers(): Promise<User[]> {
+    try {
+      return await db.select().from(users);
+    } catch (error) {
+      console.error("Error getting all users:", error);
+      return [];
     }
   }
   
