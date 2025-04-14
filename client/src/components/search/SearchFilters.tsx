@@ -61,7 +61,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
   const styles: EditingStyle[] = stylesList;
   
   const projectTypes = [
-    { value: "", label: "Todos los tipos" },
+    { value: "todos", label: "Todos los tipos" },
     { value: "reel", label: "Reel/Contenido corto" },
     { value: "youtube", label: "Video para YouTube" },
     { value: "comercial", label: "Comercial/Anuncio" },

@@ -1,0 +1,126 @@
+Perfecto, Mau. Aquí te dejo el mensaje corregido para pasar a tu equipo o desarrollador, explicando cómo debe quedar la lógica visual del perfil, lo que sí se queda, lo que se debe quitar, y cómo organizar la info sin saturar:
+
+⸻
+
+INSTRUCCIONES PARA OPTIMIZAR EL PERFIL INTERACTIVO
+
+Necesito que se simplifique la estructura del perfil. Ahorita hay muchas categorías arriba que no tienen sentido como pestañas principales. Por default el perfil debe mostrar lo esencial, sin necesidad de navegar entre tabs.
+
+⸻
+
+1. ¿Qué se debe mostrar siempre al abrir el perfil? (sin hacer scroll)
+	•	Nombre + País + Especialidad principal (Editor / Videógrafo / Fotógrafo / etc.)
+	•	Mini bio
+	•	Estilos que trabaja: Reels, YouTube, documental, bodas, etc.
+	•	Cuota base: “Desde $___ USD”
+	•	Botón: “Ver perfil completo”
+
+⸻
+
+2. Reestructurar la información en secciones más claras
+
+Ya no pongas tabs como “Podcast”, “Grabación” o “Portafolio” arriba.
+
+Todo debe estar dentro del perfil como secciones en orden, algo así:
+
+🧑‍💼 Perfil
+
+Mini bio, experiencia, especialidad principal (puede incluir más de una).
+
+🎞️ Portafolio
+
+Cards con thumbnails de sus videos principales. Si no hay video, se esconde la sección.
+
+💰 Tarifas
+	•	Básico: hasta 3 min
+	•	Estándar: hasta 10 min
+	•	Premium: edición avanzada, color, motion, etc.
+
+⚙️ Equipamiento
+
+Solo si el editor lo llenó. CPU, cámara, micro, iluminación. Si no hay equipo, no se muestra.
+
+⸻
+
+3. ¿Qué se elimina o reubica?
+	•	Podcast, grabación y edición NO deben ser tabs. Son estilos o habilidades, no categorías del perfil.
+	•	Si hace podcast o cine o contenido vertical, se menciona como etiqueta en su bio o como parte de los estilos.
+	•	No mostrar tabs arriba con íconos que parecen categorías falsas.
+
+⸻
+
+4. Interacciones clave
+	•	El perfil se debe ver en formato card vertical deslizable (scroll horizontal si ves varios editores).
+	•	Cada card debe dar una impresión profesional, sin saturación.
+	•	Agrega una ligera física en el scroll horizontal para que se sienta moderno.
+
+⸻
+
+Resumen visual ideal del perfil (orden de bloques)
+	1.	Nombre, país, especialidad
+	2.	Bio + experiencia
+	3.	Estilos (reels, podcast, YouTube…)
+	4.	Cuota inicial (desde $___)
+	5.	Portafolio con thumbnails
+	6.	Tarifas por nivel
+	7.	Equipamiento (si aplica)
+	8.	Botón “Ver perfil completo”
+
+⸻
+
+Claro, Mau. Aquí tienes el documento completo y compacto con las instrucciones claras para el diseño del card interactivo del perfil en la homepage de latamvideos.com, ya con tus datos reales en la sección de equipamiento.
+
+⸻
+
+INSTRUCCIONES: CARD DE PERFIL INTERACTIVO (HOMEPAGE)
+
+Objetivo:
+
+Que el usuario pueda visualizar un mini resumen profesional del editor sin necesidad de hacer clic ni navegar entre tabs. La idea es que sea un card vertical deslizable (tipo carrusel) que presente lo más importante de forma compacta, visual y clara.
+
+⸻
+
+Estructura del card (orden de secciones)
+	1.	Encabezado
+	•	Nombre: Mauricio Treviño Botticelli
+	•	País: México
+	•	Especialidades: Editor de video, Videógrafo
+	2.	Mini Bio
+Especialista en contenido visual para redes, campañas y documentales. 5 años de experiencia en edición, grabación y postproducción.
+	3.	Estilos dominados (como etiquetas visuales tipo chips o badges)
+🎬 Reels 🎥 YouTube 🎙️ Podcast 📽️ Documental 📸 Bodas
+	4.	Cuota base
+💰 Desde $200 USD
+	5.	Portafolio
+Muestra de 2-3 thumbnails con título (ej: “Documental Urbano”, “Campaña de Marca”). Si no hay video subido, se oculta la sección.
+	6.	Tarifas por nivel (básico, estándar, premium)
+	•	Básico: $200 USD (hasta 3 min, edición simple)
+	•	Estándar: $350 USD (hasta 10 min, con efectos)
+	•	Premium: $500 USD (edición avanzada + color)
+	7.	⚙️ Equipamiento (con tus datos reales)
+	•	Cámara: Sony Alpha 7 IV
+	•	Lentes: Sigma 24-70mm f/2.8 y 70-200mm f/2.8
+	•	Computadora: Mac Mini Pro M4
+	•	Iluminación: Neewer CB200 RGB con Bowens
+	•	Cámaras extra: Insta360 X4, GoPro Hero 11 y 12
+	8.	Botón CTA
+Ver perfil completo (Botón visible siempre al final)
+
+⸻
+
+Estilo visual del card
+	•	Fondo blanco #ffffff con sombras sutiles
+	•	Padding generoso, mucha respiración visual
+	•	Tipografía sans-serif limpia (Inter, SF Pro, Helvetica)
+	•	Badges de estilos con emojis por ahora, hasta tener íconos propios
+	•	Botón CTA azul (#007aff) o color de acento definido
+	•	Scroll horizontal con efecto físico tipo “snap”, con rebote suave al deslizar
+
+⸻e
+
+Interacciones clave
+	•	Cada card debe mostrarse en un carrusel horizontal deslizable con física ligera (scroll con snap y rebote).
+	•	Al deslizar entre editores, no debe saltar de golpe. Que se sienta natural como UI de iOS/Dribbble.
+	•	Nada de tabs internas. Toda la info fluye de arriba hacia abajo en un solo bloque compacto.
+
+⸻

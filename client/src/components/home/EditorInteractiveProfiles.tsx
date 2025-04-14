@@ -1,42 +1,53 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
-// Secciones del perfil interactivo
-type ProfileSection = 'edicion' | 'grabacion' | 'podcast' | 'portafolio' | 'equipamiento' | 'tarifas';
-
-// Ejemplo de editor con información completa para el perfil interactivo
+// Perfil interactivo según las nuevas especificaciones
 interface EditorInteractiveProfile {
   id: number;
   name: string;
   profilePicture: string;
   country: string;
+  specialties: string[];
+  miniBio: string;
   yearsOfExperience: number;
-  software: string[];
   styles: string[];
   portafolio: {
     title: string;
     thumbnail: string;
   }[];
-  equipamiento: string[];
+  equipamiento: {
+    category: string;
+    item: string;
+  }[];
   tarifas: {
-    basic: number;
-    standard: number;
-    premium: number;
+    basic: {
+      price: number;
+      description: string;
+    };
+    standard: {
+      price: number;
+      description: string;
+    };
+    premium: {
+      price: number;
+      description: string;
+    };
   };
 }
 
-// Datos de ejemplo para el perfil interactivo
+// Datos de ejemplo actualizados según las especificaciones
 const sampleInteractiveProfile: EditorInteractiveProfile = {
   id: 1,
   name: "Mauricio Treviño Botticelli",
   profilePicture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=96&h=96&q=80",
   country: "México",
+  specialties: ["Editor de video", "Videógrafo"],
+  miniBio: "Especialista en contenido visual para redes, campañas y documentales. 5 años de experiencia en edición, grabación y postproducción.",
   yearsOfExperience: 5,
-  software: ["Premiere Pro", "Final Cut", "CapCut"],
-  styles: ["Reels", "YouTube", "Podcast"],
+  styles: ["🎬 Reels", "🎥 YouTube", "🎙️ Podcast", "📽️ Documental", "📸 Bodas"],
   portafolio: [
     {
       title: "Documental Urbano",
@@ -52,23 +63,36 @@ const sampleInteractiveProfile: EditorInteractiveProfile = {
     }
   ],
   equipamiento: [
-    "MacBook Pro M1 Max",
-    "Cámara Sony A7III",
-    "Micrófono Rode PodMic",
-    "Iluminación Aputure"
+    { category: "Cámara", item: "Sony Alpha 7 IV" },
+    { category: "Lentes", item: "Sigma 24-70mm f/2.8 y 70-200mm f/2.8" },
+    { category: "Computadora", item: "Mac Mini Pro M4" },
+    { category: "Iluminación", item: "Neewer CB200 RGB con Bowens" },
+    { category: "Cámaras extra", item: "Insta360 X4, GoPro Hero 11 y 12" }
   ],
   tarifas: {
-    basic: 200,
-    standard: 350,
-    premium: 500
+    basic: {
+      price: 200,
+      description: "Edición simple, hasta 3 minutos"
+    },
+    standard: {
+      price: 350,
+      description: "Hasta 10 minutos, con efectos"
+    },
+    premium: {
+      price: 500,
+      description: "Edición avanzada + color"
+    }
   }
 };
 
 const EditorInteractiveProfiles = () => {
-  const [activeProfile, setActiveProfile] = useState<EditorInteractiveProfile>(sampleInteractiveProfile);
-  const [activeSection, setActiveSection] = useState<ProfileSection>('portafolio');
+  const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
   
-  // Referencia para el scroll horizontal
+  // Para simplificar, usamos un solo perfil de muestra, pero se podría expandir a múltiples
+  const profiles = [sampleInteractiveProfile];
+  const activeProfile = profiles[currentProfileIndex];
+  
+  // Referencia para el scroll horizontal de las tarjetas
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   // Gestión del scroll horizontal con física tipo iOS
@@ -120,230 +144,158 @@ const EditorInteractiveProfiles = () => {
     setIsDragging(false);
   };
   
-  // Función para renderizar el contenido según la sección activa
-  const renderSectionContent = () => {
-    switch (activeSection) {
-      case 'edicion':
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium mb-3">✂️ Edición</h3>
-            <p className="text-gray-600 mb-4">Especialista en edición de contenido para:</p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {activeProfile.styles.map((style, idx) => (
-                <Badge key={idx} className="bg-primary/10 text-primary">
-                  {style}
-                </Badge>
-              ))}
-            </div>
-            <p className="text-gray-600">Experiencia: {activeProfile.yearsOfExperience} años</p>
-          </div>
-        );
-      
-      case 'grabacion':
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium mb-3">🎥 Grabación</h3>
-            <p className="text-gray-600 mb-4">Servicios adicionales de grabación disponibles.</p>
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="text-sm text-gray-600">
-                Equipo profesional para grabaciones en estudio y locación.
-                Consulta disponibilidad para tu proyecto.
-              </p>
-            </div>
-          </div>
-        );
-      
-      case 'podcast':
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium mb-3">🎙️ Podcast</h3>
-            <p className="text-gray-600 mb-4">Producción completa de podcasts:</p>
-            <ul className="list-disc pl-5 text-gray-600 space-y-1">
-              <li>Edición de audio</li>
-              <li>Corrección de errores</li>
-              <li>Nivelación de sonido</li>
-              <li>Música y efectos</li>
-              <li>Exportación para plataformas</li>
-            </ul>
-          </div>
-        );
-      
-      case 'portafolio':
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium mb-3">📦 Portafolio</h3>
-            <div className="grid grid-cols-1 gap-4">
-              {activeProfile.portafolio.map((item, idx) => (
-                <div key={idx} className="relative rounded-lg overflow-hidden">
-                  <img 
-                    src={item.thumbnail} 
-                    alt={item.title}
-                    className="w-full h-[120px] object-cover"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity">
-                    <Button size="sm" className="bg-white text-black hover:bg-white/90">
-                      Ver proyecto
-                    </Button>
-                  </div>
-                  <p className="mt-1 text-sm font-medium">{item.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      
-      case 'equipamiento':
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium mb-3">⚙️ Equipamiento</h3>
-            <div className="space-y-2">
-              {activeProfile.equipamiento.map((item, idx) => (
-                <div key={idx} className="bg-gray-50 p-2 rounded-lg">
-                  <p className="text-sm text-gray-700">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      
-      case 'tarifas':
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium mb-3">💰 Tarifas</h3>
-            <div className="space-y-4">
-              <div className="border rounded-lg p-3">
-                <div className="flex justify-between items-center mb-1">
-                  <h4 className="font-medium">Básico</h4>
-                  <span className="text-primary font-bold">${activeProfile.tarifas.basic} USD</span>
-                </div>
-                <p className="text-xs text-gray-500">Edición simple, hasta 3 minutos</p>
-              </div>
-              
-              <div className="border rounded-lg p-3 border-primary bg-primary/5">
-                <div className="flex justify-between items-center mb-1">
-                  <h4 className="font-medium">Estándar</h4>
-                  <span className="text-primary font-bold">${activeProfile.tarifas.standard} USD</span>
-                </div>
-                <p className="text-xs text-gray-500">Edición completa con efectos, hasta 10 minutos</p>
-              </div>
-              
-              <div className="border rounded-lg p-3">
-                <div className="flex justify-between items-center mb-1">
-                  <h4 className="font-medium">Premium</h4>
-                  <span className="text-primary font-bold">${activeProfile.tarifas.premium} USD</span>
-                </div>
-                <p className="text-xs text-gray-500">Producción completa con corrección de color</p>
-              </div>
-            </div>
-          </div>
-        );
-      
-      default:
-        return null;
-    }
-  };
-  
   return (
     <div className="py-8">
       <h3 className="text-2xl font-bold mb-6">Perfiles Interactivos</h3>
       <p className="text-gray-600 mb-6">
-        Explora un ejemplo de perfil interactivo. Desliza horizontalmente para ver diferentes secciones.
+        Explora un ejemplo de perfil interactivo. Desliza verticalmente para ver toda la información.
       </p>
       
-      <div className="bg-white rounded-xl shadow-md max-w-md mx-auto">
-        {/* Header del perfil */}
-        <div className="p-4 border-b">
-          <div className="flex items-center">
-            <img 
-              src={activeProfile.profilePicture} 
-              alt={activeProfile.name}
-              className="w-16 h-16 rounded-full object-cover border-2 border-primary"
-            />
-            <div className="ml-4">
-              <h3 className="font-bold text-xl">{activeProfile.name}</h3>
-              <p className="text-gray-600">{activeProfile.country}</p>
+      <div 
+        ref={scrollContainerRef}
+        className="flex overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch',
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {profiles.map((profile, index) => (
+          <div 
+            key={profile.id}
+            className="bg-white rounded-xl shadow-md w-[350px] flex-shrink-0 mx-auto snap-center overflow-y-auto max-h-[650px] hide-scrollbar"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
+            {/* 1. Encabezado con datos esenciales */}
+            <div className="p-5 border-b">
+              <div className="flex items-center mb-3">
+                <img 
+                  src={profile.profilePicture} 
+                  alt={profile.name}
+                  className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                />
+                <div className="ml-4">
+                  <h3 className="font-bold text-lg">{profile.name}</h3>
+                  <p className="text-gray-600 text-sm">{profile.country}</p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {profile.specialties.map((specialty, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs bg-gray-50">
+                        {specialty}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              {/* 2. Mini Bio */}
+              <div className="mb-3">
+                <p className="text-sm text-gray-700">{profile.miniBio}</p>
+              </div>
+              
+              {/* 3. Estilos (como badges) */}
+              <div className="flex flex-wrap gap-2 mb-3">
+                {profile.styles.map((style, idx) => (
+                  <Badge key={idx} className="bg-primary/10 text-primary font-normal">
+                    {style}
+                  </Badge>
+                ))}
+              </div>
+              
+              {/* 4. Cuota base */}
+              <div className="bg-primary/5 p-3 rounded-lg flex justify-between items-center mb-4">
+                <span className="text-sm text-gray-700">Cuota inicial</span>
+                <span className="text-xl font-bold text-primary">Desde ${profile.tarifas.basic.price} USD</span>
+              </div>
+            </div>
+            
+            {/* 5. Portafolio */}
+            {profile.portafolio.length > 0 && (
+              <div className="p-5 border-b">
+                <h4 className="font-medium text-base mb-3">🎞️ Portafolio</h4>
+                <div className="grid grid-cols-1 gap-4">
+                  {profile.portafolio.map((item, idx) => (
+                    <div key={idx} className="relative rounded-lg overflow-hidden">
+                      <img 
+                        src={item.thumbnail} 
+                        alt={item.title}
+                        className="w-full h-[120px] object-cover rounded-lg"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity">
+                        <Button size="sm" className="bg-white text-black hover:bg-white/90">
+                          Ver proyecto
+                        </Button>
+                      </div>
+                      <p className="mt-1 text-sm font-medium">{item.title}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* 6. Tarifas */}
+            <div className="p-5 border-b">
+              <h4 className="font-medium text-base mb-3">💰 Tarifas</h4>
+              <div className="space-y-3">
+                <div className="border rounded-lg p-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <h5 className="font-medium">Básico</h5>
+                    <span className="text-primary font-bold">${profile.tarifas.basic.price} USD</span>
+                  </div>
+                  <p className="text-xs text-gray-500">{profile.tarifas.basic.description}</p>
+                </div>
+                
+                <div className="border rounded-lg p-3 border-primary bg-primary/5">
+                  <div className="flex justify-between items-center mb-1">
+                    <h5 className="font-medium">Estándar</h5>
+                    <span className="text-primary font-bold">${profile.tarifas.standard.price} USD</span>
+                  </div>
+                  <p className="text-xs text-gray-500">{profile.tarifas.standard.description}</p>
+                </div>
+                
+                <div className="border rounded-lg p-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <h5 className="font-medium">Premium</h5>
+                    <span className="text-primary font-bold">${profile.tarifas.premium.price} USD</span>
+                  </div>
+                  <p className="text-xs text-gray-500">{profile.tarifas.premium.description}</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* 7. Equipamiento */}
+            {profile.equipamiento.length > 0 && (
+              <div className="p-5 border-b">
+                <h4 className="font-medium text-base mb-3">⚙️ Equipamiento</h4>
+                <div className="space-y-2">
+                  {profile.equipamiento.map((equip, idx) => (
+                    <div key={idx} className="bg-gray-50 p-3 rounded-lg">
+                      <span className="text-sm font-medium">{equip.category}: </span>
+                      <span className="text-sm text-gray-700">{equip.item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* 8. CTA */}
+            <div className="p-5">
+              <Link href={`/editor/${profile.id}`}>
+                <Button className="w-full bg-[#007aff] hover:bg-[#007aff]/90">Ver perfil completo</Button>
+              </Link>
             </div>
           </div>
-        </div>
-        
-        {/* Navegación de secciones con emojis */}
-        <div
-          ref={scrollContainerRef}
-          className="flex overflow-x-auto py-2 border-b snap-x snap-mandatory hide-scrollbar"
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-          }}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseLeave}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <button
-            onClick={() => setActiveSection('edicion')}
-            className={`flex-shrink-0 px-4 py-2 mx-1 snap-start rounded-md ${
-              activeSection === 'edicion' ? 'bg-primary text-white' : 'bg-gray-100'
-            }`}
-          >
-            <span className="text-lg">✂️</span> Edición
-          </button>
-          <button
-            onClick={() => setActiveSection('grabacion')}
-            className={`flex-shrink-0 px-4 py-2 mx-1 snap-start rounded-md ${
-              activeSection === 'grabacion' ? 'bg-primary text-white' : 'bg-gray-100'
-            }`}
-          >
-            <span className="text-lg">🎥</span> Grabación
-          </button>
-          <button
-            onClick={() => setActiveSection('podcast')}
-            className={`flex-shrink-0 px-4 py-2 mx-1 snap-start rounded-md ${
-              activeSection === 'podcast' ? 'bg-primary text-white' : 'bg-gray-100'
-            }`}
-          >
-            <span className="text-lg">🎙️</span> Podcast
-          </button>
-          <button
-            onClick={() => setActiveSection('portafolio')}
-            className={`flex-shrink-0 px-4 py-2 mx-1 snap-start rounded-md ${
-              activeSection === 'portafolio' ? 'bg-primary text-white' : 'bg-gray-100'
-            }`}
-          >
-            <span className="text-lg">📦</span> Portafolio
-          </button>
-          <button
-            onClick={() => setActiveSection('equipamiento')}
-            className={`flex-shrink-0 px-4 py-2 mx-1 snap-start rounded-md ${
-              activeSection === 'equipamiento' ? 'bg-primary text-white' : 'bg-gray-100'
-            }`}
-          >
-            <span className="text-lg">⚙️</span> Equipamiento
-          </button>
-          <button
-            onClick={() => setActiveSection('tarifas')}
-            className={`flex-shrink-0 px-4 py-2 mx-1 snap-start rounded-md ${
-              activeSection === 'tarifas' ? 'bg-primary text-white' : 'bg-gray-100'
-            }`}
-          >
-            <span className="text-lg">💰</span> Tarifas
-          </button>
-        </div>
-        
-        {/* Contenido de la sección activa */}
-        <div className="min-h-[300px]">
-          {renderSectionContent()}
-        </div>
-        
-        {/* Footer con CTA */}
-        <div className="p-4 border-t">
-          <Link href={`/editor/${activeProfile.id}`}>
-            <Button className="w-full">Ver perfil completo</Button>
-          </Link>
-        </div>
+        ))}
       </div>
     </div>
   );

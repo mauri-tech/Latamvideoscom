@@ -75,8 +75,9 @@ const HiringProcess = () => {
                   <select 
                     id="projectType" 
                     className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    defaultValue=""
                   >
-                    <option value="" selected>Todos los tipos</option>
+                    <option value="">Todos los tipos</option>
                     <option value="reel">Reel/Contenido corto</option>
                     <option value="youtube">Video para YouTube</option>
                     <option value="comercial">Comercial/Anuncio</option>
@@ -92,8 +93,9 @@ const HiringProcess = () => {
                   <select 
                     id="country" 
                     className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    defaultValue=""
                   >
-                    <option value="" selected>Todos los países</option>
+                    <option value="">Todos los países</option>
                     <option value="MX">México</option>
                     <option value="CO">Colombia</option>
                     <option value="AR">Argentina</option>
