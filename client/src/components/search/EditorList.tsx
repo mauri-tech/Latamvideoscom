@@ -107,9 +107,8 @@ const EditorList = ({ filters }: EditorListProps) => {
     );
   }
   
-  // For this MVP, we're using a simplified mock representation of editors
-  // In a real implementation, we would map the backend data structure to this format
-  const mockEditors = [
+  // Datos de ejemplo para mostrar cuando la API no devuelve resultados
+  const sampleEditors = [
     {
       id: 1,
       name: "Carlos Mendoza",
@@ -148,9 +147,41 @@ const EditorList = ({ filters }: EditorListProps) => {
     },
   ];
   
-  // While we build out the API integration, use the mock data
-  // In production, we would directly use the editors data from the API response
-  const displayEditors = editors.length > 0 && editors[0].profile ? editors : mockEditors;
+  // Manejo de tipo de datos
+  interface EditorData {
+    id: number;
+    name: string;
+    location: string;
+    country: string;
+    profilePicture: string;
+    software: string[];
+    styles: string[];
+    bio: string;
+    thumbnailUrl: string;
+    basicRate: number;
+  }
+  
+  // Convertir datos de API a formato esperado o usar datos de ejemplo
+  const displayEditors: EditorData[] = editors && Array.isArray(editors) && editors.length > 0 ? 
+    editors.map((editor: any) => {
+      if (editor.profile) {
+        // Si hay datos de perfil de API, formatearlos
+        return {
+          id: editor.profile.id,
+          name: editor.user.name,
+          location: editor.user.country || "Internacional",
+          country: editor.user.country || "",
+          profilePicture: editor.user.profilePicture || "https://via.placeholder.com/96",
+          software: ["Premiere Pro"], // Estos datos deberían venir de la API
+          styles: ["Edición General"], // Estos datos deberían venir de la API
+          bio: editor.user.bio || "Editor profesional",
+          thumbnailUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&h=337&q=80",
+          basicRate: editor.profile.basicRate || 75,
+        };
+      }
+      return editor; // Si ya está en el formato correcto
+    }) 
+    : sampleEditors;
 
   return (
     <div>
@@ -224,10 +255,8 @@ const EditorList = ({ filters }: EditorListProps) => {
                         <p className="text-sm text-[#8E8E93]">Desde</p>
                         <p className="text-xl font-semibold text-primary">${editor.basicRate} USD</p>
                       </div>
-                      <Link href={`/editor/${editor.id}`}>
-                        <a className="inline-block text-primary text-sm font-medium hover:underline">
-                          Ver perfil completo
-                        </a>
+                      <Link href={`/editor/${editor.id}`} className="inline-block text-primary text-sm font-medium hover:underline">
+                        Ver perfil completo
                       </Link>
                     </div>
                   </div>

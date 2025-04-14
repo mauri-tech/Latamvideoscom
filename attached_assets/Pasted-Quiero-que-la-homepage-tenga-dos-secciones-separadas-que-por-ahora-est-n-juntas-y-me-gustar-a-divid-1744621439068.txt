@@ -1,0 +1,53 @@
+Quiero que la homepage tenga dos secciones separadas, que por ahora están juntas y me gustaría dividir bien para que la experiencia sea más clara e interactiva.
+
+1. Cards de perfiles interactivos (estilo UI simplificada)
+
+Estas tarjetas deben mostrar una vista previa interactiva del perfil completo de un editor.
+Se deben ver como mini demos de cómo luce un perfil desde dentro, con scroll horizontal, tipo carrusel deslizable.
+
+El objetivo es que la gente vea lo visual, simple y atractivo que es navegar los perfiles.
+
+Contenido de ejemplo usando mis datos:
+	•	Nombre: Mauricio Treviño Botticelli
+	•	Foto redonda
+	•	País: México
+	•	Experiencia: 5 años
+	•	Estilos: Reels, YouTube, Podcast
+	•	Softwares: Premiere Pro, Final Cut, CapCut
+	•	Videos embebidos
+	•	CTA: “Ver perfil completo”
+
+En lugar de íconos, por ahora quiero que uses emojis como placeholders visuales para las categorías:
+	•	✂️ Edición
+	•	🎥 Grabación
+	•	🎙️ Podcast
+	•	📦 Portafolio
+	•	⚙️ Equipamiento
+	•	💰 Tarifas
+
+Que cada card sea deslizable horizontalmente (scroll con snapping), y que al hacer scroll se sienta una ligera física, como si jalas una tarjeta y regresa suave — ese pequeño “bounce” tipo iOS cuando te pasas del límite.
+
+⸻
+
+2. Cards de ejemplo rápido de editores
+
+Este es otro scroll horizontal separado. No es una demo del perfil, es un snapshot de editores reales con su mini resumen.
+
+Cada card debe mostrar:
+	•	Nombre del editor
+	•	País
+	•	Softwares principales (solo texto simple)
+	•	Tipos de video que hace
+	•	Tarifa base (ej: desde $200 USD)
+	•	Botón: “Ver más”
+
+Aquí no es necesario poner video embebido, es más tipo “catálogo rápido”. Que se vean varios editores fácilmente.
+
+Este scroll también debe tener física ligera para que se sienta fluido y moderno al navegar.
+
+⸻
+
+Resumen UX:
+	•	Scroll horizontal con snapping en ambos bloques.
+	•	Animaciones suaves (sin exagerar) para dar sensación de tacto.
+	•	Separar claramente: uno es para ver cómo luce un perfil completo, el otro es para ver una galería rápida de editores.

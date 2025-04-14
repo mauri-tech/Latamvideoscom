@@ -35,42 +35,30 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
   
   const [isExpanded, setIsExpanded] = useState(false);
   
-  const { data: softwareList = [] } = useQuery({
+  interface Software {
+    id: number;
+    name: string;
+    icon?: string;
+  }
+  
+  interface EditingStyle {
+    id: number;
+    name: string;
+  }
+  
+  const { data: softwareList = [] } = useQuery<Software[]>({
     queryKey: ['/api/software'],
     staleTime: Infinity,
   });
   
-  const { data: stylesList = [] } = useQuery({
+  const { data: stylesList = [] } = useQuery<EditingStyle[]>({
     queryKey: ['/api/editing-styles'],
     staleTime: Infinity,
   });
   
-  // Mock data until API is implemented
-  const mockSoftware = [
-    { id: 1, name: "Adobe Premiere Pro" },
-    { id: 2, name: "Final Cut Pro" },
-    { id: 3, name: "DaVinci Resolve" },
-    { id: 4, name: "Adobe After Effects" },
-    { id: 5, name: "CapCut" },
-    { id: 6, name: "iMovie" },
-    { id: 7, name: "Filmora" },
-    { id: 8, name: "Vegas Pro" }
-  ];
-
-  const mockStyles = [
-    { id: 1, name: "YouTube" },
-    { id: 2, name: "Reels / TikTok" },
-    { id: 3, name: "Comerciales" },
-    { id: 4, name: "Eventos (bodas, conciertos)" },
-    { id: 5, name: "Video corporativo" },
-    { id: 6, name: "Documental" },
-    { id: 7, name: "Motion graphics" },
-    { id: 8, name: "Videoclips musicales" }
-  ];
-  
-  // Use mock data if API isn't ready
-  const software = softwareList.length > 0 ? softwareList : mockSoftware;
-  const styles = stylesList.length > 0 ? stylesList : mockStyles;
+  // Use API data
+  const software: Software[] = softwareList;
+  const styles: EditingStyle[] = stylesList;
   
   const projectTypes = [
     { value: "", label: "Todos los tipos" },
@@ -82,8 +70,8 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
   ];
   
   const updateFilter = (key: string, value: any) => {
-    // Si el valor es "all" para el país, convertirlo a string vacío para mantener la lógica existente
-    const processedValue = key === 'country' && value === 'all' ? '' : value;
+    // Si el valor es "todos" para el país, convertirlo a string vacío para mantener la lógica existente
+    const processedValue = key === 'country' && value === 'todos' ? '' : value;
     const newFilters = { ...filters, [key]: processedValue };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -193,7 +181,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
               <SelectValue placeholder="Todos los países" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos los países</SelectItem>
+              <SelectItem value="todos">Todos los países</SelectItem>
               {countries.map((country) => (
                 <SelectItem key={country.code} value={country.code}>
                   {country.name}
