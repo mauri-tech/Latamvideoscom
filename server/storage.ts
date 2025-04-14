@@ -4,7 +4,18 @@ import {
   editingStyles, EditingStyle, InsertEditingStyle,
   editorProfiles, EditorProfile, InsertEditorProfile,
   portfolioItems, PortfolioItem, InsertPortfolioItem,
-  briefs, Brief, InsertBrief
+  briefs, Brief, InsertBrief,
+  // Forum imports
+  forumCategories, ForumCategory, InsertForumCategory,
+  forumTopics, ForumTopic, InsertForumTopic,
+  forumPosts, ForumPost, InsertForumPost,
+  // Course imports
+  courseCategories, CourseCategory, InsertCourseCategory,
+  courses, Course, InsertCourse,
+  courseModules, CourseModule, InsertCourseModule,
+  courseLessons, CourseLesson, InsertCourseLesson,
+  courseEnrollments, CourseEnrollment, InsertCourseEnrollment,
+  lessonProgress, LessonProgress, InsertLessonProgress
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, inArray, lte, desc } from "drizzle-orm";
@@ -405,6 +416,586 @@ export class MemStorage implements IStorage {
     const updatedBrief = { ...brief, status };
     this.briefs.set(id, updatedBrief);
     return updatedBrief;
+  }
+  
+  // Forum Category Methods
+  async getAllForumCategories(): Promise<ForumCategory[]> {
+    return Array.from(this.forumCategories.values())
+      .sort((a, b) => a.order - b.order);
+  }
+  
+  async getForumCategory(id: number): Promise<ForumCategory | undefined> {
+    return this.forumCategories.get(id);
+  }
+  
+  async getForumCategoryBySlug(slug: string): Promise<ForumCategory | undefined> {
+    return Array.from(this.forumCategories.values()).find(
+      (category) => category.slug === slug
+    );
+  }
+  
+  async createForumCategory(data: InsertForumCategory): Promise<ForumCategory> {
+    const id = this.currentForumCategoryId++;
+    const now = new Date();
+    const category: ForumCategory = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.forumCategories.set(id, category);
+    return category;
+  }
+  
+  async updateForumCategory(id: number, data: Partial<ForumCategory>): Promise<ForumCategory | undefined> {
+    const category = this.forumCategories.get(id);
+    if (!category) return undefined;
+    
+    const now = new Date();
+    const updatedCategory = { ...category, ...data, updatedAt: now };
+    this.forumCategories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+  
+  async deleteForumCategory(id: number): Promise<boolean> {
+    return this.forumCategories.delete(id);
+  }
+  
+  // Forum Topic Methods
+  async getForumTopics(categoryId?: number): Promise<ForumTopic[]> {
+    let topics = Array.from(this.forumTopics.values());
+    
+    if (categoryId) {
+      topics = topics.filter(topic => topic.categoryId === categoryId);
+    }
+    
+    return topics.sort((a, b) => {
+      // Pinned topics first
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      
+      // Then by most recent activity
+      const aDate = a.lastActivityAt || a.createdAt;
+      const bDate = b.lastActivityAt || b.createdAt;
+      return bDate.getTime() - aDate.getTime();
+    });
+  }
+  
+  async getForumTopic(id: number): Promise<ForumTopic | undefined> {
+    return this.forumTopics.get(id);
+  }
+  
+  async getForumTopicBySlug(slug: string): Promise<ForumTopic | undefined> {
+    return Array.from(this.forumTopics.values()).find(
+      (topic) => topic.slug === slug
+    );
+  }
+  
+  async getForumTopicsByAuthor(authorId: number): Promise<ForumTopic[]> {
+    return Array.from(this.forumTopics.values())
+      .filter(topic => topic.authorId === authorId)
+      .sort((a, b) => {
+        const aDate = a.lastActivityAt || a.createdAt;
+        const bDate = b.lastActivityAt || b.createdAt;
+        return bDate.getTime() - aDate.getTime();
+      });
+  }
+  
+  async createForumTopic(data: InsertForumTopic): Promise<ForumTopic> {
+    const id = this.currentForumTopicId++;
+    const now = new Date();
+    const topic: ForumTopic = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now,
+      lastActivityAt: now,
+      viewCount: 0,
+      replyCount: 0,
+      isPinned: false,
+      isClosed: false
+    };
+    this.forumTopics.set(id, topic);
+    return topic;
+  }
+  
+  async updateForumTopic(id: number, data: Partial<ForumTopic>): Promise<ForumTopic | undefined> {
+    const topic = this.forumTopics.get(id);
+    if (!topic) return undefined;
+    
+    const now = new Date();
+    const updatedTopic = { ...topic, ...data, updatedAt: now };
+    this.forumTopics.set(id, updatedTopic);
+    return updatedTopic;
+  }
+  
+  async deleteForumTopic(id: number): Promise<boolean> {
+    return this.forumTopics.delete(id);
+  }
+  
+  async incrementTopicView(id: number): Promise<void> {
+    const topic = this.forumTopics.get(id);
+    if (topic) {
+      topic.viewCount += 1;
+      this.forumTopics.set(id, topic);
+    }
+  }
+  
+  async togglePinTopic(id: number, isPinned: boolean): Promise<ForumTopic | undefined> {
+    const topic = this.forumTopics.get(id);
+    if (!topic) return undefined;
+    
+    const updatedTopic = { ...topic, isPinned };
+    this.forumTopics.set(id, updatedTopic);
+    return updatedTopic;
+  }
+  
+  async toggleCloseTopic(id: number, isClosed: boolean): Promise<ForumTopic | undefined> {
+    const topic = this.forumTopics.get(id);
+    if (!topic) return undefined;
+    
+    const updatedTopic = { ...topic, isClosed };
+    this.forumTopics.set(id, updatedTopic);
+    return updatedTopic;
+  }
+  
+  // Forum Post Methods
+  async getForumPosts(topicId: number): Promise<ForumPost[]> {
+    return Array.from(this.forumPosts.values())
+      .filter(post => post.topicId === topicId)
+      .sort((a, b) => {
+        // First post always first
+        if (a.isFirstPost && !b.isFirstPost) return -1;
+        if (!a.isFirstPost && b.isFirstPost) return 1;
+        
+        // Then accepted answer
+        if (a.isAcceptedAnswer && !b.isAcceptedAnswer) return -1;
+        if (!a.isAcceptedAnswer && b.isAcceptedAnswer) return 1;
+        
+        // Then by date
+        return a.createdAt.getTime() - b.createdAt.getTime();
+      });
+  }
+  
+  async getForumPost(id: number): Promise<ForumPost | undefined> {
+    return this.forumPosts.get(id);
+  }
+  
+  async getForumPostsByAuthor(authorId: number): Promise<ForumPost[]> {
+    return Array.from(this.forumPosts.values())
+      .filter(post => post.authorId === authorId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  
+  async createForumPost(data: InsertForumPost): Promise<ForumPost> {
+    const id = this.currentForumPostId++;
+    const now = new Date();
+    
+    // Default first post flag to false, will update later if needed
+    let isFirstPost = false;
+    
+    // Check if this is the first post for the topic
+    const existingPosts = Array.from(this.forumPosts.values())
+      .filter(post => post.topicId === data.topicId);
+    
+    if (existingPosts.length === 0) {
+      isFirstPost = true;
+    }
+    
+    const post: ForumPost = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now,
+      isFirstPost,
+      isAcceptedAnswer: false
+    };
+    
+    this.forumPosts.set(id, post);
+    
+    // Update topic's lastActivityAt and replyCount
+    const topic = this.forumTopics.get(data.topicId);
+    if (topic) {
+      topic.lastActivityAt = now;
+      
+      if (!isFirstPost) {
+        topic.replyCount = (topic.replyCount || 0) + 1;
+      }
+      
+      this.forumTopics.set(data.topicId, topic);
+    }
+    
+    return post;
+  }
+  
+  async updateForumPost(id: number, data: Partial<ForumPost>): Promise<ForumPost | undefined> {
+    const post = this.forumPosts.get(id);
+    if (!post) return undefined;
+    
+    const now = new Date();
+    const updatedPost = { ...post, ...data, updatedAt: now };
+    this.forumPosts.set(id, updatedPost);
+    
+    // Update topic's lastActivityAt
+    const topic = this.forumTopics.get(post.topicId);
+    if (topic) {
+      topic.lastActivityAt = now;
+      this.forumTopics.set(post.topicId, topic);
+    }
+    
+    return updatedPost;
+  }
+  
+  async deleteForumPost(id: number): Promise<boolean> {
+    const post = this.forumPosts.get(id);
+    if (!post) return false;
+    
+    // Cannot delete the first post of a topic
+    if (post.isFirstPost) {
+      return false;
+    }
+    
+    // Update topic's replyCount
+    const topic = this.forumTopics.get(post.topicId);
+    if (topic) {
+      topic.replyCount = Math.max(0, (topic.replyCount || 0) - 1);
+      this.forumTopics.set(post.topicId, topic);
+    }
+    
+    return this.forumPosts.delete(id);
+  }
+  
+  async markPostAsAcceptedAnswer(id: number, isAccepted: boolean): Promise<ForumPost | undefined> {
+    const post = this.forumPosts.get(id);
+    if (!post || post.isFirstPost) return undefined;
+    
+    // If marking as accepted, unmark any currently accepted answers for the topic
+    if (isAccepted) {
+      Array.from(this.forumPosts.values())
+        .filter(p => p.topicId === post.topicId && p.isAcceptedAnswer)
+        .forEach(p => {
+          p.isAcceptedAnswer = false;
+          this.forumPosts.set(p.id, p);
+        });
+    }
+    
+    const updatedPost = { ...post, isAcceptedAnswer: isAccepted };
+    this.forumPosts.set(id, updatedPost);
+    return updatedPost;
+  }
+  
+  // Course Category Methods
+  async getAllCourseCategories(): Promise<CourseCategory[]> {
+    return Array.from(this.courseCategories.values())
+      .sort((a, b) => a.order - b.order);
+  }
+  
+  async getCourseCategory(id: number): Promise<CourseCategory | undefined> {
+    return this.courseCategories.get(id);
+  }
+  
+  async getCourseCategoryBySlug(slug: string): Promise<CourseCategory | undefined> {
+    return Array.from(this.courseCategories.values()).find(
+      (category) => category.slug === slug
+    );
+  }
+  
+  async createCourseCategory(data: InsertCourseCategory): Promise<CourseCategory> {
+    const id = this.currentCourseCategoryId++;
+    const now = new Date();
+    const category: CourseCategory = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.courseCategories.set(id, category);
+    return category;
+  }
+  
+  async updateCourseCategory(id: number, data: Partial<CourseCategory>): Promise<CourseCategory | undefined> {
+    const category = this.courseCategories.get(id);
+    if (!category) return undefined;
+    
+    const now = new Date();
+    const updatedCategory = { ...category, ...data, updatedAt: now };
+    this.courseCategories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+  
+  async deleteCourseCategory(id: number): Promise<boolean> {
+    return this.courseCategories.delete(id);
+  }
+  
+  // Course Methods
+  async getCourses(categoryId?: number): Promise<Course[]> {
+    let courses = Array.from(this.courses.values());
+    
+    if (categoryId) {
+      courses = courses.filter(course => course.categoryId === categoryId);
+    }
+    
+    return courses.sort((a, b) => {
+      // Published courses first
+      if (a.isPublished && !b.isPublished) return -1;
+      if (!a.isPublished && b.isPublished) return 1;
+      
+      // Then by most recent
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    });
+  }
+  
+  async getCourse(id: number): Promise<Course | undefined> {
+    return this.courses.get(id);
+  }
+  
+  async getCourseBySlug(slug: string): Promise<Course | undefined> {
+    return Array.from(this.courses.values()).find(
+      (course) => course.slug === slug
+    );
+  }
+  
+  async getCoursesByInstructor(instructorId: number): Promise<Course[]> {
+    return Array.from(this.courses.values())
+      .filter(course => course.instructorId === instructorId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  
+  async createCourse(data: InsertCourse): Promise<Course> {
+    const id = this.currentCourseId++;
+    const now = new Date();
+    const course: Course = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now,
+      enrollmentCount: 0,
+      isPublished: false
+    };
+    this.courses.set(id, course);
+    return course;
+  }
+  
+  async updateCourse(id: number, data: Partial<Course>): Promise<Course | undefined> {
+    const course = this.courses.get(id);
+    if (!course) return undefined;
+    
+    const now = new Date();
+    const updatedCourse = { ...course, ...data, updatedAt: now };
+    this.courses.set(id, updatedCourse);
+    return updatedCourse;
+  }
+  
+  async deleteCourse(id: number): Promise<boolean> {
+    return this.courses.delete(id);
+  }
+  
+  async toggleCoursePublished(id: number, isPublished: boolean): Promise<Course | undefined> {
+    const course = this.courses.get(id);
+    if (!course) return undefined;
+    
+    const updatedCourse = { ...course, isPublished };
+    this.courses.set(id, updatedCourse);
+    return updatedCourse;
+  }
+  
+  // Course Module Methods
+  async getCourseModules(courseId: number): Promise<CourseModule[]> {
+    return Array.from(this.courseModules.values())
+      .filter(module => module.courseId === courseId)
+      .sort((a, b) => a.order - b.order);
+  }
+  
+  async getCourseModule(id: number): Promise<CourseModule | undefined> {
+    return this.courseModules.get(id);
+  }
+  
+  async createCourseModule(data: InsertCourseModule): Promise<CourseModule> {
+    const id = this.currentCourseModuleId++;
+    const now = new Date();
+    const module: CourseModule = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.courseModules.set(id, module);
+    return module;
+  }
+  
+  async updateCourseModule(id: number, data: Partial<CourseModule>): Promise<CourseModule | undefined> {
+    const module = this.courseModules.get(id);
+    if (!module) return undefined;
+    
+    const now = new Date();
+    const updatedModule = { ...module, ...data, updatedAt: now };
+    this.courseModules.set(id, updatedModule);
+    return updatedModule;
+  }
+  
+  async deleteCourseModule(id: number): Promise<boolean> {
+    return this.courseModules.delete(id);
+  }
+  
+  // Course Lesson Methods
+  async getCourseLessons(moduleId: number): Promise<CourseLesson[]> {
+    return Array.from(this.courseLessons.values())
+      .filter(lesson => lesson.moduleId === moduleId)
+      .sort((a, b) => a.order - b.order);
+  }
+  
+  async getCourseLesson(id: number): Promise<CourseLesson | undefined> {
+    return this.courseLessons.get(id);
+  }
+  
+  async createCourseLesson(data: InsertCourseLesson): Promise<CourseLesson> {
+    const id = this.currentCourseLessonId++;
+    const now = new Date();
+    const lesson: CourseLesson = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.courseLessons.set(id, lesson);
+    return lesson;
+  }
+  
+  async updateCourseLesson(id: number, data: Partial<CourseLesson>): Promise<CourseLesson | undefined> {
+    const lesson = this.courseLessons.get(id);
+    if (!lesson) return undefined;
+    
+    const now = new Date();
+    const updatedLesson = { ...lesson, ...data, updatedAt: now };
+    this.courseLessons.set(id, updatedLesson);
+    return updatedLesson;
+  }
+  
+  async deleteCourseLesson(id: number): Promise<boolean> {
+    return this.courseLessons.delete(id);
+  }
+  
+  // Course Enrollment Methods
+  async enrollUserInCourse(courseId: number, userId: number): Promise<CourseEnrollment> {
+    // Check if enrollment exists
+    const existingEnrollment = Array.from(this.courseEnrollments.values())
+      .find(e => e.courseId === courseId && e.userId === userId);
+    
+    if (existingEnrollment) {
+      return existingEnrollment;
+    }
+    
+    const id = this.currentCourseEnrollmentId++;
+    const now = new Date();
+    const enrollment: CourseEnrollment = {
+      id,
+      courseId,
+      userId,
+      enrolledAt: now,
+      completedAt: null
+    };
+    
+    this.courseEnrollments.set(id, enrollment);
+    
+    // Update course enrollment count
+    const course = this.courses.get(courseId);
+    if (course) {
+      course.enrollmentCount = (course.enrollmentCount || 0) + 1;
+      this.courses.set(courseId, course);
+    }
+    
+    return enrollment;
+  }
+  
+  async getUserEnrollments(userId: number): Promise<CourseEnrollment[]> {
+    return Array.from(this.courseEnrollments.values())
+      .filter(enrollment => enrollment.userId === userId)
+      .sort((a, b) => b.enrolledAt.getTime() - a.enrolledAt.getTime());
+  }
+  
+  async getCourseEnrollments(courseId: number): Promise<CourseEnrollment[]> {
+    return Array.from(this.courseEnrollments.values())
+      .filter(enrollment => enrollment.courseId === courseId)
+      .sort((a, b) => b.enrolledAt.getTime() - a.enrolledAt.getTime());
+  }
+  
+  async markCourseAsCompleted(courseId: number, userId: number): Promise<CourseEnrollment | undefined> {
+    const enrollment = Array.from(this.courseEnrollments.values())
+      .find(e => e.courseId === courseId && e.userId === userId);
+    
+    if (!enrollment) return undefined;
+    
+    const now = new Date();
+    const updatedEnrollment = { ...enrollment, completedAt: now };
+    this.courseEnrollments.set(enrollment.id, updatedEnrollment);
+    return updatedEnrollment;
+  }
+  
+  // Lesson Progress Methods
+  async updateLessonProgress(lessonId: number, userId: number, completed: boolean): Promise<LessonProgress> {
+    // Check if progress exists
+    const existingProgress = Array.from(this.lessonProgress.values())
+      .find(p => p.lessonId === lessonId && p.userId === userId);
+    
+    const now = new Date();
+    
+    if (existingProgress) {
+      const updatedProgress = { 
+        ...existingProgress, 
+        completed, 
+        lastAccessedAt: now 
+      };
+      this.lessonProgress.set(existingProgress.id, updatedProgress);
+      return updatedProgress;
+    }
+    
+    const id = this.currentLessonProgressId++;
+    const progress: LessonProgress = {
+      id,
+      lessonId,
+      userId,
+      completed,
+      lastAccessedAt: now
+    };
+    
+    this.lessonProgress.set(id, progress);
+    return progress;
+  }
+  
+  async getUserLessonProgress(userId: number, lessonId: number): Promise<LessonProgress | undefined> {
+    return Array.from(this.lessonProgress.values())
+      .find(p => p.lessonId === lessonId && p.userId === userId);
+  }
+  
+  async getUserCourseProgress(userId: number, courseId: number): Promise<{total: number, completed: number}> {
+    // Get all modules for the course
+    const modules = Array.from(this.courseModules.values())
+      .filter(m => m.courseId === courseId);
+    
+    // Get all lessons for these modules
+    let lessonIds: number[] = [];
+    for (const module of modules) {
+      const moduleLessons = Array.from(this.courseLessons.values())
+        .filter(l => l.moduleId === module.id)
+        .map(l => l.id);
+      
+      lessonIds.push(...moduleLessons);
+    }
+    
+    // Get progress for all lessons
+    const totalLessons = lessonIds.length;
+    let completedLessons = 0;
+    
+    for (const lessonId of lessonIds) {
+      const progress = Array.from(this.lessonProgress.values())
+        .find(p => p.lessonId === lessonId && p.userId === userId);
+      
+      if (progress && progress.completed) {
+        completedLessons++;
+      }
+    }
+    
+    return { total: totalLessons, completed: completedLessons };
   }
   
   // Seed initial data for demo purposes

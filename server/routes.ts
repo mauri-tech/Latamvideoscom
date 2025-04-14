@@ -6,7 +6,14 @@ import {
   insertUserSchema, 
   insertEditorProfileSchema, 
   insertPortfolioItemSchema,
-  insertBriefSchema
+  insertBriefSchema,
+  insertForumCategorySchema,
+  insertForumTopicSchema,
+  insertForumPostSchema,
+  insertCourseCategorySchema,
+  insertCourseSchema,
+  insertCourseModuleSchema,
+  insertCourseLessonSchema
 } from "@shared/schema";
 import { ZodError } from "zod";
 
@@ -341,6 +348,1291 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Forum Routes
+  // Categories
+  app.get("/api/forum/categories", async (_req, res) => {
+    try {
+      const categories = await storage.getAllForumCategories();
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/forum/categories/:id", async (req, res) => {
+    try {
+      const category = await storage.getForumCategory(parseInt(req.params.id));
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/forum/categories/slug/:slug", async (req, res) => {
+    try {
+      const category = await storage.getForumCategoryBySlug(req.params.slug);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/forum/categories", async (req, res) => {
+    try {
+      // Require authentication and admin role
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is admin
+      const user = req.user;
+      if (user.userType !== "admin") {
+        return res.status(403).json({ message: "Admin permission required" });
+      }
+      
+      const categoryData = insertForumCategorySchema.parse(req.body);
+      const category = await storage.createForumCategory(categoryData);
+      res.status(201).json(category);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+  
+  app.put("/api/forum/categories/:id", async (req, res) => {
+    try {
+      // Require authentication and admin role
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is admin
+      const user = req.user;
+      if (user.userType !== "admin") {
+        return res.status(403).json({ message: "Admin permission required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const category = await storage.getForumCategory(id);
+      
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      const updatedCategory = await storage.updateForumCategory(id, req.body);
+      res.json(updatedCategory);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.delete("/api/forum/categories/:id", async (req, res) => {
+    try {
+      // Require authentication and admin role
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is admin
+      const user = req.user;
+      if (user.userType !== "admin") {
+        return res.status(403).json({ message: "Admin permission required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteForumCategory(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // Topics
+  app.get("/api/forum/topics", async (req, res) => {
+    try {
+      const categoryId = req.query.categoryId 
+        ? parseInt(req.query.categoryId as string) 
+        : undefined;
+      
+      const topics = await storage.getForumTopics(categoryId);
+      res.json(topics);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/forum/topics/:id", async (req, res) => {
+    try {
+      const topic = await storage.getForumTopic(parseInt(req.params.id));
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      // Increment view count
+      await storage.incrementTopicView(topic.id);
+      
+      res.json(topic);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/forum/topics/slug/:slug", async (req, res) => {
+    try {
+      const topic = await storage.getForumTopicBySlug(req.params.slug);
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      // Increment view count
+      await storage.incrementTopicView(topic.id);
+      
+      res.json(topic);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/forum/topics/user/:userId", async (req, res) => {
+    try {
+      const topics = await storage.getForumTopicsByAuthor(parseInt(req.params.userId));
+      res.json(topics);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/forum/topics", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const topicData = insertForumTopicSchema.parse({
+        ...req.body,
+        authorId: req.user.id // Set the current user as author
+      });
+      
+      // Check if category exists
+      const category = await storage.getForumCategory(topicData.categoryId);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      const topic = await storage.createForumTopic(topicData);
+      
+      // Create the first post for the topic
+      const postData = {
+        topicId: topic.id,
+        authorId: req.user.id,
+        content: topicData.content
+      };
+      
+      await storage.createForumPost(postData);
+      
+      res.status(201).json(topic);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+  
+  app.put("/api/forum/topics/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const topic = await storage.getForumTopic(id);
+      
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      // Check if user is author or admin
+      if (topic.authorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const updatedTopic = await storage.updateForumTopic(id, req.body);
+      res.json(updatedTopic);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.delete("/api/forum/topics/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const topic = await storage.getForumTopic(id);
+      
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      // Check if user is author or admin
+      if (topic.authorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const success = await storage.deleteForumTopic(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/forum/topics/:id/pin", async (req, res) => {
+    try {
+      // Require authentication and admin role
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is admin
+      if (req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Admin permission required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const { isPinned } = req.body;
+      
+      if (typeof isPinned !== 'boolean') {
+        return res.status(400).json({ message: "isPinned must be a boolean" });
+      }
+      
+      const topic = await storage.togglePinTopic(id, isPinned);
+      
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      res.json(topic);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/forum/topics/:id/close", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const topic = await storage.getForumTopic(id);
+      
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      // Check if user is author or admin
+      if (topic.authorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const { isClosed } = req.body;
+      
+      if (typeof isClosed !== 'boolean') {
+        return res.status(400).json({ message: "isClosed must be a boolean" });
+      }
+      
+      const updatedTopic = await storage.toggleCloseTopic(id, isClosed);
+      res.json(updatedTopic);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // Posts
+  app.get("/api/forum/posts/:topicId", async (req, res) => {
+    try {
+      const posts = await storage.getForumPosts(parseInt(req.params.topicId));
+      
+      // Get author data for each post
+      const postsWithAuthorData = await Promise.all(
+        posts.map(async (post) => {
+          const user = await storage.getUser(post.authorId);
+          if (!user) return { ...post, author: null };
+          
+          // Don't return password
+          const { password, ...userData } = user;
+          
+          return {
+            ...post,
+            author: userData
+          };
+        })
+      );
+      
+      res.json(postsWithAuthorData);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/forum/posts/user/:userId", async (req, res) => {
+    try {
+      const posts = await storage.getForumPostsByAuthor(parseInt(req.params.userId));
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/forum/posts", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const postData = insertForumPostSchema.parse({
+        ...req.body,
+        authorId: req.user.id // Set the current user as author
+      });
+      
+      // Check if topic exists
+      const topic = await storage.getForumTopic(postData.topicId);
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      // Check if topic is closed
+      if (topic.isClosed && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Topic is closed" });
+      }
+      
+      const post = await storage.createForumPost(postData);
+      res.status(201).json(post);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+  
+  app.put("/api/forum/posts/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const post = await storage.getForumPost(id);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      // Check if user is author or admin
+      if (post.authorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const updatedPost = await storage.updateForumPost(id, req.body);
+      res.json(updatedPost);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.delete("/api/forum/posts/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const post = await storage.getForumPost(id);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      // Check if user is author or admin
+      if (post.authorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const success = await storage.deleteForumPost(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Post not found or is the first post of a topic" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/forum/posts/:id/accept", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const post = await storage.getForumPost(id);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      // Get the topic to check author
+      const topic = await storage.getForumTopic(post.topicId);
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      
+      // Check if user is topic author or admin
+      if (topic.authorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const { isAccepted } = req.body;
+      
+      if (typeof isAccepted !== 'boolean') {
+        return res.status(400).json({ message: "isAccepted must be a boolean" });
+      }
+      
+      const updatedPost = await storage.markPostAsAcceptedAnswer(id, isAccepted);
+      
+      if (!updatedPost) {
+        return res.status(404).json({ message: "Post not found or is the first post of a topic" });
+      }
+      
+      res.json(updatedPost);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  // Course Routes
+  // Categories
+  app.get("/api/courses/categories", async (_req, res) => {
+    try {
+      const categories = await storage.getAllCourseCategories();
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/courses/categories/:id", async (req, res) => {
+    try {
+      const category = await storage.getCourseCategory(parseInt(req.params.id));
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/courses/categories/slug/:slug", async (req, res) => {
+    try {
+      const category = await storage.getCourseCategoryBySlug(req.params.slug);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/courses/categories", async (req, res) => {
+    try {
+      // Require authentication and admin role
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is admin
+      const user = req.user;
+      if (user.userType !== "admin") {
+        return res.status(403).json({ message: "Admin permission required" });
+      }
+      
+      const categoryData = insertCourseCategorySchema.parse(req.body);
+      const category = await storage.createCourseCategory(categoryData);
+      res.status(201).json(category);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+  
+  app.put("/api/courses/categories/:id", async (req, res) => {
+    try {
+      // Require authentication and admin role
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is admin
+      const user = req.user;
+      if (user.userType !== "admin") {
+        return res.status(403).json({ message: "Admin permission required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const category = await storage.getCourseCategory(id);
+      
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      const updatedCategory = await storage.updateCourseCategory(id, req.body);
+      res.json(updatedCategory);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.delete("/api/courses/categories/:id", async (req, res) => {
+    try {
+      // Require authentication and admin role
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is admin
+      const user = req.user;
+      if (user.userType !== "admin") {
+        return res.status(403).json({ message: "Admin permission required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteCourseCategory(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // Courses
+  app.get("/api/courses", async (req, res) => {
+    try {
+      const categoryId = req.query.categoryId 
+        ? parseInt(req.query.categoryId as string) 
+        : undefined;
+      
+      const courses = await storage.getCourses(categoryId);
+      
+      // Filter out unpublished courses unless user is admin
+      let filteredCourses = courses;
+      if (!(req.isAuthenticated() && req.user.userType === "admin")) {
+        filteredCourses = courses.filter(course => course.isPublished);
+      }
+      
+      res.json(filteredCourses);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/courses/:id", async (req, res) => {
+    try {
+      const course = await storage.getCourse(parseInt(req.params.id));
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if course is published or user is admin
+      if (!course.isPublished && !(req.isAuthenticated() && req.user.userType === "admin")) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      res.json(course);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/courses/slug/:slug", async (req, res) => {
+    try {
+      const course = await storage.getCourseBySlug(req.params.slug);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if course is published or user is admin
+      if (!course.isPublished && !(req.isAuthenticated() && req.user.userType === "admin")) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      res.json(course);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/courses/instructor/:instructorId", async (req, res) => {
+    try {
+      const courses = await storage.getCoursesByInstructor(parseInt(req.params.instructorId));
+      
+      // Filter out unpublished courses unless user is admin or the instructor
+      let filteredCourses = courses;
+      if (req.isAuthenticated()) {
+        const isAdminOrInstructor = req.user.userType === "admin" || 
+          req.user.id === parseInt(req.params.instructorId);
+        
+        if (!isAdminOrInstructor) {
+          filteredCourses = courses.filter(course => course.isPublished);
+        }
+      } else {
+        filteredCourses = courses.filter(course => course.isPublished);
+      }
+      
+      res.json(filteredCourses);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/courses", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Only instructors and admins can create courses
+      if (req.user.userType !== "admin" && req.user.userType !== "editor") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const courseData = insertCourseSchema.parse({
+        ...req.body,
+        instructorId: req.user.id // Set the current user as instructor
+      });
+      
+      // Check if category exists
+      const category = await storage.getCourseCategory(courseData.categoryId);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      const course = await storage.createCourse(courseData);
+      res.status(201).json(course);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+  
+  app.put("/api/courses/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const course = await storage.getCourse(id);
+      
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if user is instructor or admin
+      if (course.instructorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const updatedCourse = await storage.updateCourse(id, req.body);
+      res.json(updatedCourse);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.delete("/api/courses/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const course = await storage.getCourse(id);
+      
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if user is instructor or admin
+      if (course.instructorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const success = await storage.deleteCourse(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/courses/:id/publish", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const course = await storage.getCourse(id);
+      
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if user is instructor or admin
+      if (course.instructorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const { isPublished } = req.body;
+      
+      if (typeof isPublished !== 'boolean') {
+        return res.status(400).json({ message: "isPublished must be a boolean" });
+      }
+      
+      const updatedCourse = await storage.toggleCoursePublished(id, isPublished);
+      res.json(updatedCourse);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // Modules
+  app.get("/api/courses/:courseId/modules", async (req, res) => {
+    try {
+      const courseId = parseInt(req.params.courseId);
+      
+      // Check if course exists and is published or user has access
+      const course = await storage.getCourse(courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      if (!course.isPublished && !(req.isAuthenticated() && 
+          (req.user.userType === "admin" || req.user.id === course.instructorId))) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      const modules = await storage.getCourseModules(courseId);
+      res.json(modules);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/courses/:courseId/modules", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const courseId = parseInt(req.params.courseId);
+      
+      // Check if course exists
+      const course = await storage.getCourse(courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if user is instructor or admin
+      if (course.instructorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const moduleData = insertCourseModuleSchema.parse({
+        ...req.body,
+        courseId
+      });
+      
+      const module = await storage.createCourseModule(moduleData);
+      res.status(201).json(module);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+  
+  app.put("/api/courses/modules/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const module = await storage.getCourseModule(id);
+      
+      if (!module) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      // Check if user is instructor or admin
+      const course = await storage.getCourse(module.courseId);
+      if (!course || (course.instructorId !== req.user.id && req.user.userType !== "admin")) {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const updatedModule = await storage.updateCourseModule(id, req.body);
+      res.json(updatedModule);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.delete("/api/courses/modules/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const module = await storage.getCourseModule(id);
+      
+      if (!module) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      // Check if user is instructor or admin
+      const course = await storage.getCourse(module.courseId);
+      if (!course || (course.instructorId !== req.user.id && req.user.userType !== "admin")) {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const success = await storage.deleteCourseModule(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // Lessons
+  app.get("/api/courses/modules/:moduleId/lessons", async (req, res) => {
+    try {
+      const moduleId = parseInt(req.params.moduleId);
+      
+      // Check if module exists
+      const module = await storage.getCourseModule(moduleId);
+      if (!module) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      // Check if course is published or user has access
+      const course = await storage.getCourse(module.courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      if (!course.isPublished && !(req.isAuthenticated() && 
+          (req.user.userType === "admin" || req.user.id === course.instructorId))) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      const lessons = await storage.getCourseLessons(moduleId);
+      res.json(lessons);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/courses/modules/:moduleId/lessons", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const moduleId = parseInt(req.params.moduleId);
+      
+      // Check if module exists
+      const module = await storage.getCourseModule(moduleId);
+      if (!module) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      // Check if user is instructor or admin
+      const course = await storage.getCourse(module.courseId);
+      if (!course || (course.instructorId !== req.user.id && req.user.userType !== "admin")) {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const lessonData = insertCourseLessonSchema.parse({
+        ...req.body,
+        moduleId
+      });
+      
+      const lesson = await storage.createCourseLesson(lessonData);
+      res.status(201).json(lesson);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+  
+  app.put("/api/courses/lessons/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const lesson = await storage.getCourseLesson(id);
+      
+      if (!lesson) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      // Check if user is instructor or admin
+      const module = await storage.getCourseModule(lesson.moduleId);
+      if (!module) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      const course = await storage.getCourse(module.courseId);
+      if (!course || (course.instructorId !== req.user.id && req.user.userType !== "admin")) {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const updatedLesson = await storage.updateCourseLesson(id, req.body);
+      res.json(updatedLesson);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.delete("/api/courses/lessons/:id", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const id = parseInt(req.params.id);
+      const lesson = await storage.getCourseLesson(id);
+      
+      if (!lesson) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      // Check if user is instructor or admin
+      const module = await storage.getCourseModule(lesson.moduleId);
+      if (!module) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      const course = await storage.getCourse(module.courseId);
+      if (!course || (course.instructorId !== req.user.id && req.user.userType !== "admin")) {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const success = await storage.deleteCourseLesson(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // Enrollments and Progress
+  app.post("/api/courses/:courseId/enroll", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const courseId = parseInt(req.params.courseId);
+      
+      // Check if course exists and is published
+      const course = await storage.getCourse(courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      if (!course.isPublished && req.user.userType !== "admin" && req.user.id !== course.instructorId) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      const enrollment = await storage.enrollUserInCourse(courseId, req.user.id);
+      res.status(201).json(enrollment);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/courses/:courseId/enrollments", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const courseId = parseInt(req.params.courseId);
+      
+      // Check if course exists
+      const course = await storage.getCourse(courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Only instructor or admin can see all enrollments
+      if (course.instructorId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const enrollments = await storage.getCourseEnrollments(courseId);
+      
+      // Get user data for each enrollment
+      const enrollmentsWithUserData = await Promise.all(
+        enrollments.map(async (enrollment) => {
+          const user = await storage.getUser(enrollment.userId);
+          if (!user) return { ...enrollment, user: null };
+          
+          // Don't return password
+          const { password, ...userData } = user;
+          
+          return {
+            ...enrollment,
+            user: userData
+          };
+        })
+      );
+      
+      res.json(enrollmentsWithUserData);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/users/:userId/enrollments", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const userId = parseInt(req.params.userId);
+      
+      // Users can only see their own enrollments unless admin
+      if (userId !== req.user.id && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "Permission denied" });
+      }
+      
+      const enrollments = await storage.getUserEnrollments(userId);
+      
+      // Get course data for each enrollment
+      const enrollmentsWithCourseData = await Promise.all(
+        enrollments.map(async (enrollment) => {
+          const course = await storage.getCourse(enrollment.courseId);
+          return {
+            ...enrollment,
+            course
+          };
+        })
+      );
+      
+      res.json(enrollmentsWithCourseData);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/courses/lessons/:lessonId/progress", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const lessonId = parseInt(req.params.lessonId);
+      const { completed } = req.body;
+      
+      if (typeof completed !== 'boolean') {
+        return res.status(400).json({ message: "completed must be a boolean" });
+      }
+      
+      // Check if lesson exists
+      const lesson = await storage.getCourseLesson(lessonId);
+      if (!lesson) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      // Check if user is enrolled in the course
+      const module = await storage.getCourseModule(lesson.moduleId);
+      if (!module) {
+        return res.status(404).json({ message: "Module not found" });
+      }
+      
+      const enrollments = await storage.getUserEnrollments(req.user.id);
+      const isEnrolled = enrollments.some(e => e.courseId === module.courseId);
+      
+      if (!isEnrolled && req.user.userType !== "admin") {
+        return res.status(403).json({ message: "You are not enrolled in this course" });
+      }
+      
+      const progress = await storage.updateLessonProgress(lessonId, req.user.id, completed);
+      res.json(progress);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.get("/api/courses/:courseId/progress", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const courseId = parseInt(req.params.courseId);
+      
+      // Check if course exists
+      const course = await storage.getCourse(courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if user is enrolled
+      const enrollments = await storage.getUserEnrollments(req.user.id);
+      const isEnrolled = enrollments.some(e => e.courseId === courseId);
+      
+      if (!isEnrolled && req.user.userType !== "admin" && req.user.id !== course.instructorId) {
+        return res.status(403).json({ message: "You are not enrolled in this course" });
+      }
+      
+      const progress = await storage.getUserCourseProgress(req.user.id, courseId);
+      res.json(progress);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  app.post("/api/courses/:courseId/complete", async (req, res) => {
+    try {
+      // Require authentication
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const courseId = parseInt(req.params.courseId);
+      
+      // Check if course exists
+      const course = await storage.getCourse(courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      // Check if user is enrolled
+      const enrollments = await storage.getUserEnrollments(req.user.id);
+      const isEnrolled = enrollments.some(e => e.courseId === courseId);
+      
+      if (!isEnrolled) {
+        return res.status(403).json({ message: "You are not enrolled in this course" });
+      }
+      
+      // Optionally check if all lessons are completed
+      const progress = await storage.getUserCourseProgress(req.user.id, courseId);
+      if (progress.completed < progress.total && req.user.userType !== "admin") {
+        return res.status(400).json({ 
+          message: "You need to complete all lessons first",
+          progress
+        });
+      }
+      
+      const enrollment = await storage.markCourseAsCompleted(courseId, req.user.id);
+      
+      if (!enrollment) {
+        return res.status(404).json({ message: "Enrollment not found" });
+      }
+      
+      res.json(enrollment);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  // Create HTTP server
   const httpServer = createServer(app);
   return httpServer;
 }
