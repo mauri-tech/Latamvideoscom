@@ -247,7 +247,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Country filter
       if (req.query.country) {
-        filters.country = (req.query.country as string).split(',');
+        // Si el país es un string único, conviértelo a array para mantener compatibilidad
+        const countryParam = req.query.country as string;
+        filters.country = countryParam.includes(',') 
+          ? countryParam.split(',')
+          : [countryParam];
       }
       
       // Languages filter

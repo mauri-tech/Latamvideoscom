@@ -1565,9 +1565,15 @@ export class DatabaseStorage implements IStorage {
     
     // Filter by professional type
     if (filters.professionalType) {
-      filteredResults = filteredResults.filter(profile => 
-        profile.professionalType === filters.professionalType
-      );
+      filteredResults = filteredResults.filter(profile => {
+        // Comparación caso insensible o con valores por defecto
+        const profileType = profile.professionalType?.toLowerCase() || 'editor';
+        const filterType = filters.professionalType.toLowerCase();
+        
+        return profileType === filterType || 
+               // Si el filtro es "editor", mostrar también perfiles sin tipo específico
+               (filterType === 'editor' && (!profile.professionalType || profile.professionalType === ''));
+      });
     }
     
     // Sort by different criteria
