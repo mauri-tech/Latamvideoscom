@@ -1,0 +1,113 @@
+Aquí tienes las instrucciones técnicas para arreglar los problemas de guardado de datos, unificar el diseño del perfil como en la primera imagen, y agregar los nuevos campos (especialidades y tags de tecnologías), junto con los cambios en colores de botones:
+
+1. Solucionar el error al guardar la información
+Verificar endpoints de actualización
+
+Revisa en server/routes.ts que el endpoint PUT /api/editor-profile/:id (o el que uses) reciba los datos correctos (bio, equipo, tarifas, etc.).
+
+Asegúrate de retornar un status 200 o 201 cuando sea exitoso, o de mostrar un error claro cuando falle la validación.
+
+Validar la lógica en el Frontend
+
+En el componente donde guardas la info (por ej. EditProfilePage.tsx o similar), verifica que estés usando los mismos nombres de campos que el backend espera.
+
+Comprueba los key del JSON (por ejemplo, “bio” en vez de “description”, etc.).
+
+Notificaciones y feedback visual
+
+Implementa un toast o alerta que indique “Datos guardados” o “Error al guardar”.
+
+Asegúrate de manejar correctamente las promesas (async/await o .then/.catch) en React/Vue/Angular.
+
+2. Actualizar el perfil publicado en homepage
+Unificar la fuente de datos
+
+El perfil que se ve en el homepage (por ejemplo, EditorInteractiveProfile.tsx) debe consultar los mismos campos de la base de datos que el perfil completo (para no duplicar info).
+
+Tras guardar los cambios en el endpoint, haz un refetch o actualiza el cache (ej. con react-query o SWR) para que el homepage muestre la versión más reciente.
+
+Estructura de diseño
+
+Replicar el layout de la primera imagen (foto de perfil a la izquierda, nombre y país, y debajo rating/estrellas o stats).
+
+Bajo este bloque, deben aparecer la sección de Portafolio (proyectos destacados) y las tabs (Tarifas, Equipo, Reseñas, etc.).
+
+Mantener la consistencia en la tipografía y espacios para que se vea igual en homepage y en la página de perfil.
+
+3. Cambiar colores de los botones (azul y negro)
+Definir variables de color
+
+En tu CSS, Tailwind, SCSS o donde lo manejes, define:
+
+--primary-color: #007AFF; /* Azul principal */
+
+--secondary-color: #1C1C1E; /* Negro/Gris oscuro para botones secundarios */
+
+Aplicar a los componentes
+
+En todos los <Button> primarios, usa el color azul.
+
+En los botones secundarios (ej. “Cancelar”, “Ver más tarde”), usa el negro o gris oscuro.
+
+Verifica que el hover y focus tengan una tonalidad adecuada (por ej. hover con un azul un poco más oscuro).
+
+4. Agregar campo de “Tags de tecnologías/especialidades”
+(ejemplo: “Edición estilo Vox”, “Motion Graphics”, “CapCut”, etc.)
+
+Migración o actualización de la DB
+
+Crear un campo tags (tipo array de strings o JSON) en la tabla editor_profiles.
+
+Si no existe, necesitarás una migración (ALTER TABLE o similar).
+
+Ejemplo con Drizzle/Prisma: tags: string[] o jsonb en PostgreSQL.
+
+Frontend para edición y guardado
+
+Incluir en EditProfilePage.tsx un input tipo “tag input” o un multiselect.
+
+Permitirá que el usuario agregue/remueva tags libremente (“CapCut”, “Edición estilo Vox”, “Animación 2D”, etc.).
+
+Guardar el array de tags en la DB a través del endpoint de update.
+
+Visualizar en la card de perfil
+
+Debajo del nombre y la foto, mostrar los tags como chips/píldoras (por ejemplo, un map de tags con un diseño badge).
+
+Estilo minimalista, con color gris claro de fondo y texto negro, para no distraer.
+
+5. Replicar el diseño de la primera imagen
+Foto y nombre del usuario
+
+Asegúrate de tener el container a la izquierda con la foto de perfil en un size fijo (ej. 150 x 150 px), nombre grande en bold, país (banderita o un iconito si deseas), rating, etc.
+
+Barra de tabs (Portafolio, Equipo, Tarifas, Reseñas)
+
+Justo a la derecha de la foto y nombre, añade las tabs con su contenido:
+
+Portafolio: Proyectos destacados en cards.
+
+Equipo Técnico: Lista de hardware, software, etc.
+
+Tarifas: Muestra los planes con precio.
+
+Reseñas: Bloque para reviews y estrellas.
+
+Cada tab debe ser clickable y cambiar la sección activa sin recargar toda la página (usando React state o route params).
+
+Datos extras
+
+Los contadores (ej. “23 Proyectos, $200 desde, 5 Años de Experiencia”) pueden ir como texto destacado, debajo de la foto o en la parte superior de cada tab.
+
+Mantén la coherencia de márgenes y paddings para que no se vea “apretado”.
+
+Resumen Final
+Solución del error de guardado: Revisa endpoints y nombres de campos.
+
+Actualizar el homepage: Usa la misma fuente de datos y refresca tras edición.
+
+Diseño consistente: Botones primarios azules, secundarios negros, y la distribución igual a la primera imagen de ejemplo.
+
+Campo de tags: Creación en DB y edición en frontend para mostrar tags tipo chips.
+
+Tabs ordenadas: Portafolio, Equipo, Tarifas, Reseñas (o las que manejes), con layout replicando la imagen.

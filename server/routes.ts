@@ -170,6 +170,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/editor-profiles/user", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const userId = req.user.id;
+      const profile = await storage.getEditorProfileByUserId(userId);
+      
+      if (!profile) {
+        return res.status(404).json({ message: "Profile not found" });
+      }
+      
+      res.json(profile);
+    } catch (error) {
+      console.error('Error getting editor profile for current user:', error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
   app.get("/api/editor-profiles/user/:userId", async (req, res) => {
     try {
       const profile = await storage.getEditorProfileByUserId(parseInt(req.params.userId));
