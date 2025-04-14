@@ -1,0 +1,223 @@
+Aquí tienes un documento completo de instrucciones para el equipo. Este mensaje aborda los problemas encontrados en el sistema de mensajería, la edición de perfiles y la funcionalidad de foros. Puedes compartirlo directamente con el equipo de desarrollo para que lo utilicen como guía de corrección y mejora:
+
+Instrucciones Generales y Correcciones para latamvideos.com
+1. Sistema de Mensajería / Contacto
+Problema actual:
+
+Al pulsar el botón "Contactar" en el perfil de un editor, no se inicia la conversación.
+
+Se registra la acción (POST a /api/editor-profiles/11/contact-click), pero no se crea o redirige correctamente una conversación.
+
+Se arroja error 404 al intentar navegar a la página de mensajes.
+
+Además, en el backend se detecta el error “relation 'conversation_participants' does not exist”.
+
+Acciones a tomar:
+
+Rutas y Navegación:
+
+Revisar en App.tsx y en los componentes correspondientes que la ruta para los mensajes esté definida correctamente (ej: /mensajes).
+
+Asegurarse de que todos los botones de "Contactar" usen useLocation (o la función equivalente) para redirigir a /mensajes junto con los parámetros necesarios para iniciar una nueva conversación.
+
+En el botón "Contactar" (por ejemplo, en EditorProfilePage.tsx y en ProfileCard.tsx), ajustar la función handleContactClick para que:
+
+Primero verifique si el usuario está autenticado.
+
+Inicie (o recupere) la conversación con el editor.
+
+Redirija a la página de mensajes (ruta /mensajes) mostrando el modal o el panel de conversación.
+
+Backend / Base de Datos:
+
+Error "relation 'conversation_participants' does not exist":
+
+Revisar el esquema en shared/schema.ts y confirmar que las tablas para conversaciones, participantes y mensajes están definidas.
+
+Aplicar la migración:
+Si el comando npm run db:push o npx drizzle-kit push sigue solicitando interacción o no funciona de forma automática, ejecutar manualmente las siguientes sentencias SQL en la base de datos para crear las tablas faltantes:
+
+sql
+Copiar
+-- Tabla de conversaciones
+CREATE TABLE IF NOT EXISTS conversations (
+    id SERIAL PRIMARY KEY,
+    subject TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    last_message_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Tabla de participantes de conversación
+CREATE TABLE IF NOT EXISTS conversation_participants (
+    id SERIAL PRIMARY KEY,
+    conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    is_read BOOLEAN NOT NULL DEFAULT TRUE,
+    UNIQUE(conversation_id, user_id)
+);
+
+-- Tabla de mensajes
+CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
+    conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+Reiniciar el servidor para que reconozca los nuevos cambios en la base de datos.
+
+Test y Depuración:
+
+Una vez aplicados los cambios, verificar mediante consultas (por ejemplo, usando curl o Postman) que las rutas de mensajes y conversaciones regresan los datos correctos.
+
+Agregar logs de depuración en el endpoint de creación de conversación para identificar si se crea el registro correctamente.
+
+2. Edición y Visualización de Perfiles
+Problema actual:
+
+Los perfiles de usuario no se pueden editar: no existe una interfaz para modificar el "Acerca de mí", la sección de “Equipo Técnico”, tarifas, portafolio, etc.
+
+El perfil de prueba (por ejemplo, del perfil principal "Mauricio Treviño Botticelli") no muestra todos los campos de manera completa ni permite contacto.
+
+Acciones a tomar:
+
+Página de Edición de Perfil:
+
+Crear o mejorar la página EditProfilePage.tsx para que permita editar cada campo.
+
+Información básica: nombre, correo, foto de perfil, bio, país.
+
+Información profesional: experiencia, tarifas (básico, estándar, premium), software utilizado, estilos de edición.
+
+Portafolio: opción para agregar videos (utilizar placeholders de YouTube, por ejemplo videos de Mr. Beast), imágenes y miniaturas.
+
+Equipamiento: datos de "Equipo Técnico" (este será lo único que se muestra en esa pestaña).
+
+Asegurarse de que todos los campos se guarden en la base de datos correctamente, y que se validen (por ejemplo, precio en número, texto en bio, etc.).
+
+Incluir botones de "Guardar" con feedback visual (por ejemplo, un mensaje de "Datos actualizados correctamente").
+
+Enlace desde Homepage:
+
+En el componente EditorInteractiveProfile.tsx o en donde esté el mini perfil del homepage, debe haber un enlace que redirija al perfil completo de Mauricio Treviño Botticelli (u otro usuario de prueba).
+
+Este enlace debe ser clickeable y redirigir a una ruta del tipo /perfil/{id}.
+
+Interfaz de Perfil Completo (EditorProfilePage.tsx):
+
+Dividir la información en pestañas (utilizando tabs con emojis como íconos):
+
+🧑‍💼 Acerca de mí (incluye bio y experiencia)
+
+🎞️ Portafolio (muestra videos con placeholders desde YouTube, miniaturas, títulos, etc.)
+
+💰 Tarifas (detalle de precios por tipo de edición)
+
+⚙️ Equipo Técnico (lista de equipos con imágenes o íconos)
+
+(Opcional) Reseñas: Incluir un apartado para que los clientes puedan dejar reviews (implementado en la base de datos, como se explicó en el sistema de reviews).
+
+Asegurarse de que cada tab sea accesible y que la transición entre ellas sea suave.
+
+Corregir el uso de mayúsculas en textos; por ejemplo, cambiar "SOFTWARE" por "Software".
+
+Reseñas en Perfiles:
+
+Verificar la implementación de la pestaña de "Reseñas" o "Reviews" en EditorProfilePage.tsx.
+
+Asegurarse de que el formulario para dejar reseñas funcione correctamente y no genere error 500.
+
+Implementar controles para que solo el autor de la reseña o un admin pueda eliminar o editar una reseña.
+
+Mostrar una visualización clara de la valoración (por ejemplo, con estrellas y la fecha de la reseña).
+
+3. Funcionalidad y Diseño del Foro
+Problemas actuales:
+
+El foro no permite crear nuevos temas, escribir respuestas, o realizar upvote/downvote como en Reddit.
+
+Los posts y respuestas no se registran correctamente (falta identificar el usuario que postea).
+
+Falta filtrar y dividir los temas en categorías estéticas con emojis.
+
+Acciones a tomar:
+
+Interfaz del Foro:
+
+Rediseñar la vista del foro utilizando un estilo minimalista inspirado en Notion/Apple.
+
+Utilizar pequeñas etiquetas con emojis para categorizar los temas. Ejemplos:
+
+🎬 Temas de Video
+
+🎵 Temas de Audio
+
+✂️ Temas de Edición
+
+📸 Enseña tu Trabajo
+
+💬 Ayuda de Comunidad
+
+Las categorías deben mostrarse con un diseño compacto para maximizar el espacio en pantalla.
+
+Funcionalidad del Foro:
+
+Asegurarse de que los usuarios puedan:
+
+Crear nuevos posts/temas.
+
+Responder a posts existentes.
+
+Upvote y downvote (métodos de conteo de votos).
+
+Etiquetar cada post con tags, y hacer clic en esos tags para filtrar publicaciones.
+
+Crear una base de datos adecuada para almacenar los posts, respuestas y votes.
+
+Por ejemplo, tablas (o colecciones) para forum_categories, forum_topics, forum_posts, y forum_votes.
+
+Verificar que la autenticación funcione correctamente al crear un post y que el usuario logueado se registre en la acción.
+
+Pruebas y Datos de Prueba:
+
+Crear un script o utilizar peticiones API para añadir 5 artículos de prueba con "Test" en el nombre en cada categoría.
+
+Verificar que los datos se muestren correctamente y que se puedan filtrar según las etiquetas definidas.
+
+Revisión Final del Foro:
+
+Revisa que la jerarquía y navegación sean intuitivas: que se muestren los temas, respuestas y votos.
+
+Asegúrate de que la interfaz del foro permita ver la conversación completa y que el usuario pueda identificar quién posteó cada respuesta.
+
+4. Últimas Consideraciones Generales
+Navegación y Rutas:
+
+Revisa y actualiza el router (App.tsx) para incluir todas las nuevas páginas (acerca de, FAQ, foros, políticas, etc.).
+
+Verificar que los enlaces en el footer y en el menú sean correctos y que redirijan a las rutas definidas.
+
+UI/UX Global:
+
+Inspirarse en la estética de Apple y Notion: interfaz limpia, mucho espacio en blanco y transiciones suaves.
+
+Asegurar consistencia en tipografías (usar Satoshi), colores (azul principal #007AFF, fondos blancos y detalles en gris), y estilos de botones (azul sólido, sin gradientes innecesarios).
+
+Revisar todos los componentes para eliminar errores de espacios, interlineado excesivo y mayúsculas innecesarias (por ejemplo, "Software" en lugar de "SOFTWARE").
+
+Seguridad y Performance:
+
+Revisar que no existan leaks o vulnerabilidades de seguridad.
+
+Asegurar que todas las peticiones API tengan el manejo de errores adecuado y que se muestre información útil al usuario en caso de fallos.
+
+Realizar pruebas de usabilidad y performance para garantizar una experiencia fluida en todas las secciones del sitio.
+
+Estas instrucciones deben servir como guía para corregir y mejorar la funcionalidad de mensajería, edición de perfiles y el foro, así como para revisar todos los aspectos de UI/UX en el sitio. Por favor, mantengan comunicación constante para reportar avances o nuevos errores.
+
+¡Gracias por el esfuerzo y adelante!
+Saludos,
+[Mauricio]
+
+Puedes enviar este documento a tu equipo para que tengan una referencia clara de lo que debe implementarse y corregirse en latamvideos.com.

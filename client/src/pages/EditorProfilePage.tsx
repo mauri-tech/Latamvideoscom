@@ -282,33 +282,125 @@ const EditorProfilePage = () => {
           </div>
           
           {/* Tabs for Portfolio, Reviews, Equipment, Rates */}
-          <Tabs defaultValue="portfolio" className="mb-6">
+          <Tabs defaultValue="about" className="mb-6">
             <TabsList className="w-full border-b-0 rounded-t-lg bg-[#F2F2F7] p-1">
+              <TabsTrigger 
+                value="about" 
+                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Acerca de mí">🧑‍💼</span>
+                  <span>Acerca de mí</span>
+                </span>
+              </TabsTrigger>
               <TabsTrigger 
                 value="portfolio" 
                 className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
               >
-                Portfolio
-              </TabsTrigger>
-              <TabsTrigger 
-                value="reviews" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
-              >
-                Reseñas
-              </TabsTrigger>
-              <TabsTrigger 
-                value="equipment" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
-              >
-                Equipo
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Portafolio">🎞️</span>
+                  <span>Portafolio</span>
+                </span>
               </TabsTrigger>
               <TabsTrigger 
                 value="rates" 
                 className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
               >
-                Tarifas y Contacto
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Tarifas">💰</span>
+                  <span>Tarifas</span>
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="equipment" 
+                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Equipo Técnico">⚙️</span>
+                  <span>Equipo Técnico</span>
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="reviews" 
+                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Reseñas">⭐</span>
+                  <span>Reseñas</span>
+                </span>
               </TabsTrigger>
             </TabsList>
+            
+            {/* About Me Tab */}
+            <TabsContent value="about" className="mt-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-xl font-semibold mb-4">Acerca de mí</h3>
+                <div className="mb-6">
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    {editor.bio || 'Este editor aún no ha añadido una biografía.'}
+                  </p>
+                  
+                  {editor.experience && (
+                    <div className="mt-6">
+                      <h4 className="text-lg font-medium mb-2">Experiencia</h4>
+                      <p className="text-gray-700 leading-relaxed">{editor.experience}</p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="border-t border-gray-100 pt-6">
+                  <h4 className="text-lg font-medium mb-4">Especialidad</h4>
+                  {editor.editingStyles && editor.editingStyles.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {editingStylesList.filter(style => 
+                        editor.editingStyles.includes(style.id)
+                      ).map(style => (
+                        <span key={style.id} className="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">
+                          {style.name}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">No se han especificado estilos de edición.</p>
+                  )}
+                </div>
+                
+                <div className="border-t border-gray-100 pt-6 mt-6">
+                  <h4 className="text-lg font-medium mb-4">Software</h4>
+                  {editor.software && editor.software.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {softwareList.filter(sw => 
+                        editor.software.includes(sw.id)
+                      ).map(sw => (
+                        <span key={sw.id} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+                          {sw.name}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">No se ha especificado software.</p>
+                  )}
+                </div>
+                
+                <div className="border-t border-gray-100 pt-6 mt-6">
+                  <h4 className="text-lg font-medium mb-4">Años de experiencia</h4>
+                  <div className="flex items-center">
+                    <div className="w-24 h-24 rounded-full bg-primary-50 flex items-center justify-center border-4 border-primary">
+                      <span className="text-3xl font-bold text-primary">{editor.yearsOfExperience || '0'}</span>
+                    </div>
+                    <div className="ml-6">
+                      <p className="text-gray-700">
+                        {editor.yearsOfExperience ? (
+                          `${editor.yearsOfExperience} años de experiencia profesional en edición de video.`
+                        ) : (
+                          'Experiencia no especificada.'
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
             
             {/* Portfolio Tab */}
             <TabsContent value="portfolio" className="mt-6">
