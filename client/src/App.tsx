@@ -22,6 +22,7 @@ function Router() {
       <Route path="/login" component={LoginPage} />
       <Route path="/editor/:id" component={EditorProfilePage} />
       <Route path="/search" component={SearchPage} />
+      <Route path="/forum" component={ForumPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/admin" component={AdminPanel} />
       <Route component={NotFound} />
