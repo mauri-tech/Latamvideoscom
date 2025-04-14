@@ -1,0 +1,89 @@
+DOCUMENTO TÉCNICO - editoreslatam.com
+
+Nombre del proyecto:
+
+editoreslatam.com
+El portafolio inteligente para editores de video en LATAM.
+
+⸻
+
+¿Qué es editoreslatam.com?
+
+Es una plataforma freemium donde editores de video latinoamericanos pueden crear un perfil profesional, subir su portafolio, definir sus tarifas, mostrar sus herramientas de trabajo y conectar directamente con agencias, marcas y creadores de contenido que necesitan servicios de edición.
+
+Esta herramienta resuelve dos cosas:
+	1.	Que los editores tengan un lugar donde mostrar su trabajo de forma digna y profesional sin depender de redes sociales o plataformas donde los invisibilizan.
+	2.	Que las marcas encuentren talento específico filtrado por estilo, equipo y precio, sin pasar por mil grupos de Facebook o plataformas genéricas.
+
+⸻
+
+Usuarios principales
+
+Hay dos usuarios principales:
+	•	Editores de video, que quieren mostrar su trabajo, conseguir clientes y crecer profesionalmente.
+	•	Contratantes (agencias, creadores de contenido, empresas), que buscan editores para proyectos puntuales o colaboraciones continuas.
+
+⸻
+
+Funciones clave para editores
+	•	Registro de perfil con foto, bio, software que usan, equipo, años de experiencia y estilos de edición dominados.
+	•	Subida de portafolio con enlaces embebidos (YouTube, Vimeo o Google Drive).
+	•	Fijar tarifas por tipo de edición: básica, media y avanzada.
+	•	Indicar disponibilidad semanal y formas de pago preferidas.
+	•	Acceder a estadísticas simples como vistas de perfil y clics en contacto.
+	•	Tener un perfil público con diseño profesional para compartir en redes o con prospectos.
+
+⸻
+
+Funciones clave para contratantes
+	•	Buscador avanzado con filtros por tipo de video, precio, país, software y tiempo estimado de entrega.
+	•	Visualización de perfiles públicos con videos, tarifas y disponibilidad.
+	•	Opción para enviar un brief rápido o solicitar cotización directamente desde el perfil del editor.
+	•	Motor de recomendación (en versiones futuras) que sugiere editores ideales con base en el brief cargado.
+
+⸻
+
+Estructura general de la plataforma (MVP)
+	•	Una landing page donde se explica qué es la plataforma, a quién ayuda y cómo funciona, con llamados a la acción claros para registrarse como editor o contratar talento.
+	•	Un registro dividido por pasos para que el editor cree su perfil profesional paso a paso sin abrumarse.
+	•	Una página de perfil público del editor que se ve limpia, profesional y fácil de compartir.
+	•	Un buscador filtrable para que los contratantes puedan explorar entre cientos de perfiles.
+	•	Un dashboard interno para los editores, donde puedan ver sus estadísticas, actualizar información o agregar nuevos proyectos.
+
+⸻
+
+Diseño y estilo visual
+
+Inspirado en el Swiss Design, también conocido como “estilo tipográfico internacional”, el diseño de la plataforma será minimalista, sobrio, limpio y funcional.
+
+Colores base: blanco puro y fondo #f2f2f7, con textos en tonos oscuros como #1c1c1e. Los acentos visuales como botones o tags activos usarán un azul sobrio tipo #007aff.
+
+La tipografía debe ser sans-serif moderna, clara y bien espaciada. Algunas opciones ideales son Inter, SF Pro o Suisse Int’l. Nada de sombras innecesarias, degradados ni bordes innecesarios. Mucho espacio en blanco para que la información respire.
+
+Cada componente debe sentirse profesional, bien jerarquizado, sin ruidos visuales ni distracciones. Todo tiene que tener intención.
+
+⸻
+
+Flujo del registro para editores
+	1.	En el primer paso, el editor sube su foto, escribe su nombre, correo, país, zona horaria y años de experiencia.
+	2.	En el segundo paso, selecciona los softwares que domina (Premiere, Final Cut, CapCut, etc.) y los estilos de edición que maneja (reels, bodas, YouTube, eventos, etc.).
+	3.	En el tercer paso, especifica su equipo: computadora, cámara, micrófono, etc.
+	4.	En el cuarto paso, sube su portafolio: videos o enlaces, con posibilidad de elegir miniaturas personalizadas.
+	5.	En el quinto paso, define sus tarifas por tipo de proyecto, disponibilidad semanal y formas de pago aceptadas.
+
+Cada paso será visualmente limpio, con campos grandes y bien espaciados. Nada apretado, nada rebuscado.
+
+⸻
+
+Futuras mejoras (para versión Pro)
+	•	Verificación de perfiles (badge azul para editores verificados).
+	•	Sistema de reseñas por parte de clientes.
+	•	Cotizador visual donde el editor puede armar propuestas y enviarlas directo desde su panel.
+	•	Un sistema de match automático entre briefs y editores que cumplan los filtros.
+	•	Comunidad interna con foros o cursos enfocados en mejorar el trabajo de los editores.
+
+⸻
+
+Stack tecnológico recomendado (para MVP)
+
+Frontend: React con Next.js, usando Tailwind CSS para un desarrollo ágil y 100% responsive.
