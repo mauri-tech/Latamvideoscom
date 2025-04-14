@@ -77,7 +77,12 @@ export function AuthProvider({ children }: { children: ReactNode }): React.React
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
+      // Adaptar el formato para que coincida con lo que espera passport (username en lugar de email)
+      const adaptedCredentials = {
+        username: credentials.email,
+        password: credentials.password
+      };
+      const res = await apiRequest("POST", "/api/login", adaptedCredentials);
       if (!res.ok) {
         const error = await res.json();
         throw new Error(error.message || "Failed to log in");

@@ -16,6 +16,7 @@ import {
   insertCourseLessonSchema
 } from "@shared/schema";
 import { ZodError } from "zod";
+import { createAdminUser } from "./createAdminUser";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
