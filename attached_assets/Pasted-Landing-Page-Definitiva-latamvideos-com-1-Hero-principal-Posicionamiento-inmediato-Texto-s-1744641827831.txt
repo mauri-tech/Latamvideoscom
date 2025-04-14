@@ -1,0 +1,152 @@
+Landing Page Definitiva – latamvideos.com
+
+⸻
+
+1. Hero principal – Posicionamiento inmediato
+
+Texto sugerido:
+
+“Conecta tu talento con quienes más lo necesitan.”
+Los mejores editores y videógrafos de LATAM, listos para trabajar con agencias, negocios y figuras públicas.
+
+Botones:
+	•	“Ver editores y videógrafos” (Primario, #007AFF)
+	•	“Quiero aparecer aquí” (Secundario)
+
+Visual:
+Fondo con gradiente azul elegante estilo Apple, mockup de laptop o celular mostrando un perfil real.
+Debe sentirse premium, liviano y tecnológico.
+
+⸻
+
+2. ¿Para quién es esta plataforma?
+
+Texto sugerido:
+
+Eres editor o videógrafo.
+Tienes talento, experiencia y un portafolio que merece ser visto.
+Aquí, te encuentran quienes buscan lo que haces: marcas, empresas, creadores y managers.
+
+Bullet points destacados:
+	•	Agencias que buscan freelancers de confianza
+	•	Negocios que necesitan contenido de calidad
+	•	Figuras públicas que quieren proyectarse bien
+
+Botón CTA: “Ver cómo funciona”
+
+⸻
+
+3. ¿Cómo funciona? (flujo simple)
+
+Título: Así de fácil es formar parte
+	1.	Explora perfiles profesionales
+	2.	Filtra por estilos, software y precios
+	3.	Contacta directo al talento
+
+Visual estilo Apple: limpio, 3 íconos alineados, fondo blanco, tipografía bold.
+
+⸻
+
+4. Perfil interactivo (demo visual del UI)
+
+Título: Así se ve tu perfil aquí
+
+Mostrar un perfil real simplificado como card interactiva:
+	•	Nombre + país
+	•	Estilos: Reels, bodas, documentales, podcast
+	•	Tarifas: desde $200 USD
+	•	Equipamiento
+	•	Mini portafolio embebido
+	•	Botón: “Ver perfil completo”
+
+Importante:
+	•	Scroll horizontal suave
+	•	Emojis como íconos temporales
+	•	Sombra sutil, fondo blanco
+	•	Sentimiento de app
+
+⸻
+
+5. Editores & videógrafos destacados
+
+Título: Algunos de los talentos en la plataforma
+
+Cards pequeñas con:
+	•	Nombre
+	•	Especialidad (Editor / Videógrafo)
+	•	Estilos (Reels, bodas, YouTube…)
+	•	Softwares que usa
+	•	Tarifa base
+	•	CTA: “Ver más”
+
+Scroll horizontal tipo carrusel.
+Estilo limpio, moderno, con margen blanco y etiquetas bien separadas.
+
+⸻
+
+6. CTA con doble camino (elige tu perfil)
+
+Texto:
+¿Quieres contratar o ser contratado?
+
+Botones:
+	•	“Estoy buscando talento”
+	•	“Quiero mostrar mi trabajo”
+
+Fondo con gradiente Apple-style en azul lavanda o azul oscuro con halo.
+
+⸻
+
+7. Beneficios claros (comprobación social)
+
+Título: ¿Por qué confiar en latamvideos.com?
+
+Cards verticales con íconos:
+	•	Perfiles verificados
+	•	Tarifas claras
+	•	Contacto directo
+	•	Portafolios profesionales
+	•	Sin comisiones ocultas
+
+⸻
+
+8. Testimonios o frases aspiracionales (si aplican más adelante)
+
+Formato cita o video.
+Ejemplo:
+“Gracias a esta plataforma me contrató una agencia en Nueva York. Nunca pensé que mostrar mi trabajo así tuviera tanto impacto.”
+— Kevin, editor en Ciudad de México
+
+⸻
+
+9. Preguntas frecuentes (FAQ)
+
+Estilo acordeón.
+Responde:
+	•	¿Tiene costo aparecer aquí?
+	•	¿Cómo me contacto con un editor?
+	•	¿Qué pasa si quiero cambiar mis tarifas?
+
+⸻
+
+10. CTA final con diseño aspiracional
+
+Texto:
+Haz que tu trabajo se vea tan bien como lo editas.
+O encuentra al talento que lo hará por ti.
+
+Botones:
+	•	“Explorar editores”
+	•	“Unirme como creador”
+
+Footer limpio, sin ruido. Solo logo, links básicos, correo de contacto, redes y legal.
+
+⸻
+
+¿Diseño general?
+	•	Tipografía Satoshi
+	•	Azul Apple #007AFF como color principal
+	•	Gradientes tipo #CFE6FF a #F9F9F9 o #1D2E47 a #0050FF
+	•	Fondo blanco suave o azul en bloques clave
+	•	Mucho espacio en blanco. Respiración visual tipo Apple.
+	•	Bordes redondeados mínimos. Sombras apenas perceptibles.
