@@ -160,9 +160,10 @@ const MessagesPage = () => {
   useEffect(() => {
     if (activeConversation) {
       // La conversación se marcará como leída automáticamente
-      // cuando obtenemos sus mensajes
+      // cuando obtenemos sus mensajes a través de la API
+      queryClient.invalidateQueries({ queryKey: ['/api/conversations', activeConversation] });
     }
-  }, [activeConversation]);
+  }, [activeConversation, queryClient]);
   
   // Manejar envío de mensaje
   const onMessageSubmit = (values: MessageFormValues) => {
@@ -518,7 +519,7 @@ const MessagesPage = () => {
                           {isPendingSend ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
-                            <PaperPlane className="h-4 w-4" />
+                            <Send className="h-4 w-4" />
                           )}
                         </Button>
                       </form>
