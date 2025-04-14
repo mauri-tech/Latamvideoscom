@@ -35,8 +35,8 @@ interface Review {
 
 // Datos del perfil de demostración interactivo (solo Mauricio Treviño)
 const editorProfile: Editor = {
-  id: 1,
-  name: "Mauricio Treviño B.",
+  id: 11,
+  name: "Mauricio Treviño Botticelli",
   profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
   location: "🇲🇽 Ciudad de México",
   verified: true,
@@ -49,7 +49,7 @@ const editorProfile: Editor = {
     min: 200,
     currency: "USD"
   },
-  experience: 5
+  experience: 8
 };
 
 // Reseñas para el perfil interactivo
@@ -142,7 +142,7 @@ const EditorInteractiveProfile = () => {
                 ))}
               </div>
               
-              <div className="grid grid-cols-3 gap-2 w-full">
+              <div className="grid grid-cols-3 gap-2 w-full mb-4">
                 <div className="bg-gray-50 rounded p-2 text-center">
                   <p className="text-sm font-bold text-[#0050FF]">{editorProfile.portfolioCount}</p>
                   <p className="text-xs text-gray-500">Proyectos</p>
@@ -156,6 +156,12 @@ const EditorInteractiveProfile = () => {
                   <p className="text-xs text-gray-500">Años exp.</p>
                 </div>
               </div>
+              
+              <Link href={`/editor/${editorProfile.id}`}>
+                <Button className="w-full bg-[#0050FF] hover:bg-[#003CC0]">
+                  Ver perfil completo
+                </Button>
+              </Link>
             </div>
             
             {/* Contenido de las pestañas */}
@@ -349,7 +355,7 @@ const EditorInteractiveProfile = () => {
               className="bg-[#0050FF] hover:bg-[#0040E0] text-white"
               asChild
             >
-              <Link href="/editor/1">
+              <Link href={`/editor/${editorProfile.id}`}>
                 Ver perfil completo
               </Link>
             </Button>
