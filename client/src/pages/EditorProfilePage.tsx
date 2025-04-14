@@ -298,12 +298,12 @@ const EditorProfilePage = () => {
             </TabsContent>
             
             {/* Rates Tab */}
-            <TabsContent value="rates" className="mt-6">
+            <TabsContent value="rates" className="mt-6" id="contact">
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold mb-6">Tarifas</h3>
+                <h3 className="text-xl font-semibold mb-6">Tarifas y Contacto</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="border rounded-lg p-6 text-center">
+                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
                     <h4 className="text-lg font-medium mb-1">Básica</h4>
                     <p className="text-sm text-[#8E8E93] mb-4">Edición simple, sin efectos complejos</p>
                     <div className="text-3xl font-bold text-primary mb-6">
@@ -312,7 +312,7 @@ const EditorProfilePage = () => {
                     <BriefForm editorId={editorId} />
                   </div>
                   
-                  <div className="border rounded-lg p-6 text-center">
+                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
                     <h4 className="text-lg font-medium mb-1">Media</h4>
                     <p className="text-sm text-[#8E8E93] mb-4">Edición con efectos básicos, corrección de color</p>
                     <div className="text-3xl font-bold text-primary mb-6">
@@ -321,7 +321,7 @@ const EditorProfilePage = () => {
                     <BriefForm editorId={editorId} />
                   </div>
                   
-                  <div className="border rounded-lg p-6 text-center">
+                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-shadow">
                     <h4 className="text-lg font-medium mb-1">Avanzada</h4>
                     <p className="text-sm text-[#8E8E93] mb-4">Edición compleja, animaciones, efectos especiales</p>
                     <div className="text-3xl font-bold text-primary mb-6">

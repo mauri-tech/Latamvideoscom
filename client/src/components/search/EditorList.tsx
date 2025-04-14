@@ -10,6 +10,7 @@ import {
   PaginationPrevious 
 } from '@/components/ui/pagination';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -344,9 +345,26 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
                         <p className="text-sm text-[#8E8E93]">Desde</p>
                         <p className="text-xl font-semibold text-primary">${editor.basicRate} USD</p>
                       </div>
-                      <Link href={`/editor/${editor.id}`} className="inline-block text-primary text-sm font-medium hover:underline">
-                        Ver perfil completo
-                      </Link>
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-primary border-primary hover:bg-primary/5 flex-1"
+                          asChild
+                        >
+                          <Link href={`/editor/${editor.id}`}>
+                            Ver perfil
+                          </Link>
+                        </Button>
+                        <Button 
+                          variant="default"
+                          size="sm"
+                          className="bg-primary hover:bg-primary/90 flex-1"
+                          onClick={() => window.location.href = `/editor/${editor.id}#contact`}
+                        >
+                          Contactar
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
