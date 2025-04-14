@@ -1749,6 +1749,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Ruta para crear datos de prueba (solo para administradores)
+  app.post("/api/admin/create-test-data", async (req, res) => {
+    try {
+      // Verificar que el usuario está autenticado
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      // Verificar que el usuario es administrador
+      const currentUser = req.user as Express.User;
+      if (currentUser.userType !== "admin") {
+        return res.status(403).json({ message: "Forbidden: Admin access required" });
+      }
+      
+      // Crear usuarios de prueba con diferentes roles profesionales
+      const professionalTypes = [
+        "editor", "videographer", "sound", "lighting", "colorist", "vfx", "animator", "director"
+      ];
+      
+      const createdProfiles = [];
+      
+      // Crear un usuario y perfil para cada tipo profesional
+      for (let i = 0; i < professionalTypes.length; i++) {
+        // Crear usuario
+        const testUser = await storage.createUser({
+          email: `test${i+1}@example.com`,
+          password: "password123",
+          name: `Test ${professionalTypes[i].charAt(0).toUpperCase() + professionalTypes[i].slice(1)}`,
+          userType: "editor"
+        });
+        
+        // Crear perfil de editor con tipo profesional específico
+        const profile = await storage.createEditorProfile({
+          userId: testUser.id,
+          software: [1, 2],
+          editingStyles: [1, 3],
+          equipment: ["Camera", "Microphone"],
+          basicRate: 80 + i * 20,
+          mediumRate: 120 + i * 20,
+          advancedRate: 180 + i * 20,
+          weeklyAvailability: 40,
+          paymentMethods: ["PayPal", "Bank Transfer"],
+          experience: "5+ years",
+          expertise: ["Commercials", "Documentaries"],
+          professionalType: professionalTypes[i]
+        });
+        
+        createdProfiles.push({
+          userId: testUser.id,
+          profileId: profile.id,
+          professionalType: professionalTypes[i]
+        });
+      }
+      
+      res.status(201).json({
+        message: "Test data created successfully",
+        profiles: createdProfiles
+      });
+    } catch (error) {
+      console.error("Error creating test data:", error);
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  });
+
   // Create HTTP server
   const httpServer = createServer(app);
   return httpServer;

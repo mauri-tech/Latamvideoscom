@@ -12,6 +12,7 @@ import EditorProfilePage from "@/pages/EditorProfilePage";
 import SearchPage from "@/pages/SearchPage";
 import DashboardPage from "@/pages/DashboardPage";
 import AdminPanel from "@/pages/AdminPanel";
+import AdminPage from "@/pages/AdminPage";
 import ForumPage from "@/pages/ForumPage";
 import FAQPage from "@/pages/FAQPage";
 import TermsPage from "@/pages/TermsPage";
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/terms" component={TermsPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/admin" component={AdminPanel} />
+      <ProtectedRoute path="/admin/test-data" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>
   );
