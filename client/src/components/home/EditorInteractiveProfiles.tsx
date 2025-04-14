@@ -2,172 +2,292 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Star, ChevronLeft, ChevronRight, CheckCircle, Clock } from 'lucide-react';
 
-// Opciones de pestañas 
-const tabs = [
-  { id: 'info', label: 'Información' },
-  { id: 'portfolio', label: 'Portafolio' },
-  { id: 'equipment', label: 'Equipamiento' },
-  { id: 'rates', label: 'Tarifas' }
+// Tipo para los editores recomendados
+interface Editor {
+  id: number;
+  name: string;
+  profilePicture: string;
+  location: string;
+  verified: boolean;
+  rating: number;
+  reviewCount: number;
+  specialties: string[];
+  tags: string[];
+  portfolioCount: number;
+  price: {
+    min: number;
+    currency: string;
+  };
+  experience: number;
+}
+
+// Datos de editores recomendados
+const recommendedEditors: Editor[] = [
+  {
+    id: 1,
+    name: "Mauricio Treviño B.",
+    profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    location: "Ciudad de México",
+    verified: true,
+    rating: 4.9,
+    reviewCount: 127,
+    specialties: ["Editor de video", "Videógrafo"],
+    tags: ["Reels", "YouTube", "Documental", "Bodas"],
+    portfolioCount: 23,
+    price: {
+      min: 200,
+      currency: "USD"
+    },
+    experience: 5
+  },
+  {
+    id: 2,
+    name: "Valentina Quiroga",
+    profilePicture: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    location: "Bogotá",
+    verified: true,
+    rating: 4.8,
+    reviewCount: 94,
+    specialties: ["Motion graphics", "Colorista"],
+    tags: ["Comerciales", "Moda", "Lujo", "Viajes"],
+    portfolioCount: 42,
+    price: {
+      min: 300,
+      currency: "USD"
+    },
+    experience: 7
+  },
+  {
+    id: 3,
+    name: "Gabriel Fernández",
+    profilePicture: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    location: "Buenos Aires",
+    verified: true,
+    rating: 4.9,
+    reviewCount: 73,
+    specialties: ["Editor de cine", "Montajista"],
+    tags: ["Largometrajes", "Series", "Documental"],
+    portfolioCount: 18,
+    price: {
+      min: 450,
+      currency: "USD"
+    },
+    experience: 12
+  },
+  {
+    id: 4,
+    name: "Sofía Ramírez",
+    profilePicture: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    location: "Santiago",
+    verified: true,
+    rating: 4.7,
+    reviewCount: 85,
+    specialties: ["VFX", "3D Animation"],
+    tags: ["Películas", "Videojuegos", "Publicidad"],
+    portfolioCount: 31,
+    price: {
+      min: 350,
+      currency: "USD"
+    },
+    experience: 8
+  },
+  {
+    id: 5,
+    name: "Carlos Mendoza",
+    profilePicture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    location: "Lima",
+    verified: false,
+    rating: 4.5,
+    reviewCount: 42,
+    specialties: ["Editor deportivo", "Videógrafo"],
+    tags: ["Deportes extremos", "Eventos", "Documentales"],
+    portfolioCount: 15,
+    price: {
+      min: 180,
+      currency: "USD"
+    },
+    experience: 4
+  }
 ];
 
 const EditorInteractiveProfiles = () => {
-  const [activeTab, setActiveTab] = useState('info');
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsToShow, setItemsToShow] = useState(3);
+  
+  // Determinar el número de items a mostrar en base al tamaño de la pantalla
+  React.useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width > 1024) {
+        setItemsToShow(3);
+      } else if (width > 640) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(1);
+      }
+    };
+    
+    // Ejecutar al montar y en cada cambio de tamaño
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    // Limpiar event listener al desmontar
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Navegar por el carrusel
+  const next = () => {
+    setStartIndex(prev => 
+      prev + itemsToShow >= recommendedEditors.length ? 0 : prev + 1
+    );
+  };
+  
+  const prev = () => {
+    setStartIndex(prev => 
+      prev === 0 ? Math.max(0, recommendedEditors.length - itemsToShow) : prev - 1
+    );
+  };
+  
+  // Renderizar estrellas para el rating
+  const renderRating = (rating: number) => {
+    return (
+      <div className="flex">
+        {[...Array(5)].map((_, i) => (
+          <Star 
+            key={i} 
+            className={`w-4 h-4 ${i < Math.floor(rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+          />
+        ))}
+        <span className="ml-1 text-sm text-gray-600">({rating})</span>
+      </div>
+    );
+  };
   
   return (
     <div className="py-16 bg-white">
-      <div className="max-w-5xl mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-4 text-center">Perfiles de Editores Destacados</h2>
-        <p className="text-gray-600 mb-10 text-center max-w-2xl mx-auto">
-          Explora los perfiles interactivos de nuestros mejores editores de video en Latinoamérica. 
-          Navega entre las diferentes secciones para conocer su trabajo y tarifas.
-        </p>
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold">Editores Recomendados</h2>
+          
+          <div className="flex items-center space-x-2">
+            <button 
+              onClick={prev}
+              className="p-2 rounded-full bg-[#F5F5F7] hover:bg-[#E5E5EA] transition-colors"
+              aria-label="Anterior"
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-600" />
+            </button>
+            <button 
+              onClick={next}
+              className="p-2 rounded-full bg-[#F5F5F7] hover:bg-[#E5E5EA] transition-colors"
+              aria-label="Siguiente"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        </div>
         
-        {/* Tarjeta de ejemplo */}
-        <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Cabecera */}
-          <div className="bg-gradient-to-r from-[#0093E9] to-[#80D0C7] p-6 text-center">
-            <img 
-              src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" 
-              alt="Mauricio Treviño Botticelli"
-              className="w-24 h-24 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
-            />
-            <h3 className="font-bold text-xl text-white mt-3">Mauricio Treviño Botticelli</h3>
-            <p className="text-white/80 text-sm">Ciudad de México, México</p>
-            <div className="flex items-center justify-center mt-2">
-              <span className="text-white text-sm bg-[#007AFF] px-2 py-1 rounded-full text-xs">
-                5 años de experiencia
-              </span>
-            </div>
-          </div>
-          
-          {/* Pestañas */}
-          <div className="flex border-b border-gray-200">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-3 px-4 transition ${
-                  activeTab === tab.id
-                    ? 'text-[#007AFF] border-b-2 border-[#007AFF] font-medium'
-                    : 'text-gray-500 hover:text-[#007AFF]'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-          
-          {/* Contenido de las pestañas */}
-          <div className="p-6">
-            {activeTab === 'info' && (
-              <div>
-                <h4 className="font-medium mb-3">Biografía</h4>
-                <p className="text-gray-700 mb-4">
-                  Especialista en contenido visual para redes, campañas y documentales. 
-                  Mi enfoque se centra en narrativa visual y colorimetría para lograr un impacto emocional.
-                </p>
+        {/* Carrusel de editores */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {recommendedEditors.slice(startIndex, startIndex + itemsToShow).map((editor) => (
+            <div key={editor.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+              {/* Cabecera */}
+              <div className="relative">
+                <div className="bg-gradient-to-r from-[#0093E9] to-[#80D0C7] h-24"></div>
+                <div className="absolute top-12 left-0 w-full flex flex-col items-center">
+                  <img 
+                    src={editor.profilePicture} 
+                    alt={editor.name}
+                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+                  />
+                </div>
+              </div>
+              
+              {/* Información del editor */}
+              <div className="pt-16 px-4 pb-4">
+                <div className="text-center mb-2">
+                  <div className="flex items-center justify-center">
+                    <h3 className="font-bold text-lg">{editor.name}</h3>
+                    {editor.verified && (
+                      <div className="ml-1 text-[#007AFF]" title="Perfil verificado">
+                        <CheckCircle className="w-4 h-4 fill-[#007AFF]" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-gray-600 text-sm">{editor.location}</p>
+                </div>
                 
-                <h4 className="font-medium mb-2">Especialidades</h4>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {["Editor de video", "Videógrafo", "Director de fotografía"].map((specialty, i) => (
-                    <Badge key={i} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
-                      {specialty}
-                    </Badge>
-                  ))}
+                <div className="flex justify-center mb-4">
+                  {renderRating(editor.rating)}
+                  <span className="text-gray-500 text-sm ml-1">({editor.reviewCount})</span>
                 </div>
-              </div>
-            )}
-            
-            {activeTab === 'portfolio' && (
-              <div>
-                <h4 className="font-medium mb-4">Proyectos destacados</h4>
-                <div className="space-y-4">
-                  <div className="rounded-lg overflow-hidden shadow-sm">
-                    <img 
-                      src="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=169&q=80" 
-                      alt="Documental Alas de Libertad"
-                      className="w-full h-40 object-cover"
-                    />
-                    <div className="p-3 bg-[#F5F5F7]">
-                      <h5 className="font-medium">Documental "Alas de Libertad"</h5>
-                    </div>
-                  </div>
-                  
-                  <div className="rounded-lg overflow-hidden shadow-sm">
-                    <img 
-                      src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=169&q=80" 
-                      alt="Campaña Ritmos Urbanos"
-                      className="w-full h-40 object-cover"
-                    />
-                    <div className="p-3 bg-[#F5F5F7]">
-                      <h5 className="font-medium">Campaña "Ritmos Urbanos"</h5>
-                    </div>
+                
+                {/* Especialidades */}
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1 justify-center">
+                    {editor.specialties.map((specialty, idx) => (
+                      <Badge key={idx} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
+                        {specialty}
+                      </Badge>
+                    ))}
                   </div>
                 </div>
-              </div>
-            )}
-            
-            {activeTab === 'equipment' && (
-              <div>
-                <h4 className="font-medium mb-4">Equipamiento profesional</h4>
-                <div className="space-y-3">
-                  <div className="p-3 bg-[#F5F5F7] rounded-lg">
-                    <span className="font-medium text-[#007AFF]">Cámara: </span>
-                    <span>Sony Alpha 7 IV</span>
-                  </div>
-                  <div className="p-3 bg-[#F5F5F7] rounded-lg">
-                    <span className="font-medium text-[#007AFF]">Computadora: </span>
-                    <span>Mac Mini Pro M4 con 32GB RAM</span>
-                  </div>
-                  <div className="p-3 bg-[#F5F5F7] rounded-lg">
-                    <span className="font-medium text-[#007AFF]">Software: </span>
-                    <span>Adobe Premiere Pro, DaVinci Resolve, After Effects</span>
+                
+                {/* Tags */}
+                <div className="mb-4">
+                  <div className="flex flex-wrap gap-1 justify-center">
+                    {editor.tags.map((tag, idx) => (
+                      <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </div>
-            )}
-            
-            {activeTab === 'rates' && (
-              <div>
-                <h4 className="font-medium mb-4">Planes de servicio</h4>
-                <div className="space-y-4">
-                  <div className="border rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h5 className="font-medium">Básico</h5>
-                      <span className="text-[#007AFF] font-bold">$200 USD</span>
-                    </div>
-                    <p className="text-sm text-gray-500">Edición simple para redes sociales o YouTube</p>
+                
+                {/* Información destacada */}
+                <div className="grid grid-cols-3 gap-2 mb-4 text-center">
+                  <div className="bg-[#F5F5F7] p-2 rounded-lg">
+                    <p className="text-sm font-medium text-gray-800">{editor.portfolioCount}</p>
+                    <p className="text-xs text-gray-500">Proyectos</p>
                   </div>
-                  
-                  <div className="border-2 border-[#007AFF] rounded-lg p-4 bg-[#007AFF]/5">
-                    <div className="flex justify-between items-center mb-2">
-                      <h5 className="font-medium">Estándar</h5>
-                      <span className="text-[#007AFF] font-bold">$350 USD</span>
-                    </div>
-                    <p className="text-sm text-gray-500">Edición profesional con efectos y transiciones</p>
+                  <div className="bg-[#F5F5F7] p-2 rounded-lg">
+                    <p className="text-sm font-medium text-gray-800">
+                      <span className="text-[#007AFF]">${editor.price.min}</span>
+                    </p>
+                    <p className="text-xs text-gray-500">Desde</p>
                   </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h5 className="font-medium">Premium</h5>
-                      <span className="text-[#007AFF] font-bold">$500 USD</span>
+                  <div className="bg-[#F5F5F7] p-2 rounded-lg">
+                    <div className="flex items-center justify-center">
+                      <Clock className="w-3 h-3 text-gray-600 mr-1" />
+                      <p className="text-sm font-medium text-gray-800">{editor.experience}</p>
                     </div>
-                    <p className="text-sm text-gray-500">Edición avanzada con tratamiento cinematográfico</p>
+                    <p className="text-xs text-gray-500">Años exp.</p>
                   </div>
                 </div>
+                
+                {/* CTA */}
+                <Button 
+                  className="w-full bg-[#007AFF] hover:bg-[#0069d9]"
+                  onClick={() => window.location.href = `/editor/${editor.id}`}
+                >
+                  Ver perfil
+                </Button>
               </div>
-            )}
-          </div>
-          
-          {/* Botón de acción */}
-          <div className="p-4 border-t border-gray-200">
-            <Link href="/editor/1">
-              <Button className="w-full bg-[#007AFF] hover:bg-[#0069d9]">
-                Ver perfil completo
-              </Button>
-            </Link>
-          </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Botón para explorar todos */}
+        <div className="mt-8 text-center">
+          <Button 
+            variant="outline" 
+            className="border-[#007AFF] text-[#007AFF] hover:bg-[#007AFF]/5"
+            onClick={() => window.location.href = '/search'}
+          >
+            Explorar todos los editores
+          </Button>
         </div>
       </div>
     </div>
