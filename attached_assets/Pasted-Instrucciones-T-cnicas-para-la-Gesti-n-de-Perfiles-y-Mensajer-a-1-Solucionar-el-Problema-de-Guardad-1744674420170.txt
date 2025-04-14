@@ -1,0 +1,195 @@
+Instrucciones Técnicas para la Gestión de Perfiles y Mensajería
+1. Solucionar el Problema de Guardado en Perfiles
+1.1 Verificar el Esquema y la Migración de la Base de Datos
+Error Actual:
+Al guardar el perfil se produce un error 500. Esto probablemente se debe a que el campo technologyTags (almacenado en la tabla como technology_tags) no existe en la base de datos.
+
+Pasos a seguir:
+
+Revisar el archivo shared/schema.ts y confirmar que el campo para los tags de tecnología se define correctamente en la tabla editor_profiles.
+
+Solución Inmediata: Ejecutar la siguiente sentencia SQL en PostgreSQL para añadir el campo que falta:
+
+sql
+Copiar
+ALTER TABLE editor_profiles ADD COLUMN technology_tags JSONB NOT NULL DEFAULT '[]';
+Verificar la incorporación del nuevo campo ejecutando:
+
+sql
+Copiar
+SELECT column_name, data_type 
+FROM information_schema.columns 
+WHERE table_schema = 'public' AND table_name = 'editor_profiles';
+Reiniciar el servidor para que el modelo de datos se actualice y se use el nuevo campo.
+
+1.2 Revisar el Endpoint de Actualización y la Lógica del Servidor
+Acciones:
+
+Confirmar que la ruta (ej: PUT /api/editor-profiles/:id) mapea correctamente el campo technologyTags al campo technology_tags de la base de datos.
+
+Revisar el código en server/routes.ts y server/storage.ts para asegurar que la información del formulario se envía con los nombres de campo correctos (por ejemplo, que el formulario envíe "technologyTags" y se traduzca correctamente al nombre del campo en la DB).
+
+Incluir validación y manejo adecuado de errores para capturar y reportar cualquier fallo en el guardado.
+
+1.3 Actualizar la Interfaz de Edición de Perfiles (Front-end)
+Tareas en el Front-end (EditProfilePage.tsx u otro componente de edición):
+
+Verificar que el campo de "Tags de Tecnología" permita ingresar y eliminar tags libremente. Se recomienda usar un componente tipo tags input o multiselect.
+
+Asegurarse de que el valor se envíe como un array (o en formato JSON) en el payload del request.
+
+Tras guardar, el estado debe actualizarse y reflejarse en la vista del perfil publicado en el homepage (mediante refetch o actualizando el cache).
+
+1.4 Unificar la Información y Mejorar la Consistencia entre Perfiles
+Acciones:
+
+Revisar que la edición de otros campos (bio, tarifas, portafolio, multimedia, etc.) funcione de manera uniforme.
+
+Evitar duplicación de datos en tablas separadas para lograr que cada usuario tenga un perfil centralizado y actualizable en tiempo real.
+
+Verificar que al actualizar el perfil, todos los datos (incluyendo el nuevo campo technology_tags) se almacenen y se lean correctamente en todos los endpoints (tanto en la API para el perfil como en el dashboard del homepage).
+
+1.5 Botones y Estética en la Edición y Visualización
+Colores de Botones:
+
+Botón primario: Azul sólido (#007AFF)
+
+Botón secundario: Negro o gris oscuro (por ejemplo, #1C1C1E)
+
+Layout del Perfil:
+
+Organizar la información en tabs utilizando emojis para seccionar las áreas:
+
+📝 Portafolio: Datos textuales del perfil (experiencia, descripción, proyectos destacados).
+
+🎞 Multimedia: Links a videos, imágenes o audios (por ejemplo, placeholders de videos de YouTube).
+
+📊 Estadísticas: KPIs básicos (vistas, clics, solicitudes).
+
+📨 Solicitudes recibidas: Listado de leads o briefs, con opciones para gestionar la respuesta.
+
+Incluir en la sección que muestra la foto del perfil una lista de tags de tecnologías y especialidades (p. ej.: "Edición estilo Vox", "CapCut") que sean editables y se muestren como chips clickeables para filtrar contenido.
+
+2. Mejores Prácticas para Bases de Datos de Perfiles y Sistemas de Mensajería
+2.1 Unificación y Normalización de Datos en Perfiles
+a) Diseño de la Tabla de Usuarios y Perfiles
+Usuarios (Users):
+
+Campos básicos: id (clave primaria, autoincrement o UUID), email, password, name, profile_picture y otros datos de autenticación (tokens, roles).
+
+Perfiles de Usuario (UserProfiles / EditorProfiles):
+
+Relación uno a uno con Users, usando user_id como clave foránea única.
+
+Datos extendidos:
+
+bio (o about_me)
+
+country
+
+experience (años y detalles)
+
+specialty o professional_type (ej.: “editor”, “videógrafo”)
+
+Tarifas (campos para básico, estándar y premium)
+
+software o skills (se puede almacenar como array o en una tabla de relación)
+
+tags (para tecnologías y especialidades, editable y con opción a añadir)
+
+payment_methods (lista de métodos aceptados, por ejemplo, PayPal, Transferencia, Stripe)
+
+b) Normalización y Evitar Redundancias
+Centralización de Información:
+Asegúrate de que los datos básicos de los usuarios se almacenen en la tabla Users y los datos extendidos en UserProfiles, evitando duplicar información.
+
+Tablas Auxiliares para Relaciones M:N:
+Para campos como tags o software, utiliza tablas de relación (por ejemplo, profile_tags junto con una tabla tags) para facilitar el mantenimiento y las consultas.
+
+Índices y Claves Foráneas:
+Define índices en campos comúnmente filtrados (como country, professional_type, tags) y asegúrate de tener claves foráneas en todas las relaciones para mantener la integridad de los datos.
+
+2.2 Diseño del Sistema de Conversaciones y Mensajería
+a) Tablas y Relaciones para el Chat
+Conversaciones (Conversations):
+Campos: id (clave primaria), subject (opcional), created_at, updated_at, last_message_at.
+Propósito: Representar una conversación entre dos o más usuarios.
+
+Participantes en Conversación (Conversation_Participants):
+Campos: id, conversation_id (clave foránea a Conversations), user_id (clave foránea a Users), is_read (bandera para mensajes leídos).
+Restricción: Cada combinación de conversation_id y user_id debe ser única.
+
+Mensajes (Messages):
+Campos: id, conversation_id (clave foránea a Conversations), sender_id (clave foránea a Users), content, created_at.
+Propósito: Almacenar los mensajes enviados en una conversación.
+
+b) Buenas Prácticas en el Diseño del Sistema de Mensajes
+Integridad Referencial:
+Utilizar claves foráneas con eliminación en cascada para asegurar que, al eliminar un usuario o conversación, se borren los mensajes y registros relacionados.
+
+Indexación y Rendimiento:
+Indexar campos frecuentes (ej.: conversation_id, user_id, created_at) para optimizar las consultas.
+
+KPIs y Seguimiento:
+Definir columnas o tablas de logging para registrar estadísticas:
+
+Vistas del perfil: Usar una tabla (ej. ProfileViews) con user_id, timestamp, IP/ubicación.
+
+Interacción en conversaciones: Contar mensajes, clics en “Contactar”, conversiones.
+
+Realizar agregaciones periódicas o conectar herramientas de análisis (Google Analytics, Fathom, Plausible) para obtener métricas de uso y rendimiento.
+
+2.3 Estrategias de Alojamiento y Mantenimiento
+Uso de Servicios Gestionados:
+Se recomienda utilizar servicios gestionados para bases de datos (Amazon RDS, Google Cloud SQL, Heroku Postgres) para mayor seguridad, escalabilidad y respaldo automático.
+
+Backups y Replicación:
+Configurar backups automáticos diarios y establecer un plan de recuperación ante desastres. Utiliza replicación si la carga aumenta o se necesita alta disponibilidad.
+
+Monitoreo y KPIs:
+Implementar herramientas de monitoreo (PgBouncer, New Relic, DataDog) para vigilar el rendimiento y detectar cuellos de botella. Registrar todos los eventos relevantes (errores, tiempos de respuesta) para optimizar las consultas.
+
+Migraciones y Versionado del Esquema:
+Utiliza herramientas de migración (Drizzle, Prisma Migrate, Flyway, Liquibase) para gestionar y versionar cambios en el esquema sin afectar la aplicación en producción. Asegúrate de documentar los cambios para facilitar la reversión si es necesario.
+
+Seguridad:
+Asegura la comunicación entre la aplicación y la base de datos mediante SSL/TLS. Configura roles y permisos estrictos, limitando el acceso a solo lo necesario para cada servicio.
+
+3. Resumen y Conclusión
+Para Perfiles y Mensajería:
+
+Migración/Actualización:
+Asegurarse de que la tabla editor_profiles incluya el campo technology_tags (JSONB, default '[]') y todos los campos relevantes estén actualizados.
+
+Endpoint & Lógica:
+Revisar que el endpoint de actualización de perfiles (PUT /api/editor-profiles/:id) mapee y guarde correctamente todos los campos enviados (incluyendo los tags).
+
+UI/UX:
+El formulario de edición debe permitir modificar todos los campos (bio, tarifas, portafolio, multimedia, tags, etc.) y, al guardar, reflejar inmediatamente los cambios en el perfil publicado en el homepage y en el dashboard.
+Organizar la información en tabs con emojis para seccionar:
+
+📝 Portafolio (datos textuales)
+
+🎞 Multimedia (enlaces a videos, imágenes, audios)
+
+📊 Estadísticas (KPIs: vistas, clics, solicitudes)
+
+📨 Solicitudes recibidas (leads, briefs)
+
+Estética:
+Utilizar botones con colores sólidos: azul primario (#007AFF) para acciones principales y negro/gris oscuro (#1C1C1E) para secundarios.
+
+Para la Base de Datos y el Sistema de Mensajería:
+
+Normalización:
+Unificar la información en tablas normalizadas donde Users y EditorProfiles estén vinculados por una clave única, y usar tablas auxiliares para relaciones M:N (tags, software).
+
+Sistema de Mensajes:
+Diseñar el sistema con tablas específicas para Conversations, Conversation_Participants y Messages, asegurando integridad referencial e índices adecuados para rendimiento.
+
+Alojamiento y Mantenimiento:
+Utilizar servicios gestionados, configurar backups, implementar monitoreo y realizar migraciones controladas para asegurar la escalabilidad, seguridad y alta disponibilidad.
+
+Implementar estas mejoras unificará la información en un único perfil editable, garantizará la persistencia de datos y proveerá una experiencia profesional y coherente tanto en la edición de perfiles como en el sistema de mensajería. Además, contar con un sistema de KPIs facilitará el análisis de uso y la optimización de la plataforma.
+
+Utiliza estas instrucciones como guía completa para resolver el problema actual y optimizar el manejo de perfiles y datos en latamvideos.com.
