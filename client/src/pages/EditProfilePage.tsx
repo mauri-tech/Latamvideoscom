@@ -48,6 +48,7 @@ const editorProfileSchema = z.object({
   paymentMethods: z.array(z.string()).optional(),
   experience: z.string().optional(),
   expertise: z.array(z.string()).optional(),
+  technologyTags: z.array(z.string()).optional(),
 });
 
 type UserFormValues = z.infer<typeof userFormSchema>;
@@ -107,6 +108,7 @@ const EditProfilePage = () => {
       paymentMethods: [],
       experience: "",
       expertise: [],
+      technologyTags: [],
     },
   });
   
@@ -181,17 +183,36 @@ const EditProfilePage = () => {
   // Mutación para actualizar perfil profesional
   const updateProfileMutation = useMutation({
     mutationFn: async (data: EditorProfileFormValues) => {
-      if (editorProfile?.id) {
-        // Actualizar perfil existente
-        const res = await apiRequest('PUT', `/api/editor-profiles/${editorProfile.id}`, data);
-        return await res.json();
-      } else if (currentUser?.id) {
-        // Crear nuevo perfil
-        const res = await apiRequest('POST', '/api/editor-profiles', {
-          ...data,
-          userId: currentUser.id
-        });
-        return await res.json();
+      try {
+        if (editorProfile?.id) {
+          // Actualizar perfil existente
+          const res = await apiRequest('PUT', `/api/editor-profiles/${editorProfile.id}`, data);
+          return await res.json();
+        } else if (currentUser?.id) {
+          try {
+            // Intentar crear nuevo perfil
+            const res = await apiRequest('POST', '/api/editor-profiles', {
+              ...data,
+              userId: currentUser.id
+            });
+            return await res.json();
+          } catch (error) {
+            // Si ya existe un perfil (error 400), obtener el perfil existente y actualizarlo
+            if ((error as any).status === 400) {
+              // Obtener el perfil existente
+              const profileRes = await apiRequest('GET', `/api/editor-profiles/user/${currentUser.id}`);
+              const existingProfile = await profileRes.json();
+              
+              // Actualizar el perfil existente
+              const updateRes = await apiRequest('PUT', `/api/editor-profiles/${existingProfile.id}`, data);
+              return await updateRes.json();
+            }
+            throw error;
+          }
+        }
+      } catch (error) {
+        console.error("Error al actualizar perfil:", error);
+        throw error;
       }
     },
     onSuccess: () => {
@@ -204,9 +225,10 @@ const EditProfilePage = () => {
     onError: (error: Error) => {
       toast({
         title: "Error",
-        description: "No se pudo actualizar tu perfil profesional: " + error.message,
+        description: "No se pudo actualizar tu perfil profesional: " + (error.message || 'Error desconocido'),
         variant: "destructive",
       });
+      console.error("Error completo:", error);
     }
   });
   
