@@ -182,9 +182,10 @@ async function seedForum() {
     
     if (firstTopic) {
       // Verificar si ya existen respuestas
-      const existingPosts = await db.select().from(forumPosts).where({ topicId: firstTopic.id });
+      const existingPosts = await db.select().from(forumPosts);
+      const postsForThisTopics = existingPosts.filter(post => post.topicId === firstTopic.id);
       
-      if (existingPosts.length === 0) {
+      if (postsForThisTopics.length === 0) {
         const testPosts = [
           {
             topicId: firstTopic.id,
