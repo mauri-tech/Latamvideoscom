@@ -239,7 +239,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             Tipo de proyecto
           </label>
           <Select
-            value={filters.projectType}
+            value={filters.projectType || "todos"}
             onValueChange={(value) => updateFilter('projectType', value)}
           >
             <SelectTrigger className="w-full">
@@ -260,7 +260,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             País
           </label>
           <Select
-            value={filters.country}
+            value={filters.country || "all"}
             onValueChange={(value) => updateFilter('country', value)}
           >
             <SelectTrigger className="w-full">
@@ -282,18 +282,22 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             Software preferido
           </label>
           <Select
-            value={filters.software.length > 0 ? filters.software[0].toString() : ""}
+            value={filters.software.length > 0 ? filters.software[0].toString() : "none"}
             onValueChange={(value) => {
-              const softwareId = parseInt(value);
-              updateFilter('software', value ? [softwareId] : []);
+              if (value === "none") {
+                updateFilter('software', []);
+              } else {
+                const softwareId = parseInt(value);
+                updateFilter('software', [softwareId]);
+              }
             }}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Selecciona software" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Cualquier software</SelectItem>
-              {software.map((item) => (
+              <SelectItem value="none">Cualquier software</SelectItem>
+              {software.filter(item => item.id > 0).map((item) => (
                 <SelectItem key={item.id} value={item.id.toString()}>
                   {item.name}
                 </SelectItem>
@@ -351,14 +355,15 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             Nivel de experiencia
           </label>
           <Select
-            value={filters.experienceLevel}
-            onValueChange={(value) => updateFilter('experienceLevel', value)}
+            value={filters.experienceLevel || "any"}
+            onValueChange={(value) => updateFilter('experienceLevel', value === "any" ? "" : value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Cualquier nivel" />
             </SelectTrigger>
             <SelectContent>
-              {experienceLevels.map((level) => (
+              <SelectItem key="any" value="any">Cualquier nivel</SelectItem>
+              {experienceLevels.filter(level => level.value !== "").map((level) => (
                 <SelectItem key={level.value} value={level.value}>
                   {level.label}
                 </SelectItem>
@@ -424,14 +429,15 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             Disponibilidad
           </label>
           <Select
-            value={filters.availability}
-            onValueChange={(value) => updateFilter('availability', value)}
+            value={filters.availability || "any"}
+            onValueChange={(value) => updateFilter('availability', value === "any" ? "" : value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Cualquier disponibilidad" />
             </SelectTrigger>
             <SelectContent>
-              {availabilityOptions.map((option) => (
+              <SelectItem key="any" value="any">Cualquier disponibilidad</SelectItem>
+              {availabilityOptions.filter(option => option.value !== "").map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
@@ -445,14 +451,15 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             Tiempo de entrega
           </label>
           <Select
-            value={filters.deliveryTime}
-            onValueChange={(value) => updateFilter('deliveryTime', value)}
+            value={filters.deliveryTime || "any"}
+            onValueChange={(value) => updateFilter('deliveryTime', value === "any" ? "" : value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Cualquier plazo" />
             </SelectTrigger>
             <SelectContent>
-              {deliveryTimeOptions.map((option) => (
+              <SelectItem key="any" value="any">Cualquier plazo</SelectItem>
+              {deliveryTimeOptions.filter(option => option.value !== "").map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
