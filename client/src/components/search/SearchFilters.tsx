@@ -84,7 +84,7 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
   
   // Nuevos tipos de profesionales
   const professionalTypes = [
-    { value: "", label: "Todos los profesionales" },
+    { value: "all", label: "Todos los profesionales" },
     { value: "editor", label: "Editor de video" },
     { value: "videographer", label: "Videógrafo" },
     { value: "sound", label: "Microfonista/Sonidista" },
