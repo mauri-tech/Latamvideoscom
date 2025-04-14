@@ -40,7 +40,7 @@ const Features = () => {
             <ul className="space-y-3">
               {editorFeatures.map((feature, index) => (
                 <li key={index} className="flex items-start">
-                  <Check className="h-6 w-6 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <Check className="h-6 w-6 text-[#2A9D8F] mr-2 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -59,7 +59,7 @@ const Features = () => {
             <ul className="space-y-3">
               {clientFeatures.map((feature, index) => (
                 <li key={index} className="flex items-start">
-                  <Check className="h-6 w-6 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <Check className="h-6 w-6 text-[#2A9D8F] mr-2 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}

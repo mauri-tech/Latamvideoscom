@@ -29,7 +29,7 @@ const EditorShowcase = () => {
         </div>
         
         <div className="text-center mt-12">
-          <Link href="/search" className="inline-flex items-center text-primary font-medium hover:text-[#0056B3]">
+          <Link href="/search" className="inline-flex items-center text-[#2A9D8F] font-medium hover:text-[#21867A]">
             Ver todos los editores
             <ChevronRight className="h-5 w-5 ml-1" />
           </Link>

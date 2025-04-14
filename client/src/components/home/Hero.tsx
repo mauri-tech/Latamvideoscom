@@ -14,12 +14,12 @@ const Hero = () => {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/register">
-              <Button className="bg-primary text-white px-6 py-3 rounded-md hover:bg-[#0056B3] font-medium w-full sm:w-auto">
+              <Button className="bg-[#2A9D8F] text-white px-6 py-3 rounded-md hover:bg-[#21867A] font-medium w-full sm:w-auto">
                 Crear mi perfil como editor
               </Button>
             </Link>
             <Link href="/search">
-              <Button variant="outline" className="border border-primary text-primary px-6 py-3 rounded-md hover:bg-primary hover:text-white font-medium w-full sm:w-auto">
+              <Button variant="outline" className="border border-[#2A9D8F] text-[#2A9D8F] px-6 py-3 rounded-md hover:bg-[#2A9D8F] hover:text-white font-medium w-full sm:w-auto">
                 Buscar editores
               </Button>
             </Link>
