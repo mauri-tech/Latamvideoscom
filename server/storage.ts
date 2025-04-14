@@ -338,6 +338,13 @@ export class MemStorage implements IStorage {
       );
     }
     
+    // Filter by professional type
+    if (filters.professionalType) {
+      results = results.filter(profile => 
+        profile.professionalType === filters.professionalType
+      );
+    }
+    
     return results;
   }
   
@@ -1206,6 +1213,13 @@ export class DatabaseStorage implements IStorage {
         
         return filters.country.includes(user.country);
       });
+    }
+    
+    // Filter by professional type
+    if (filters.professionalType) {
+      filteredResults = filteredResults.filter(profile => 
+        profile.professionalType === filters.professionalType
+      );
     }
     
     // Sort by different criteria
