@@ -52,6 +52,41 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
     filterParams.set('maxRate', filters.maxRate.toString());
   }
   
+  // Agregar filtro de tipo profesional 
+  if (filters.professionalType) {
+    filterParams.set('professionalType', filters.professionalType);
+  }
+  
+  // Agregar filtro de país
+  if (filters.country) {
+    filterParams.set('country', filters.country);
+  }
+  
+  // Agregar filtro de experiencia
+  if (filters.experienceLevel) {
+    filterParams.set('experienceLevel', filters.experienceLevel);
+  }
+  
+  // Agregar filtro de tipos de proyecto
+  if (filters.projectType) {
+    filterParams.set('projectType', filters.projectType);
+  }
+  
+  // Agregar filtro de idiomas
+  if (filters.languages && filters.languages.length) {
+    filterParams.set('languages', filters.languages.join(','));
+  }
+  
+  // Agregar filtro de disponibilidad
+  if (filters.availability) {
+    filterParams.set('availability', filters.availability);
+  }
+  
+  // Agregar filtro de tiempo de entrega
+  if (filters.deliveryTime) {
+    filterParams.set('deliveryTime', filters.deliveryTime);
+  }
+  
   // Agregar parámetros de paginación
   filterParams.set('page', filters.page?.toString() || currentPage.toString());
   filterParams.set('limit', filters.limit?.toString() || itemsPerPage.toString());
