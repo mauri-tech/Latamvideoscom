@@ -42,6 +42,24 @@ const EditorProfilePage = () => {
     enabled: !!profileData,
   });
   
+  // Fetch software list
+  const { 
+    data: softwareList = [], 
+    isLoading: softwareLoading 
+  } = useQuery({
+    queryKey: ['/api/software'],
+    enabled: !!profileData,
+  });
+  
+  // Fetch editing styles list
+  const { 
+    data: editingStylesList = [], 
+    isLoading: stylesLoading 
+  } = useQuery({
+    queryKey: ['/api/editing-styles'],
+    enabled: !!profileData,
+  });
+  
   // Fetch portfolio items
   const { 
     data: portfolioItems = [], 
@@ -160,28 +178,10 @@ const EditorProfilePage = () => {
     profilePicture: userData.profilePicture,
     location: `${userData.country || 'Internacional'}`,
     country: userData.country,
-    software: profileData.software?.map((id: number) => {
-      // Map software IDs to names (this would be more robust in production)
-      const softwareMap: {[key: number]: string} = {
-        1: "Premiere Pro",
-        2: "Final Cut Pro",
-        3: "DaVinci Resolve",
-        4: "After Effects",
-        5: "CapCut"
-      };
-      return softwareMap[id] || `Software ${id}`;
-    }) || [],
-    styles: profileData.editingStyles?.map((id: number) => {
-      // Map style IDs to names
-      const styleMap: {[key: number]: string} = {
-        1: "YouTube",
-        2: "Reels/TikTok",
-        3: "Comerciales",
-        4: "Eventos",
-        5: "Video corporativo"
-      };
-      return styleMap[id] || `Estilo ${id}`;
-    }) || [],
+    bio: userData.bio || '',
+    software: profileData.software || [],
+    editingStyles: profileData.editingStyles || [],
+    yearsOfExperience: userData.yearsOfExperience,
     experience: `${userData.yearsOfExperience || ''} años de experiencia.`,
     equipment: profileData.equipment || [],
     basicRate: profileData.basicRate,
@@ -352,8 +352,8 @@ const EditorProfilePage = () => {
                   <h4 className="text-lg font-medium mb-4">Especialidad</h4>
                   {editor.editingStyles && editor.editingStyles.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
-                      {editingStylesList.filter(style => 
-                        editor.editingStyles.includes(style.id)
+                      {Array.isArray(editingStylesList) && editingStylesList.filter(style => 
+                        Array.isArray(editor.editingStyles) && editor.editingStyles.includes(style.id)
                       ).map(style => (
                         <span key={style.id} className="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">
                           {style.name}
@@ -369,8 +369,8 @@ const EditorProfilePage = () => {
                   <h4 className="text-lg font-medium mb-4">Software</h4>
                   {editor.software && editor.software.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
-                      {softwareList.filter(sw => 
-                        editor.software.includes(sw.id)
+                      {Array.isArray(softwareList) && softwareList.filter(sw => 
+                        Array.isArray(editor.software) && editor.software.includes(sw.id)
                       ).map(sw => (
                         <span key={sw.id} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
                           {sw.name}

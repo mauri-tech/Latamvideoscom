@@ -1,0 +1,171 @@
+🚧 IMPORTANTE – Mejora urgente del sistema de perfiles 🚧
+
+Estamos detectando un problema clave que debemos resolver de forma prioritaria:
+
+🧩 Problema actual
+Actualmente no existe una sección clara donde el usuario pueda editar y guardar su perfil.
+Aunque tenemos un perfil público visualizable, no hay una interfaz que permita editar cada campo como:
+
+Su descripción o "Acerca de mí"
+
+Equipo técnico
+
+Tarifas
+
+Portafolio textual
+
+Enlaces multimedia (videos, imágenes, reels, etc.)
+
+Tags (software que usa, estilo de edición, etc.)
+
+Formas de pago
+
+Disponibilidad semanal
+
+✅ ¿Qué necesitamos?
+Implementar una interfaz completa de edición de perfil para que cualquier usuario pueda:
+
+Cargar y modificar sus datos fácilmente.
+
+Guardar los cambios con feedback visual.
+
+Tener autocompletado de campos donde aplique (por ejemplo, software como CapCut, Premiere, etc.).
+
+Contar con tabs organizadas tipo dashboard con emojis para facilitar la navegación:
+
+📝 Portafolio	🎞 Multimedia	📊 Estadísticas	📨 Solicitudes recibidas
+🎯 ¿Por qué es clave esto?
+Queremos que cada perfil se convierta en una especie de landing page profesional, atractiva para clientes potenciales.
+
+Esto solo es posible si:
+
+Cada usuario puede editar y mantener actualizada su información.
+
+Podemos guiarlo a llenar su perfil completo desde un dashboard editable, intuitivo y limpio.
+
+Se vincula correctamente con el sistema de mensajería interna, para que los visitantes puedan contactar fácilmente.
+
+🛠 Consideraciones técnicas
+Verificar que todos los campos existen en la base de datos (editor_profiles).
+
+Validar que haya endpoints funcionales para: GET, POST y PUT de perfiles.
+
+Si se usa Drizzle o Prisma, verificar que las relaciones estén bien estructuradas.
+
+Implementar la vista de edición desde /dashboard o /editar-perfil.
+
+Puede usarse el mismo componente que ya renderiza el perfil, pero editable (como modo edición).
+
+Asegurar persistencia de datos y feedback visual tras guardar cambios.
+
+
+1. Objetivo General
+Crear e integrar una interfaz de edición de perfil que permita a cualquier usuario modificar, actualizar y guardar su información personal y profesional. Esto incluye campos básicos, información extendida (Acerca de mí, experiencia, etc.), portafolio, multimedia, tarifas, equipo técnico, y otros datos relevantes. La idea es que cada perfil se convierta en una landing page profesional que también se conecte de manera fluida con el sistema de mensajería.
+
+2. Requisitos Funcionales
+Interfaz de Edición de Perfil:
+
+Campos Editables:
+
+Información básica: Nombre, foto de perfil, país, bio breve.
+
+Información profesional: Años de experiencia, especialidad (editor, videógrafo, etc.), tarifas (básico, estándar, premium).
+
+Portafolio: Texto descriptivo de proyectos, lista de proyectos realizados.
+
+Multimedia: Enlaces o embebidos de videos (ej. de YouTube, usando placeholders como Mr. Beast) y miniaturas.
+
+Software y Skills: Lista de herramientas que usa (ej. CapCut, Premiere, etc.) con tags clickeables.
+
+Formas de pago y disponibilidad.
+
+Organización por Tabs con Emojis:
+Cada sección se ubicará en un tab que permita la fácil navegación:
+
+📝 Portafolio: Texto descriptivo de la experiencia y proyectos.
+
+🎞 Multimedia: Links y embebidos de videos, imágenes y audios.
+
+📊 Estadísticas: Datos clave (vistas al perfil, clics en “contactar”, briefs recibidos, etc.).
+
+📨 Solicitudes recibidas: Listado de briefs o leads, con estado y botones para gestionar.
+
+Modo Edición e Interfaz de Guardado:
+
+Todos los campos deben ser editables directamente (modo inline o mediante formularios específicos).
+
+Debe existir un botón “Guardar cambios” con feedback visual (mensajes de éxito/error).
+
+Implementar validación de campos (por ejemplo, que los precios sean numéricos, el email tenga formato correcto, etc.).
+
+Integración con el Sistema de Mensajería:
+
+El perfil debe estar vinculado al sistema de mensajería.
+
+El botón “Contactar” (ubicado en el perfil) debe iniciar una conversación con el profesional, redirigiendo al usuario a la pantalla de mensajes y mostrando un modal o ventana de chat.
+
+Asegurarse de que, tras guardar los cambios, la información se actualice en tiempo real y se actualicen los endpoints correspondientes.
+
+Endpoints y Persistencia de Datos:
+
+Revisar que en la base de datos (tabla editor_profiles o equivalente) existan todos los campos necesarios: bio, experiencia, tarifas, portafolio, multimedia, software, disponibilidad, etc.
+
+Implementar o corregir los endpoints HTTP necesarios (GET, PUT, POST) para:
+
+Consultar el perfil completo
+
+Actualizar cada sección del perfil
+
+Verificar la existencia de migraciones si se han agregado nuevos campos; en caso de cambios en el esquema, ejecutar las migraciones necesarias para mantener la base de datos actualizada.
+
+UI/UX y Estética:
+
+Inspirarse en un diseño minimalista y limpio (estilo Apple/Notion).
+
+Usar la fuente Satoshi, paleta de colores definida y un uso consistente del espacio en blanco.
+
+Los tabs deben ser visualmente atractivos, con un pequeño emoji representativo de la sección (por ejemplo, 📝, 🎞, 📊, 📨) y un texto descriptivo.
+
+Los botones de "Contacto", "Guardar" y demás acciones deben ser consistentes (en este caso, botón azul sólido con código #007AFF).
+
+3. Consideraciones Técnicas
+Frontend:
+
+Reestructurar o crear un componente dedicado de edición (EditProfilePage.tsx o similar) que permita a los usuarios editar cada campo.
+
+Usar formularios controlados (por ejemplo, utilizando React Hook Form) para manejar la validación y el estado de edición.
+
+Los datos deben cargarse inicialmente mediante una consulta a la API (GET) y, al guardar, enviar los cambios mediante una llamada (PUT/POST).
+
+Incluir manejo de errores y feedback visual (por ejemplo, notificaciones toast).
+
+Backend:
+
+Actualizar el esquema de la base de datos (si se requiere) para incluir nuevos campos o corregir relaciones existentes.
+
+Definir y documentar endpoints para:
+
+Obtener el perfil completo del usuario.
+
+Actualizar el perfil (dividido en secciones si es necesario).
+
+Asegurar que la autenticación y la autorización estén correctamente implementadas para que solo el usuario dueño del perfil pueda editarlo.
+
+Revisar el logging y manejo de errores en los endpoints para mejorar la depuración.
+
+Integración con Mensajería:
+
+Confirmar que al pulsar “Contactar” se verifique el estado de autenticación y se inicie o recupere la conversación correspondiente.
+
+Validar la navegación a la ruta /mensajes y que, desde allí, se visualice el mensaje de inicio o se abra el chat automáticamente.
+
+4. Importancia y Beneficios
+Perfil como Landing Page:
+Cada perfil será la carta de presentación profesional del usuario y, en el futuro, servirá como landing page para captar clientes.
+Por ello, es fundamental que la información sea completa, fácil de editar, visualmente atractiva y que transmita profesionalismo.
+
+Optimización de Conversión y Contacto:
+Una interfaz clara y bien estructurada facilitará que clientes y agencias encuentren rápidamente la información que buscan y, mediante el sistema de mensajería integrado, puedan iniciar contactos de manera inmediata.
+
+Escalabilidad:
+Con esta base, se podrá agregar en el futuro funcionalidades como sistema de reseñas, calificaciones, portfolios enriquecidos y estadísticas más detalladas que ayuden a optimizar y destacar el trabajo de cada profesional.
