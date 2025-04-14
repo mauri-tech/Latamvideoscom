@@ -232,6 +232,48 @@ export type InsertCourseEnrollment = z.infer<typeof insertCourseEnrollmentSchema
 export type LessonProgress = typeof lessonProgress.$inferSelect;
 export type InsertLessonProgress = z.infer<typeof insertLessonProgressSchema>;
 
+// MESSAGES TABLES
+export const conversations = pgTable("conversations", {
+  id: serial("id").primaryKey(),
+  subject: text("subject").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  lastMessageAt: timestamp("last_message_at").defaultNow(),
+});
+
+export const insertConversationSchema = createInsertSchema(conversations).pick({
+  subject: true,
+});
+
+export const conversationParticipants = pgTable("conversation_participants", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").notNull().references(() => conversations.id, { onDelete: "cascade" }),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  isRead: boolean("is_read").notNull().default(true),
+}, (t) => ({
+  unq: primaryKey({ columns: [t.conversationId, t.userId] }),
+}));
+
+export const insertConversationParticipantSchema = createInsertSchema(conversationParticipants).pick({
+  conversationId: true,
+  userId: true,
+  isRead: true,
+});
+
+export const messages = pgTable("messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").notNull().references(() => conversations.id, { onDelete: "cascade" }),
+  senderId: integer("sender_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertMessageSchema = createInsertSchema(messages).pick({
+  conversationId: true,
+  senderId: true,
+  content: true,
+});
+
 // Relations - after all tables have been defined
 export const usersRelations = relations(users, ({ one, many }) => ({
   editorProfile: one(editorProfiles),
@@ -241,6 +283,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   instructorCourses: many(courses),
   courseEnrollments: many(courseEnrollments),
   lessonProgress: many(lessonProgress),
+  sentMessages: many(messages, { relationName: "user_sent_messages" }),
+  conversationParticipations: many(conversationParticipants),
 }));
 
 export const editorProfilesRelations = relations(editorProfiles, ({ one, many }) => ({
