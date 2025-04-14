@@ -46,7 +46,10 @@ const SearchPage = () => {
           
           {/* Results Section */}
           <div className="w-full md:w-3/4">
-            <EditorList filters={filters} />
+            <EditorList 
+              filters={filters} 
+              onFilterChange={handleFilterChange} 
+            />
           </div>
         </div>
       </div>
