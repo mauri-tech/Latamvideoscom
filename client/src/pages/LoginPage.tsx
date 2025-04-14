@@ -118,9 +118,14 @@ const LoginPage = () => {
                   <Button 
                     type="submit" 
                     className="w-full bg-primary text-white hover:bg-primary/90"
-                    disabled={submitting}
+                    disabled={loginMutation.isPending}
                   >
-                    {submitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
+                    {loginMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Iniciando sesión...
+                      </>
+                    ) : 'Iniciar sesión'}
                   </Button>
                 </form>
               </Form>

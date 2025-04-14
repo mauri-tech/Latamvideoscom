@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -13,14 +13,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import MultiStepForm from '@/components/editor/MultiStepForm';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth, type RegisterData } from '@/hooks/useAuth';
 import { Helmet } from 'react-helmet';
 
 // Validation schema
@@ -39,10 +38,15 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const RegisterPage = () => {
   const [registeredUser, setRegisteredUser] = useState<any>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const { toast } = useToast();
   const [_, navigate] = useLocation();
-  const { login } = useAuth();
+  const { user, registerMutation } = useAuth();
+  
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
   
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -56,50 +60,24 @@ const RegisterPage = () => {
   });
   
   const onSubmit = async (values: RegisterFormValues) => {
-    setSubmitting(true);
+    const registerData: RegisterData = {
+      email: values.email,
+      password: values.password,
+      name: values.name,
+      userType: values.userType
+    };
     
-    try {
-      // Send registration request to API
-      const response = await apiRequest('POST', '/api/users', {
-        email: values.email,
-        password: values.password,
-        name: values.name,
-        userType: values.userType,
-      });
-      
-      const userData = await response.json();
-      
-      // Log the user in
-      login({
-        id: userData.id,
-        email: userData.email,
-        name: userData.name,
-        userType: userData.userType,
-      });
-      
-      toast({
-        title: "Registro exitoso",
-        description: values.userType === 'editor' 
-          ? "Ahora completa tu perfil profesional." 
-          : "Ahora puedes empezar a buscar editores.",
-      });
-      
-      if (values.userType === 'editor') {
-        // If editor, set registered user to continue with profile creation
-        setRegisteredUser(userData);
-      } else {
-        // If client, redirect to search page
-        navigate('/search');
+    registerMutation.mutate(registerData, {
+      onSuccess: (userData) => {
+        if (values.userType === 'editor') {
+          // If editor, set registered user to continue with profile creation
+          setRegisteredUser(userData);
+        } else {
+          // If client, redirect to search page
+          navigate('/search');
+        }
       }
-    } catch (error) {
-      toast({
-        title: "Error al registrar",
-        description: "Hubo un problema al crear tu cuenta. El correo podría estar ya en uso.",
-        variant: "destructive"
-      });
-    } finally {
-      setSubmitting(false);
-    }
+    });
   };
 
   if (registeredUser) {
@@ -227,9 +205,14 @@ const RegisterPage = () => {
                   <Button 
                     type="submit" 
                     className="w-full bg-primary text-white hover:bg-primary/90"
-                    disabled={submitting}
+                    disabled={registerMutation.isPending}
                   >
-                    {submitting ? 'Registrando...' : 'Registrarme'}
+                    {registerMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Registrando...
+                      </>
+                    ) : 'Registrarme'}
                   </Button>
                 </form>
               </Form>
