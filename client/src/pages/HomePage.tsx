@@ -2,26 +2,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import Hero from '@/components/home/Hero';
-import Features from '@/components/home/Features';
-import EditorInteractiveProfiles from '@/components/home/EditorInteractiveProfiles';
-import BusinessSection from '@/components/home/BusinessSection';
-import FeaturedEditors from '@/components/home/FeaturedEditors';
-import HiringProcess from '@/components/home/HiringProcess';
-import Testimonials from '@/components/home/Testimonials';
-import CTASection from '@/components/home/CTASection';
 
 /**
- * HomePage component - Main landing page of the application
- * Structure:
- * 1. Hero - Main landing section with introduction
- * 2. Features - Features for editors
- * 3. EditorInteractiveProfiles - Interactive editor profiles showcase
- * 4. BusinessSection - Section for businesses explaining benefits
- * 5. FeaturedEditors - Showcase of featured editors
- * 6. HiringProcess - Explanation of the hiring process
- * 7. Testimonials - User testimonials
- * 8. CTASection - Call to action
+ * HomePage test component - Para probar renderización
  */
 const HomePage: React.FC = () => {
   return (
@@ -38,29 +21,12 @@ const HomePage: React.FC = () => {
         <Header />
         
         <main>
-          {/* 1. Hero Section */}
-          <Hero />
-          
-          {/* 2. Features for Editors */}
-          <Features />
-          
-          {/* 3. Interactive Profiles */}
-          <EditorInteractiveProfiles />
-          
-          {/* 4. Business Section */}
-          <BusinessSection />
-          
-          {/* 5. Featured Editors */}
-          <FeaturedEditors />
-          
-          {/* 6. Hiring Process */}
-          <HiringProcess />
-          
-          {/* 7. Testimonials */}
-          <Testimonials />
-          
-          {/* 8. Call to Action */}
-          <CTASection />
+          <div className="container mx-auto py-20 px-4">
+            <h1 className="text-3xl font-bold text-center mb-8">Página de Prueba</h1>
+            <p className="text-center text-lg mb-8">
+              Esta es una página de prueba para verificar si el componente HomePage está cargando correctamente.
+            </p>
+          </div>
         </main>
         
         <Footer />
