@@ -1,0 +1,103 @@
+Actualmente, al intentar contactar a un usuario (por ejemplo, a “Carlos Méndez”), el sistema arroja un error 500 y no permite crear la conversación. A continuación les detallo lo que necesitamos y las consideraciones para que la bandeja de mensajes funcione correctamente:
+
+1. Comportamiento esperado
+Crear la conversación automáticamente
+
+Cuando un usuario (emisor) selecciona a otro usuario (destinatario) y hace clic en “Iniciar conversación”, el sistema debe crear un registro de “conversación” en la base de datos.
+
+Inmediatamente, esa conversación debe aparecer en la barra lateral izquierda (“bandeja de mensajes”) con el nombre y la foto de perfil del destinatario, para ambos usuarios.
+
+Enviar y recibir mensajes
+
+Dentro de esa conversación recién creada, el emisor puede escribir el primer mensaje.
+
+El destinatario, al recibirlo, debe poder verlo en su propia bandeja de mensajes, junto con la foto/nombre de quien inicia la conversación.
+
+Barra lateral con lista de conversaciones
+
+La barra lateral en la izquierda debe mostrar todas las conversaciones que tiene el usuario actual, ordenadas por la última actividad o mensaje enviado/recibido.
+
+Cada conversación se representa con la foto de perfil y el nombre del otro usuario.
+
+2. Problema actual
+Error 500 al intentar crear la conversación (“No se pudo crear la conversación”).
+
+Esto indica que no hay una base de datos o no hay lógica implementada para guardar la conversación y sus mensajes.
+
+3. Instrucciones para resolverlo
+Configurar la base de datos
+
+Crear una tabla o colección (dependiendo del stack) llamada conversations que tenga:
+
+id (autogenerado)
+
+user1_id (emisor)
+
+user2_id (destinatario)
+
+created_at (timestamp)
+
+last_message (texto o referencia al último mensaje)
+
+Crear otra tabla o colección messages para almacenar:
+
+id
+
+conversation_id
+
+sender_id
+
+message_text
+
+created_at
+
+Endpoint o lógica para “Crear Conversación”
+
+Al hacer clic en “Iniciar conversación”, se llama a un endpoint o método backend que:
+
+Verifica si ya existe una conversación previa entre esos dos usuarios.
+
+Si no existe, crea un nuevo registro en conversations.
+
+Devuelve el conversation_id para que el front sepa a qué conversación asociar los próximos mensajes.
+
+Endpoint o lógica para “Enviar Mensaje”
+
+Una vez recibimos un conversation_id, el usuario puede enviar un mensaje.
+
+El sistema crea un registro en messages con el texto, el sender_id y la hora.
+
+Actualiza last_message en la tabla de conversations para reflejar el último mensaje.
+
+Mostrar lista de conversaciones en la barra lateral
+
+Consultar la tabla conversations para el usuario actual.
+
+Unir los datos con la tabla de usuarios para mostrar la foto/nombre del otro usuario.
+
+Ordenar las conversaciones por fecha de last_message descendente.
+
+Foto de perfil y nombre en la conversación
+
+Al cargar la conversación, traer los datos de user1_id y user2_id.
+
+Dependiendo de quién sea el usuario logueado, mostrar la foto y nombre del “otro” en la cabecera de la conversación y la barra lateral.
+
+4. Consideraciones adicionales
+Autenticación y permisos: asegurar que solo los usuarios logueados puedan crear conversaciones o ver las suyas.
+
+Notificaciones: en el futuro, agregar notificaciones en tiempo real (ej: websockets) cuando un nuevo mensaje llegue.
+
+Protección de datos: ocultar cualquier información privada del perfil que no deba ser compartida en el chat (e.g. email, si no se desea).
+
+5. Próximos pasos
+Implementar la base de datos y endpoints de conversación y mensajes.
+
+Probar la creación y envío de mensajes desde el front.
+
+Validar que se muestre correctamente en la barra lateral con la foto y nombre del destinatario.
+
+Revisar la UX: permitir editar o eliminar mensajes, filtrar conversaciones, etc.
+
+Después de esta parte, pasaremos a optimizar o rediseñar los perfiles de usuario en la plataforma.
+
