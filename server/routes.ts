@@ -13,7 +13,8 @@ import {
   insertCourseCategorySchema,
   insertCourseSchema,
   insertCourseModuleSchema,
-  insertCourseLessonSchema
+  insertCourseLessonSchema,
+  insertReviewSchema
 } from "@shared/schema";
 import { ZodError } from "zod";
 import { createAdminUser } from "./createAdminUser";

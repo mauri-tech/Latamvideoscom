@@ -5,6 +5,7 @@ import {
   editorProfiles, EditorProfile, InsertEditorProfile,
   portfolioItems, PortfolioItem, InsertPortfolioItem,
   briefs, Brief, InsertBrief,
+  reviews, Review, InsertReview,
   // Forum imports
   forumCategories, ForumCategory, InsertForumCategory,
   forumTopics, ForumTopic, InsertForumTopic,
@@ -67,6 +68,14 @@ export interface IStorage {
   getBriefsByEditorId(editorId: number): Promise<Brief[]>;
   createBrief(data: InsertBrief): Promise<Brief>;
   updateBriefStatus(id: number, status: string): Promise<Brief | undefined>;
+  
+  // Review Methods
+  getReview(id: number): Promise<Review | undefined>;
+  getReviewsByEditorProfileId(editorProfileId: number): Promise<Review[]>;
+  getReviewsByClientId(clientId: number): Promise<Review[]>;
+  createReview(data: InsertReview): Promise<Review>;
+  updateReview(id: number, data: Partial<Review>): Promise<Review | undefined>;
+  deleteReview(id: number): Promise<boolean>;
   
   // Forum Methods
   // Categories
@@ -151,6 +160,7 @@ export class MemStorage implements IStorage {
   private editorProfiles: Map<number, EditorProfile>;
   private portfolioItems: Map<number, PortfolioItem>;
   private briefs: Map<number, Brief>;
+  private reviews: Map<number, Review>;
   
   // Forum data
   private forumCategories: Map<number, ForumCategory>;
@@ -171,6 +181,7 @@ export class MemStorage implements IStorage {
   private currentProfileId = 1;
   private currentPortfolioId = 1;
   private currentBriefId = 1;
+  private currentReviewId = 1;
   
   // Forum counters
   private currentForumCategoryId = 1;
@@ -194,6 +205,7 @@ export class MemStorage implements IStorage {
     this.editorProfiles = new Map();
     this.portfolioItems = new Map();
     this.briefs = new Map();
+    this.reviews = new Map();
     
     // Inicializar colecciones del foro
     this.forumCategories = new Map();
@@ -428,6 +440,48 @@ export class MemStorage implements IStorage {
     const updatedBrief = { ...brief, status };
     this.briefs.set(id, updatedBrief);
     return updatedBrief;
+  }
+  
+  // Review Methods
+  async getReview(id: number): Promise<Review | undefined> {
+    return this.reviews.get(id);
+  }
+  
+  async getReviewsByEditorProfileId(editorProfileId: number): Promise<Review[]> {
+    return Array.from(this.reviews.values())
+      .filter(review => review.editorProfileId === editorProfileId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  
+  async getReviewsByClientId(clientId: number): Promise<Review[]> {
+    return Array.from(this.reviews.values())
+      .filter(review => review.clientId === clientId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  
+  async createReview(data: InsertReview): Promise<Review> {
+    const id = this.currentReviewId++;
+    const now = new Date();
+    const review: Review = {
+      ...data,
+      id,
+      createdAt: now
+    };
+    this.reviews.set(id, review);
+    return review;
+  }
+  
+  async updateReview(id: number, data: Partial<Review>): Promise<Review | undefined> {
+    const review = this.reviews.get(id);
+    if (!review) return undefined;
+    
+    const updatedReview = { ...review, ...data };
+    this.reviews.set(id, updatedReview);
+    return updatedReview;
+  }
+  
+  async deleteReview(id: number): Promise<boolean> {
+    return this.reviews.delete(id);
   }
   
   // Forum Category Methods
