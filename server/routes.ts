@@ -172,29 +172,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/editor-profiles/user", async (req, res) => {
     try {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      
-      const userId = req.user.id;
-      console.log('Getting profile for userId:', userId);
-      
-      try {
-        const profile = await storage.getEditorProfileByUserId(userId);
-        console.log('Profile found:', profile ? 'yes' : 'no');
-        
-        if (!profile) {
-          return res.status(404).json({ message: "Profile not found" });
-        }
-        
-        res.json(profile);
-      } catch (dbError) {
-        console.error('Database error getting profile:', dbError);
-        res.status(500).json({ message: "Database error", details: dbError.message });
-      }
-    } catch (error) {
-      console.error('Error getting editor profile for current user:', error);
-      res.status(500).json({ message: "Server error", details: error.message });
+      const { getEditorProfileForCurrentUser } = await import('./debugRoute');
+      return getEditorProfileForCurrentUser(req, res);
+    } catch (error: any) {
+      console.error('Fatal error in /api/editor-profiles/user route:', error);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      return res.status(500).json({ 
+        message: "Fatal server error", 
+        details: error ? error.message : 'Unknown error',
+        stack: error ? error.stack : ''
+      });
     }
   });
   
