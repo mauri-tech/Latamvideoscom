@@ -116,6 +116,7 @@ const EditProfilePage = () => {
   const [newEquipment, setNewEquipment] = useState("");
   const [newPaymentMethod, setNewPaymentMethod] = useState("");
   const [newExpertise, setNewExpertise] = useState("");
+  const [newTechnologyTag, setNewTechnologyTag] = useState("");
   
   // Obtener datos del usuario actual
   const { data: currentUser, isLoading: isLoadingUser } = useQuery({
@@ -269,6 +270,7 @@ const EditProfilePage = () => {
         paymentMethods: editorProfile.paymentMethods || [],
         experience: editorProfile.experience || "",
         expertise: editorProfile.expertise || [],
+        technologyTags: editorProfile.technologyTags || [],
       });
     }
   }, [editorProfile, editorProfileForm]);
@@ -326,6 +328,21 @@ const EditProfilePage = () => {
   const removeExpertise = (index: number) => {
     const currentExpertise = editorProfileForm.getValues("expertise") || [];
     editorProfileForm.setValue("expertise", currentExpertise.filter((_, i) => i !== index));
+  };
+  
+  // Agregar nuevo tag de tecnología
+  const addTechnologyTag = () => {
+    if (!newTechnologyTag) return;
+    
+    const currentTags = editorProfileForm.getValues("technologyTags") || [];
+    editorProfileForm.setValue("technologyTags", [...currentTags, newTechnologyTag]);
+    setNewTechnologyTag("");
+  };
+  
+  // Remover tag de tecnología
+  const removeTechnologyTag = (index: number) => {
+    const currentTags = editorProfileForm.getValues("technologyTags") || [];
+    editorProfileForm.setValue("technologyTags", currentTags.filter((_, i) => i !== index));
   };
   
   const isLoading = isLoadingUser || isLoadingProfile;
@@ -855,6 +872,45 @@ const EditProfilePage = () => {
                                 variant="ghost" 
                                 size="sm" 
                                 onClick={() => removeExpertise(index)}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-medium">Tags de tecnología</h3>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-end gap-2">
+                          <div className="flex-1">
+                            <Label htmlFor="tech-tag-input">Agregar tag de tecnología</Label>
+                            <Input
+                              id="tech-tag-input"
+                              value={newTechnologyTag}
+                              onChange={(e) => setNewTechnologyTag(e.target.value)}
+                              placeholder="Ej: DaVinci Resolve, FCPX, After Effects, etc."
+                            />
+                          </div>
+                          <Button type="button" onClick={addTechnologyTag} size="sm">
+                            <Plus className="h-4 w-4 mr-1" /> Agregar
+                          </Button>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          {editorProfileForm.watch("technologyTags")?.map((tag, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                              <span>{tag}</span>
+                              <Button 
+                                type="button" 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => removeTechnologyTag(index)}
                               >
                                 <X className="h-4 w-4" />
                               </Button>
