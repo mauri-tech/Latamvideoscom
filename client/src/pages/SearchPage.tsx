@@ -21,7 +21,7 @@ const SearchPage = () => {
   return (
     <div className="min-h-screen bg-[#F2F2F7]">
       <Helmet>
-        <title>Buscar editores de video | EditoresLATAM</title>
+        <title>Buscar editores de video | latamvideos.com</title>
         <meta name="description" content="Encuentra editores de video especializados para tus proyectos. Filtra por tipo de proyecto, país, software y presupuesto." />
       </Helmet>
       <Header />

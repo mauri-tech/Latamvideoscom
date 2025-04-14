@@ -21,7 +21,7 @@ const Features = () => {
     <section id="como-funciona" className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">¿Cómo funciona editoreslatam?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">¿Cómo funciona latamvideos.com?</h2>
           <p className="text-lg text-[#8E8E93] max-w-2xl mx-auto">
             Una plataforma diseñada para satisfacer las necesidades específicas del mercado de edición de video en Latinoamérica.
           </p>
