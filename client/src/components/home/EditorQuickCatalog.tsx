@@ -170,9 +170,8 @@ const EditorQuickCatalog = () => {
       {/* Controles de navegación */}
       <div className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10">
         <Button 
-          variant="outline" 
           size="icon" 
-          className="bg-white shadow-md rounded-full" 
+          className="bg-[#007AFF] text-white shadow-md rounded-full hover:bg-[#0069d9]" 
           onClick={scrollLeft}
         >
           <ChevronLeft className="h-5 w-5" />
@@ -181,9 +180,8 @@ const EditorQuickCatalog = () => {
       
       <div className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10">
         <Button 
-          variant="outline" 
           size="icon" 
-          className="bg-white shadow-md rounded-full" 
+          className="bg-[#007AFF] text-white shadow-md rounded-full hover:bg-[#0069d9]" 
           onClick={scrollRight}
         >
           <ChevronRight className="h-5 w-5" />
@@ -203,53 +201,71 @@ const EditorQuickCatalog = () => {
         {editors.map((editor) => (
           <div 
             key={editor.id}
-            className="flex-shrink-0 w-[280px] snap-start mx-2 bg-white rounded-lg shadow-sm overflow-hidden"
+            className="flex-shrink-0 w-[280px] snap-start mx-2 rounded-lg shadow-md overflow-hidden h-[420px]"
           >
-            <div className="p-4">
-              <div className="flex items-center space-x-3 mb-3">
-                <img 
-                  src={editor.profilePicture} 
-                  alt={`Foto de ${editor.name}`}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <h4 className="font-medium">{editor.name}</h4>
-                  <p className="text-[#8E8E93] text-sm">{editor.country}</p>
+            <div className="h-full flex flex-col">
+              {/* Cabecera con gradiente glaciar */}
+              <div className="h-1/3 p-4 relative flex items-center justify-center" 
+                style={{
+                  background: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
+                  overflow: "hidden"
+                }}
+              >
+                {/* Efecto brillante superior */}
+                <div className="absolute top-0 left-0 right-0 h-1/2 bg-white opacity-10 blur-xl transform -translate-y-1/2"></div>
+                
+                <div className="z-10 flex flex-col items-center">
+                  <img 
+                    src={editor.profilePicture} 
+                    alt={`Foto de ${editor.name}`}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg"
+                  />
+                  <h4 className="font-semibold text-white mt-2 text-center">{editor.name}</h4>
+                  <p className="text-sm text-white/90">{editor.country}</p>
                 </div>
               </div>
               
-              <div className="mb-3">
-                <p className="text-sm text-[#8E8E93] mb-1">Software:</p>
-                <div className="flex flex-wrap gap-1">
-                  {editor.software.map((s, i) => (
-                    <Badge key={i} variant="outline" className="bg-gray-50">
-                      {s}
-                    </Badge>
-                  ))}
+              {/* Contenido */}
+              <div className="p-4 bg-white flex-grow flex flex-col">
+                <div className="mb-4 flex-grow">
+                  <div className="mb-3">
+                    <p className="text-sm text-[#8E8E93] mb-1">Software:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {editor.software.map((s, i) => (
+                        <Badge key={i} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
+                          {s}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="mb-2">
+                    <p className="text-sm text-[#8E8E93] mb-1">Especialidades:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {editor.styles.map((s, i) => (
+                        <Badge key={i} className="bg-[#007AFF]/5 text-[#007AFF] border-0">
+                          {s}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="mb-4">
-                <p className="text-sm text-[#8E8E93] mb-1">Especialidades:</p>
-                <div className="flex flex-wrap gap-1">
-                  {editor.styles.map((s, i) => (
-                    <Badge key={i} variant="outline" className="bg-gray-50">
-                      {s}
-                    </Badge>
-                  ))}
+                
+                {/* Tarifa y botón */}
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                  <div>
+                    <span className="text-sm text-[#8E8E93]">Desde</span>
+                    <span className="text-lg font-bold text-[#007AFF] ml-1 block">${editor.basicRate} USD</span>
+                  </div>
+                  <Link href={`/editor/${editor.id}`}>
+                    <Button 
+                      size="sm" 
+                      className="bg-[#007AFF] hover:bg-[#0069d9]"
+                    >
+                      Ver perfil
+                    </Button>
+                  </Link>
                 </div>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <div>
-                  <span className="text-sm text-[#8E8E93]">Desde</span>
-                  <span className="font-semibold ml-1">${editor.basicRate} USD</span>
-                </div>
-                <Link href={`/editor/${editor.id}`}>
-                  <Button size="sm" variant="default">
-                    Ver perfil
-                  </Button>
-                </Link>
               </div>
             </div>
           </div>
@@ -258,11 +274,10 @@ const EditorQuickCatalog = () => {
       
       {/* Botón para ver más perfiles */}
       {!showMoreClicked && (
-        <div className="text-center mt-6">
+        <div className="text-center mt-8">
           <Button
             onClick={handleShowMore}
-            variant="outline"
-            className="mx-auto"
+            className="mx-auto bg-[#007AFF] hover:bg-[#0069d9] px-6"
           >
             Ver más perfiles
           </Button>

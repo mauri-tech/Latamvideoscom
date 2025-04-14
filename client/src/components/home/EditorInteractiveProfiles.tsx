@@ -176,11 +176,13 @@ const EditorInteractiveProfiles = () => {
         {profiles.map((profile, index) => (
           <div 
             key={profile.id}
-            className="bg-white rounded-xl shadow-md w-[350px] flex-shrink-0 mx-auto snap-center overflow-y-auto max-h-[650px] hide-scrollbar"
+            className="rounded-xl shadow-lg w-[350px] flex-shrink-0 mx-auto snap-center overflow-y-auto max-h-[700px] hide-scrollbar border border-[#E5E5EA]"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
               WebkitOverflowScrolling: 'touch',
+              background: 'linear-gradient(to bottom, #ffffff, #f8f9fa)',
+              boxShadow: '0 10px 40px -10px rgba(0, 0, 0, 0.1)'
             }}
           >
             {/* 1. Encabezado con datos esenciales */}
