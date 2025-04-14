@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, CheckCircle, Briefcase, Clock, Monitor } from 'lucide-react';
+import { Star, CheckCircle, Briefcase, Clock, Monitor, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Tipo para los editores recomendados
 interface Editor {
@@ -83,7 +83,34 @@ const EditorInteractiveProfiles = () => {
   return (
     <div className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Perfiles de Editores Destacados</h2>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold">Perfiles de Editores Destacados</h2>
+          
+          <div className="flex items-center space-x-3 mt-4 md:mt-0">
+            <button 
+              onClick={() => {
+                const currentIndex = recommendedEditors.findIndex(e => e.id === selectedEditor.id);
+                const prevIndex = currentIndex === 0 ? recommendedEditors.length - 1 : currentIndex - 1;
+                setSelectedEditor(recommendedEditors[prevIndex]);
+              }}
+              className="p-3 rounded-full border border-[#E5E5EA] bg-white hover:border-[#0050FF]/30 transition-colors shadow-sm"
+              aria-label="Anterior"
+            >
+              <ChevronLeft className="w-5 h-5 text-[#0050FF]" />
+            </button>
+            <button 
+              onClick={() => {
+                const currentIndex = recommendedEditors.findIndex(e => e.id === selectedEditor.id);
+                const nextIndex = (currentIndex + 1) % recommendedEditors.length;
+                setSelectedEditor(recommendedEditors[nextIndex]);
+              }}
+              className="p-3 rounded-full border border-[#E5E5EA] bg-white hover:border-[#0050FF]/30 transition-colors shadow-sm"
+              aria-label="Siguiente"
+            >
+              <ChevronRight className="w-5 h-5 text-[#0050FF]" />
+            </button>
+          </div>
+        </div>
         
         {/* Área del perfil interactivo */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-10 border border-gray-200">
