@@ -37,6 +37,10 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
     availability: initialFilters.availability || '',
     deliveryTime: initialFilters.deliveryTime || '',
     rating: initialFilters.rating || 0,
+    page: initialFilters.page || 1,
+    limit: initialFilters.limit || 10,
+    sortBy: initialFilters.sortBy || 'relevance',
+    sortDirection: initialFilters.sortDirection || 'desc',
   });
   
   const [isExpanded, setIsExpanded] = useState(false);
@@ -188,6 +192,10 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
       availability: '',
       deliveryTime: '',
       rating: 0,
+      page: 1,             // Mantener la primera página
+      limit: 10,           // Mantener el límite estándar
+      sortBy: 'relevance', // Restablecer orden
+      sortDirection: 'desc' // Restablecer dirección
     };
     
     setFilters(resetValues);

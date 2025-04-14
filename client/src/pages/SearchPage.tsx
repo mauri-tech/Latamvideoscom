@@ -18,6 +18,10 @@ const SearchPage = () => {
     availability: '',
     deliveryTime: '',
     rating: 0,
+    page: 1,             // Página actual
+    limit: 10,           // Elementos por página
+    sortBy: 'relevance', // Campo de ordenamiento
+    sortDirection: 'desc' // Dirección de ordenamiento
   });
 
   const handleFilterChange = (newFilters: any) => {

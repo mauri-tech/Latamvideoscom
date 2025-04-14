@@ -19,6 +19,24 @@ interface EditorListProps {
 }
 
 const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
+  // Estados para paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  
+  // Manejo de tipo de datos
+  interface EditorData {
+    id: number;
+    name: string;
+    location: string;
+    country: string;
+    profilePicture: string;
+    software: string[];
+    styles: string[];
+    bio: string;
+    thumbnailUrl: string;
+    basicRate: number;
+  }
+  
   // Transformar los filtros en parámetros de consulta
   const filterParams = new URLSearchParams();
   
@@ -56,6 +74,10 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
   
   const editors = response?.results || [];
   
+  // Obtener información de paginación del API
+  const totalItems = response?.pagination?.total || 0;
+  const totalPages = response?.pagination?.totalPages || 1;
+  
   // Function to get country name from country code
   const getCountryName = (countryCode: string) => {
     // This would typically be a lookup in a real implementation
@@ -69,6 +91,24 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
     };
     
     return countryMap[countryCode] || countryCode;
+  };
+  
+  // Manejar cambio de página
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    
+    // Agregar el parámetro de página a los filtros
+    const newParams = new URLSearchParams(filterParams.toString());
+    newParams.set('page', page.toString());
+    newParams.set('limit', itemsPerPage.toString());
+    
+    // Triggering a new search with the updated page
+    onFilterChange({
+      ...filters,
+      page,
+      limit: itemsPerPage
+    });
   };
   
   if (isLoading) {
@@ -162,42 +202,6 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       basicRate: 60,
     },
   ];
-  
-  // Manejo de tipo de datos
-  interface EditorData {
-    id: number;
-    name: string;
-    location: string;
-    country: string;
-    profilePicture: string;
-    software: string[];
-    styles: string[];
-    bio: string;
-    thumbnailUrl: string;
-    basicRate: number;
-  }
-  
-  // Obtener información de paginación del API
-  const totalItems = response?.pagination?.total || 0;
-  const totalPages = response?.pagination?.totalPages || 1;
-  
-  // Manejar cambio de página
-  const handlePageChange = (page: number) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-    
-    // Agregar el parámetro de página a los filtros
-    const newParams = new URLSearchParams(filterParams.toString());
-    newParams.set('page', page.toString());
-    newParams.set('limit', itemsPerPage.toString());
-    
-    // Triggering a new search with the updated page
-    onFilterChange({
-      ...filters,
-      page,
-      limit: itemsPerPage
-    });
-  };
   
   // Convertir datos de API a formato esperado o usar datos de ejemplo
   const displayEditors: EditorData[] = editors && Array.isArray(editors) && editors.length > 0 ? 
