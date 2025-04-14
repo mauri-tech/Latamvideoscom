@@ -16,8 +16,8 @@ const Hero = () => {
               </h1>
               
               <p className="text-gray-600 text-lg md:text-xl mb-8 leading-relaxed">
-                Conectamos editores de video con marcas, agencias y creadores que 
-                buscan talento específico por estilo, equipo y precio.
+                La plataforma para conectar creativos con negocios y empresas
+                buscando talento específico por estilo, equipo y precio.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">

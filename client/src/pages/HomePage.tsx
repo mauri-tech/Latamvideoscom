@@ -4,6 +4,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
 import Features from '@/components/home/Features';
+import EditorInteractiveProfiles from '@/components/home/EditorInteractiveProfiles';
 
 /**
  * HomePage - Agregando componentes uno a uno
@@ -28,6 +29,9 @@ const HomePage: React.FC = () => {
           
           {/* 2. Features */}
           <Features />
+          
+          {/* 3. Editor Interactive Profiles */}
+          <EditorInteractiveProfiles />
         </main>
         
         <Footer />
