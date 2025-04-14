@@ -5,37 +5,42 @@ import { Check } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <div className="bg-white py-12 md:py-16">
-      <div className="container mx-auto px-4">
+    <div className="relative overflow-hidden py-16 md:py-20">
+      {/* Fondo con el gradiente premium */}
+      <div className="absolute inset-0 bg-[#0A0A0A] z-0">
+        <div className="absolute inset-0 opacity-90 gradient-premium-blue"></div>
+      </div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row items-center">
           {/* Contenido del texto */}
-          <div className="md:w-1/2 mb-8 md:mb-0">
+          <div className="md:w-1/2 mb-12 md:mb-0">
             <div className="max-w-lg">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-                <span className="text-[#007AFF]">latamvideos</span>
-                <span className="text-black font-normal">.com</span>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+                <span className="text-white">latamvideos</span>
+                <span className="text-[#A0C4FF] font-light">.com</span>
               </h1>
               
-              <p className="text-gray-600 text-lg mb-8">
+              <p className="text-[#E0E7FF] text-lg md:text-xl mb-8 leading-relaxed">
                 Conectamos editores de video con marcas, agencias y creadores que 
                 buscan talento específico por estilo, equipo y precio.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
-                  className="bg-[#007AFF] hover:bg-[#0069d9] text-white" 
+                  className="bg-white text-[#0050FF] hover:bg-white/90 shadow-lg" 
                   size="lg"
-                  asChild
+                  onClick={() => window.location.href = '/register'}
                 >
-                  <Link href="/register">Registrarse</Link>
+                  Registrarse
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="border-[#007AFF] text-[#007AFF] hover:bg-[#007AFF]/5"
+                  className="border-white text-white hover:bg-white/10 backdrop-blur-sm"
                   size="lg"
-                  asChild
+                  onClick={() => window.location.href = '/about'}
                 >
-                  <Link href="/about">Conocer más</Link>
+                  Conocer más
                 </Button>
               </div>
             </div>
@@ -43,8 +48,8 @@ const Hero = () => {
           
           {/* Imagen del editor trabajando */}
           <div className="md:w-1/2">
-            <div className="bg-[#F5F5F7] rounded-xl p-4">
-              <h3 className="font-medium text-lg mb-3">Editor de video trabajando</h3>
+            <div className="bg-black/30 backdrop-blur-md rounded-xl p-6 shadow-2xl border border-white/10">
+              <h3 className="font-medium text-lg mb-3 text-white">Software de edición profesional</h3>
               <div className="aspect-video rounded-lg flex items-center justify-center overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80" 
@@ -55,45 +60,69 @@ const Hero = () => {
             </div>
           </div>
         </div>
-        
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold mb-8">Para Editores</h2>
+      </div>
+      
+      {/* Sección Para Editores con gradiente suave */}
+      <div className="mt-20 py-16 relative">
+        <div className="absolute inset-0 bg-white z-0"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">Para Editores</h2>
           
-          <div className="space-y-4">
-            <div className="flex items-start">
-              <div className="text-[#007AFF] mr-3 mt-1 flex-shrink-0">
-                <Check className="h-5 w-5" />
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
+              <div className="flex items-start mb-4">
+                <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
+                  <Check className="h-5 w-5 text-[#0050FF]" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-lg mb-2">Perfil profesional destacado</h3>
+                  <p className="text-gray-700">
+                    Crea un perfil completo con tus herramientas, habilidades y experiencia para destacar ante potenciales clientes.
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-800">
-                Crea un perfil profesional con tu información, herramientas y experiencia
-              </p>
             </div>
             
-            <div className="flex items-start">
-              <div className="text-[#007AFF] mr-3 mt-1 flex-shrink-0">
-                <Check className="h-5 w-5" />
+            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
+              <div className="flex items-start mb-4">
+                <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
+                  <Check className="h-5 w-5 text-[#0050FF]" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-lg mb-2">Portafolio visual impactante</h3>
+                  <p className="text-gray-700">
+                    Sube tu portafolio con enlaces a tus mejores trabajos en YouTube o Vimeo para mostrar tu estilo único.
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-800">
-                Sube tu portafolio con enlaces a tus mejores trabajos en YouTube o Vimeo
-              </p>
             </div>
             
-            <div className="flex items-start">
-              <div className="text-[#007AFF] mr-3 mt-1 flex-shrink-0">
-                <Check className="h-5 w-5" />
+            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
+              <div className="flex items-start mb-4">
+                <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
+                  <Check className="h-5 w-5 text-[#0050FF]" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-lg mb-2">Tarifas personalizadas</h3>
+                  <p className="text-gray-700">
+                    Define tus tarifas según el servicio y experiencia que ofreces, con paquetes para diferentes necesidades.
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-800">
-                Define tus tarifas según el servicio y experiencia que ofreces
-              </p>
             </div>
             
-            <div className="flex items-start">
-              <div className="text-[#007AFF] mr-3 mt-1 flex-shrink-0">
-                <Check className="h-5 w-5" />
+            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
+              <div className="flex items-start mb-4">
+                <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
+                  <Check className="h-5 w-5 text-[#0050FF]" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-lg mb-2">Clientes específicos</h3>
+                  <p className="text-gray-700">
+                    Recibe solicitudes de clientes que buscan específicamente tu perfil y experiencia para sus proyectos.
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-800">
-                Recibe solicitudes de clientes que buscan específicamente tu perfil
-              </p>
             </div>
           </div>
         </div>

@@ -166,25 +166,33 @@ const EditorInteractiveProfiles = () => {
   };
   
   return (
-    <div className="py-16 bg-white">
+    <div className="py-20 bg-[#F8FAFF]">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold">Editores Recomendados</h2>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+          <div>
+            <h2 className="text-3xl font-bold text-[#041C32] relative">
+              Editores Recomendados
+              <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-gradient-to-r from-[#0050FF] to-[#A0C4FF]"></span>
+            </h2>
+            <p className="text-[#6B7280] mt-4 max-w-2xl">
+              Descubre a los mejores editores de video en Latinoamérica, seleccionados por su calidad, experiencia y reputación.
+            </p>
+          </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <button 
               onClick={prev}
-              className="p-2 rounded-full bg-[#F5F5F7] hover:bg-[#E5E5EA] transition-colors"
+              className="p-3 rounded-full border border-[#E5E5EA] bg-white hover:border-[#0050FF]/30 transition-colors shadow-sm"
               aria-label="Anterior"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-600" />
+              <ChevronLeft className="w-5 h-5 text-[#0050FF]" />
             </button>
             <button 
               onClick={next}
-              className="p-2 rounded-full bg-[#F5F5F7] hover:bg-[#E5E5EA] transition-colors"
+              className="p-3 rounded-full border border-[#E5E5EA] bg-white hover:border-[#0050FF]/30 transition-colors shadow-sm"
               aria-label="Siguiente"
             >
-              <ChevronRight className="w-5 h-5 text-gray-600" />
+              <ChevronRight className="w-5 h-5 text-[#0050FF]" />
             </button>
           </div>
         </div>
@@ -195,12 +203,14 @@ const EditorInteractiveProfiles = () => {
             <div key={editor.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
               {/* Cabecera */}
               <div className="relative">
-                <div className="bg-gradient-to-r from-[#0093E9] to-[#80D0C7] h-24"></div>
-                <div className="absolute top-12 left-0 w-full flex flex-col items-center">
+                <div className="gradient-premium-blue h-28 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[#0A0A0A]/30"></div>
+                </div>
+                <div className="absolute top-14 left-0 w-full flex flex-col items-center">
                   <img 
                     src={editor.profilePicture} 
                     alt={editor.name}
-                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl"
                   />
                 </div>
               </div>
@@ -248,28 +258,28 @@ const EditorInteractiveProfiles = () => {
                 
                 {/* Información destacada */}
                 <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-                  <div className="bg-[#F5F5F7] p-2 rounded-lg">
-                    <p className="text-sm font-medium text-gray-800">{editor.portfolioCount}</p>
-                    <p className="text-xs text-gray-500">Proyectos</p>
+                  <div className="gradient-card-soft p-2 rounded-lg shadow-sm border border-[#E5E5EA]">
+                    <p className="text-sm font-bold text-[#0050FF]">{editor.portfolioCount}</p>
+                    <p className="text-xs text-gray-600">Proyectos</p>
                   </div>
-                  <div className="bg-[#F5F5F7] p-2 rounded-lg">
-                    <p className="text-sm font-medium text-gray-800">
-                      <span className="text-[#007AFF]">${editor.price.min}</span>
+                  <div className="gradient-card-soft p-2 rounded-lg shadow-sm border border-[#E5E5EA]">
+                    <p className="text-sm font-bold text-[#0050FF]">
+                      ${editor.price.min}
                     </p>
-                    <p className="text-xs text-gray-500">Desde</p>
+                    <p className="text-xs text-gray-600">Desde</p>
                   </div>
-                  <div className="bg-[#F5F5F7] p-2 rounded-lg">
+                  <div className="gradient-card-soft p-2 rounded-lg shadow-sm border border-[#E5E5EA]">
                     <div className="flex items-center justify-center">
-                      <Clock className="w-3 h-3 text-gray-600 mr-1" />
-                      <p className="text-sm font-medium text-gray-800">{editor.experience}</p>
+                      <Clock className="w-3 h-3 text-[#0050FF] mr-1" />
+                      <p className="text-sm font-bold text-[#0050FF]">{editor.experience}</p>
                     </div>
-                    <p className="text-xs text-gray-500">Años exp.</p>
+                    <p className="text-xs text-gray-600">Años exp.</p>
                   </div>
                 </div>
                 
                 {/* CTA */}
                 <Button 
-                  className="w-full bg-[#007AFF] hover:bg-[#0069d9]"
+                  className="w-full bg-gradient-to-r from-[#0050FF] to-[#0093E9] hover:opacity-90 text-white shadow-md"
                   onClick={() => window.location.href = `/editor/${editor.id}`}
                 >
                   Ver perfil
@@ -280,14 +290,19 @@ const EditorInteractiveProfiles = () => {
         </div>
         
         {/* Botón para explorar todos */}
-        <div className="mt-8 text-center">
-          <Button 
-            variant="outline" 
-            className="border-[#007AFF] text-[#007AFF] hover:bg-[#007AFF]/5"
-            onClick={() => window.location.href = '/search'}
-          >
-            Explorar todos los editores
-          </Button>
+        <div className="mt-16 text-center">
+          <div className="relative inline-block">
+            <Button 
+              variant="outline" 
+              className="border-[#0050FF] text-[#0050FF] hover:bg-[#0050FF]/5 text-base px-8 py-6 relative z-10 overflow-hidden shadow-sm"
+              onClick={() => window.location.href = '/search'}
+            >
+              <span className="relative z-10">Explorar todos los editores</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-[#0050FF]/10 to-[#80D0C7]/10 opacity-0 hover:opacity-100 transition-opacity"></span>
+            </Button>
+            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-r from-[#0050FF] to-[#80D0C7] rounded-full opacity-20 blur-md"></div>
+            <div className="absolute -top-2 -left-2 w-10 h-10 bg-gradient-to-r from-[#0050FF] to-[#80D0C7] rounded-full opacity-20 blur-md"></div>
+          </div>
         </div>
       </div>
     </div>

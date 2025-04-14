@@ -15,6 +15,80 @@
   scrollbar-width: none;
 }
 
+/* Gradientes premium inspirados en Apple */
+.gradient-premium-blue {
+  background: linear-gradient(125deg, #041C32 0%, #0050FF 35%, #A0C4FF 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-premium-blue::before,
+.gradient-premium-blue::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gradient-premium-blue::before {
+  background: radial-gradient(120% 120% at 50% 30%, rgba(160, 196, 255, 0.2) 0%, rgba(0, 80, 255, 0.05) 50%, rgba(4, 28, 50, 0) 100%);
+  animation: pulse 8s ease-in-out infinite alternate;
+}
+
+.gradient-premium-blue::after {
+  background: radial-gradient(70% 100% at 50% 100%, rgba(0, 80, 255, 0.3) 0%, rgba(4, 28, 50, 0) 70%);
+  animation: wave 12s ease-in-out infinite;
+}
+
+/* Gradiente suave para tarjetas */
+.gradient-card-soft {
+  background: linear-gradient(135deg, #f5f9ff 0%, #e8f0ff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-card-soft::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(100% 100% at 0% 0%, rgba(160, 196, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Animaciones para los efectos de "respiración" */
+@keyframes pulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: translateY(5%) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(5%) rotate(1deg);
+  }
+}
+
 @layer base {
   :root {
     --font-satoshi: 'Satoshi', sans-serif;
