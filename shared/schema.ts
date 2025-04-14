@@ -66,6 +66,7 @@ export const editorProfiles = pgTable("editor_profiles", {
   paymentMethods: jsonb("payment_methods").notNull().default([]), // Array of payment methods
   experience: text("experience"), // Brief description of experience
   expertise: jsonb("expertise").notNull().default([]), // Array of areas of expertise
+  professionalType: text("professional_type").default('editor'), // Type of professional (editor, videographer, etc.)
   viewCount: integer("view_count").notNull().default(0),
   contactClickCount: integer("contact_click_count").notNull().default(0),
   verified: boolean("verified").notNull().default(false),
@@ -87,6 +88,7 @@ export const insertEditorProfileSchema = createInsertSchema(editorProfiles).pick
   paymentMethods: true,
   experience: true,
   expertise: true,
+  professionalType: true,
 });
 
 // PORTFOLIO ITEMS TABLE

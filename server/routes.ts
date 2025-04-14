@@ -239,6 +239,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filters.experienceLevel = req.query.experienceLevel as string;
       }
       
+      // Professional type filter
+      if (req.query.professionalType) {
+        filters.professionalType = req.query.professionalType as string;
+      }
+      
       // Country filter
       if (req.query.country) {
         filters.country = (req.query.country as string).split(',');
