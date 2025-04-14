@@ -1,429 +1,395 @@
-import { Helmet } from "react-helmet";
-import { Layout } from "@/components/layout/Layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import { useEffect, useState } from "react";
-import { Users, Video, Headphones, PenTool, Film, MessageSquare, Clock, Eye, Pin, 
-  Star, Lightbulb, MessageCircle, HelpCircle, Check, ChevronRight, BadgeCheck, Zap } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { Separator } from "@/components/ui/separator";
+import React, { useState, useEffect } from 'react';
+import { Layout } from '@/components/layout/Layout';
+import { useAuth } from '@/hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import { Link, useLocation } from 'wouter';
+import { 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger 
+} from '@/components/ui/tabs';
+import { 
+  Card, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription, 
+  CardContent, 
+  CardFooter 
+} from '@/components/ui/card';
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from '@/components/ui/pagination';
+import { Button } from '@/components/ui/button';
+import { 
+  MessageSquare, 
+  User, 
+  Clock, 
+  Filter, 
+  Eye, 
+  MessageCircle, 
+  PlusCircle,
+  Search
+} from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Helmet } from 'react-helmet';
 
-export default function ForumPage() {
-  const { toast } = useToast();
-  const { user } = useAuth();
-  const [selectedTab, setSelectedTab] = useState("all");
+// Interfaz para categoría de foro
+interface ForumCategory {
+  id: number;
+  name: string;
+  description: string | null;
+  slug: string;
+  iconName: string | null;
+  order: number;
+  createdAt: string;
+  topicCount?: number; // Agregado para mostrar cantidad de temas
+}
 
-  useEffect(() => {
-    // Simulación de carga del foro
-    toast({
-      title: "Foro en desarrollo",
-      description: "El foro está actualmente en desarrollo. ¡Pronto podrás participar!",
-    });
-  }, []);
-
-  // Datos simulados para el diseño
-  const forumCategories = [
-    { id: 1, name: "Editores de Video", icon: <Video className="h-5 w-5 text-blue-500" />, count: 156, description: "Discusiones sobre técnicas, software y flujos de trabajo para edición de video" },
-    { id: 2, name: "Videógrafos", icon: <Film className="h-5 w-5 text-green-500" />, count: 89, description: "Compartir consejos de filmación, equipo y producción audiovisual" },
-    { id: 3, name: "Diseñadores", icon: <PenTool className="h-5 w-5 text-purple-500" />, count: 104, description: "Recursos y tendencias de diseño gráfico, motion graphics y animación" },
-    { id: 4, name: "Audio y Música", icon: <Headphones className="h-5 w-5 text-red-500" />, count: 72, description: "Todo sobre sonido, mezcla, edición de audio y música para producciones" },
-    { id: 5, name: "Producción", icon: <Film className="h-5 w-5 text-amber-500" />, count: 67, description: "Planificación, dirección y producción general de proyectos audiovisuales" },
-    { id: 6, name: "General", icon: <MessageSquare className="h-5 w-5 text-gray-500" />, count: 183, description: "Temas diversos, novedades del sector y conversaciones off-topic" },
-  ];
-
-  const recentTopics = [
-    {
-      id: 1,
-      title: "¿Cuál es el mejor flujo de trabajo para editar videos de YouTube en 2023?",
-      author: { name: "Carlos Mendoza", role: "Editor", level: "Mentor", avatar: "" },
-      category: "Editores de Video",
-      replies: 23,
-      views: 238,
-      lastActivity: "hace 2 horas",
-      isPinned: true,
-    },
-    {
-      id: 2,
-      title: "Problemas con la estabilización en DaVinci Resolve 18",
-      author: { name: "Luciana Pérez", role: "Videógrafa", level: "Colaborador", avatar: "" },
-      category: "Editores de Video",
-      replies: 14,
-      views: 126,
-      lastActivity: "hace 4 horas",
-      isPinned: false,
-    },
-    {
-      id: 3,
-      title: "Recursos gratuitos para Motion Graphics en After Effects",
-      author: { name: "Manuel Ortega", role: "Diseñador", level: "Conector", avatar: "" },
-      category: "Diseñadores",
-      replies: 43,
-      views: 512,
-      lastActivity: "hace 6 horas",
-      isPinned: false,
-    },
-    {
-      id: 4,
-      title: "¿Cómo cobrar por proyectos audiovisuales en Latinoamérica?",
-      author: { name: "Diana Torres", role: "Productora", level: "Maestro", avatar: "" },
-      category: "General",
-      replies: 76,
-      views: 894,
-      lastActivity: "hace 1 día",
-      isPinned: true,
-    },
-    {
-      id: 5,
-      title: "Técnicas avanzadas de correción de color para videoclips",
-      author: { name: "Roberto Silva", role: "Editor", level: "Conector", avatar: "" },
-      category: "Editores de Video",
-      replies: 18,
-      views: 214,
-      lastActivity: "hace 1 día",
-      isPinned: false,
-    }
-  ];
-
-  const popularTopics = [
-    {
-      id: 6,
-      title: "Lista completa de recursos gratuitos para editores en 2023",
-      author: { name: "Raúl Jiménez", role: "Editor", level: "Maestro", avatar: "" },
-      category: "General",
-      replies: 158,
-      views: 4287,
-      lastActivity: "hace 3 días",
-      isPinned: false,
-    },
-    {
-      id: 7,
-      title: "Guía definitiva para optimizar el rendimiento de Premiere Pro",
-      author: { name: "Alejandra Montes", role: "Editora", level: "Mentor", avatar: "" },
-      category: "Editores de Video",
-      replies: 126,
-      views: 3198,
-      lastActivity: "hace 5 días",
-      isPinned: false,
-    }
-  ];
-
-  const getLevelBadge = (level: string) => {
-    switch (level) {
-      case "Explorador":
-        return <Badge variant="outline" className="text-gray-500">Explorador</Badge>;
-      case "Colaborador":
-        return <Badge variant="outline" className="text-blue-400">Colaborador</Badge>;
-      case "Conector":
-        return <Badge variant="outline" className="text-blue-600">Conector</Badge>;
-      case "Mentor":
-        return <Badge variant="outline" className="text-emerald-600">Mentor</Badge>;
-      case "Maestro":
-        return <Badge variant="outline" className="text-amber-500">Maestro <BadgeCheck className="h-3 w-3 ml-1" /></Badge>;
-      default:
-        return <Badge variant="outline" className="text-gray-500">Explorador</Badge>;
-    }
+// Interfaz para tema del foro
+interface ForumTopic {
+  id: number;
+  title: string;
+  content: string;
+  authorId: number;
+  categoryId: number;
+  isPinned: boolean;
+  isClosed: boolean;
+  viewCount: number;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  author?: {
+    id: number;
+    name: string;
+    profilePicture: string | null;
   };
+  replyCount?: number;
+  lastActivity?: string;
+}
 
+// Mostrar tiempo transcurrido de forma amigable
+function timeAgo(date: string) {
+  const now = new Date();
+  const past = new Date(date);
+  const diff = Math.floor((now.getTime() - past.getTime()) / 1000);
+  
+  if (diff < 60) return `hace ${diff} segundos`;
+  if (diff < 3600) return `hace ${Math.floor(diff / 60)} minutos`;
+  if (diff < 86400) return `hace ${Math.floor(diff / 3600)} horas`;
+  if (diff < 2592000) return `hace ${Math.floor(diff / 86400)} días`;
+  if (diff < 31536000) return `hace ${Math.floor(diff / 2592000)} meses`;
+  return `hace ${Math.floor(diff / 31536000)} años`;
+}
+
+const ForumPage: React.FC = () => {
+  const { user } = useAuth();
+  const [_, navigate] = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('recientes');
+  const [currentPage, setCurrentPage] = useState(1);
+  const topicsPerPage = 10;
+  
+  // Consulta para obtener categorías
+  const { 
+    data: categories, 
+    isLoading: categoriesLoading 
+  } = useQuery({
+    queryKey: ['/api/forum/categories'],
+    staleTime: 1000 * 60 * 5, // 5 minutos
+  });
+  
+  // Consulta para obtener temas según filtro
+  const { 
+    data: topics, 
+    isLoading: topicsLoading 
+  } = useQuery({
+    queryKey: ['/api/forum/topics', { filter: activeTab, page: currentPage }],
+    staleTime: 1000 * 60, // 1 minuto
+  });
+  
+  // Filtrar temas según búsqueda
+  const filteredTopics = topics ? topics.filter((topic: ForumTopic) => 
+    topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    topic.content.toLowerCase().includes(searchQuery.toLowerCase())
+  ) : [];
+  
+  // Calcular paginación
+  const totalPages = Math.ceil((filteredTopics?.length || 0) / topicsPerPage);
+  const currentTopics = filteredTopics.slice(
+    (currentPage - 1) * topicsPerPage,
+    currentPage * topicsPerPage
+  );
+  
+  // Restablecer página al cambiar filtro
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
+  
+  // Restablecer página al buscar
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+  
   return (
     <Layout>
       <Helmet>
-        <title>Foro de la Comunidad | latamvideos.com</title>
+        <title>Foro de Comunidad | latamvideos.com</title>
       </Helmet>
-
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold">Foro de la Comunidad</h1>
-              <p className="text-muted-foreground mt-2">
-                Un espacio para compartir conocimientos, resolver dudas y conectar con otros profesionales del video.
-              </p>
-            </div>
-            <div>
-              {user ? (
-                <Button>
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  Crear tema
-                </Button>
-              ) : (
-                <Button variant="outline" onClick={() => toast({
-                  title: "Inicia sesión para participar",
-                  description: "Necesitas una cuenta para crear temas en el foro",
-                })}>
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  Crear tema
-                </Button>
-              )}
+      
+      <div className="container mx-auto py-8 px-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#041C32] to-[#0050FF] bg-clip-text text-transparent">
+              Foro de Comunidad
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Conecta, aprende y comparte con otros profesionales del video en Latinoamérica
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            {user ? (
+              <Button 
+                onClick={() => navigate('/forum/new-topic')}
+                className="bg-[#0050FF] hover:bg-[#0040E0] gap-2"
+              >
+                <PlusCircle size={18} />
+                Nuevo Tema
+              </Button>
+            ) : (
+              <Button 
+                onClick={() => navigate('/login?redirect=/forum/new-topic')}
+                variant="outline"
+                className="border-[#0050FF] text-[#0050FF] hover:bg-blue-50"
+              >
+                Iniciar sesión para participar
+              </Button>
+            )}
+            
+            <div className="relative w-full md:w-auto">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Buscar en el foro..."
+                className="pl-9 w-full md:w-[260px]"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {forumCategories.map((category) => (
+        </div>
+        
+        {/* Categorías */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {categoriesLoading ? (
+            Array(6).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-[100px] rounded-md" />
+            ))
+          ) : categories && categories.length > 0 ? (
+            categories.map((category: ForumCategory) => (
               <Card key={category.id} className="hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      {category.icon}
-                      <CardTitle className="ml-2 text-lg">{category.name}</CardTitle>
-                    </div>
-                    <Badge variant="secondary">{category.count}</Badge>
-                  </div>
+                  <CardTitle className="text-lg">
+                    <Link href={`/forum/category/${category.slug}`}>
+                      <a className="hover:text-primary transition-colors">
+                        {category.name}
+                      </a>
+                    </Link>
+                  </CardTitle>
+                  <CardDescription className="line-clamp-2">
+                    {category.description || 'Sin descripción disponible'}
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-3">{category.description}</p>
-                  <Button variant="link" className="px-0">
-                    Explorar <ChevronRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </CardContent>
+                <CardFooter className="pt-2">
+                  <div className="text-muted-foreground text-sm flex items-center gap-1">
+                    <MessageCircle size={14} />
+                    <span>{category.topicCount || 0} temas</span>
+                  </div>
+                </CardFooter>
               </Card>
-            ))}
-          </div>
-
-          <div className="bg-muted/40 p-4 rounded-lg mb-8">
-            <div className="flex items-center space-x-3 mb-4">
-              <Zap className="h-5 w-5 text-amber-500" />
-              <h2 className="text-lg font-semibold">Nivel de comunidad</h2>
+            ))
+          ) : (
+            <div className="col-span-3 py-8 text-center">
+              <p className="text-muted-foreground">No hay categorías disponibles</p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-              <div className="border bg-background rounded p-3 text-center">
-                <p className="text-sm text-gray-500 mb-1">Explorador</p>
-                <p className="text-xs">+5 pts / post</p>
-              </div>
-              <div className="border bg-background rounded p-3 text-center">
-                <p className="text-sm text-blue-400 mb-1">Colaborador</p>
-                <p className="text-xs">+2 pts / comentario</p>
-              </div>
-              <div className="border bg-background rounded p-3 text-center">
-                <p className="text-sm text-blue-600 mb-1">Conector</p>
-                <p className="text-xs">+3 pts / voto positivo</p>
-              </div>
-              <div className="border bg-background rounded p-3 text-center">
-                <p className="text-sm text-emerald-600 mb-1">Mentor</p>
-                <p className="text-xs">+10 pts / resp. útil</p>
-              </div>
-              <div className="border bg-background rounded p-3 text-center">
-                <p className="text-sm text-amber-500 mb-1">Maestro</p>
-                <p className="text-xs">Nivel élite</p>
-              </div>
-            </div>
-          </div>
-
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-4">
-            <div className="flex items-center justify-between">
-              <TabsList>
-                <TabsTrigger value="all">Todos los temas</TabsTrigger>
-                <TabsTrigger value="recent">Más recientes</TabsTrigger>
-                <TabsTrigger value="popular">Más populares</TabsTrigger>
-                <TabsTrigger value="unanswered">Sin respuesta</TabsTrigger>
-              </TabsList>
-              <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Actualizado hace 5 min</span>
-              </div>
-            </div>
-
-            <TabsContent value="all" className="space-y-4">
-              <div>
-                {recentTopics.map((topic) => (
-                  <div key={topic.id} className="border-b border-border last:border-0">
-                    <div className="py-4 px-1">
-                      <div className="flex items-start justify-between">
-                        <div className="flex">
-                          <Avatar className="h-9 w-9 mr-4">
-                            <AvatarImage src={topic.author.avatar} />
-                            <AvatarFallback>{topic.author.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="flex items-center mb-1">
-                              {topic.isPinned && <Pin className="h-4 w-4 text-red-500 mr-2" />}
-                              <h3 className="font-semibold text-base">
-                                <a href="#" className="hover:text-primary transition-colors">{topic.title}</a>
-                              </h3>
-                            </div>
-                            <div className="flex items-center text-sm text-muted-foreground space-x-4">
-                              <span className="flex items-center">
-                                <MessageCircle className="h-3 w-3 mr-1" />
-                                {topic.replies} respuestas
-                              </span>
-                              <span className="flex items-center">
-                                <Eye className="h-3 w-3 mr-1" />
-                                {topic.views} vistas
-                              </span>
-                              <span>{topic.category}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <span className="text-sm">{topic.author.name}</span>
-                            {getLevelBadge(topic.author.level)}
-                          </div>
-                          <span className="text-xs text-muted-foreground">{topic.lastActivity}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {popularTopics.map((topic) => (
-                  <div key={topic.id} className="border-b border-border last:border-0">
-                    <div className="py-4 px-1">
-                      <div className="flex items-start justify-between">
-                        <div className="flex">
-                          <Avatar className="h-9 w-9 mr-4">
-                            <AvatarImage src={topic.author.avatar} />
-                            <AvatarFallback>{topic.author.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="flex items-center mb-1">
-                              {topic.isPinned && <Pin className="h-4 w-4 text-red-500 mr-2" />}
-                              <h3 className="font-semibold text-base">
-                                <a href="#" className="hover:text-primary transition-colors">{topic.title}</a>
-                              </h3>
-                            </div>
-                            <div className="flex items-center text-sm text-muted-foreground space-x-4">
-                              <span className="flex items-center">
-                                <MessageCircle className="h-3 w-3 mr-1" />
-                                {topic.replies} respuestas
-                              </span>
-                              <span className="flex items-center">
-                                <Eye className="h-3 w-3 mr-1" />
-                                {topic.views} vistas
-                              </span>
-                              <span>{topic.category}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <span className="text-sm">{topic.author.name}</span>
-                            {getLevelBadge(topic.author.level)}
-                          </div>
-                          <span className="text-xs text-muted-foreground">{topic.lastActivity}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-center">
-                <Button variant="outline">Cargar más temas</Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="recent" className="space-y-4">
-              <div>
-                {recentTopics.map((topic) => (
-                  <div key={topic.id} className="border-b border-border last:border-0">
-                    <div className="py-4 px-1">
-                      <div className="flex items-start justify-between">
-                        <div className="flex">
-                          <Avatar className="h-9 w-9 mr-4">
-                            <AvatarImage src={topic.author.avatar} />
-                            <AvatarFallback>{topic.author.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="flex items-center mb-1">
-                              {topic.isPinned && <Pin className="h-4 w-4 text-red-500 mr-2" />}
-                              <h3 className="font-semibold text-base">
-                                <a href="#" className="hover:text-primary transition-colors">{topic.title}</a>
-                              </h3>
-                            </div>
-                            <div className="flex items-center text-sm text-muted-foreground space-x-4">
-                              <span className="flex items-center">
-                                <MessageCircle className="h-3 w-3 mr-1" />
-                                {topic.replies} respuestas
-                              </span>
-                              <span className="flex items-center">
-                                <Eye className="h-3 w-3 mr-1" />
-                                {topic.views} vistas
-                              </span>
-                              <span>{topic.category}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <span className="text-sm">{topic.author.name}</span>
-                            {getLevelBadge(topic.author.level)}
-                          </div>
-                          <span className="text-xs text-muted-foreground">{topic.lastActivity}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-center">
-                <Button variant="outline">Cargar más temas</Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="popular" className="space-y-4">
-              <div>
-                {popularTopics.map((topic) => (
-                  <div key={topic.id} className="border-b border-border last:border-0">
-                    <div className="py-4 px-1">
-                      <div className="flex items-start justify-between">
-                        <div className="flex">
-                          <Avatar className="h-9 w-9 mr-4">
-                            <AvatarImage src={topic.author.avatar} />
-                            <AvatarFallback>{topic.author.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="flex items-center mb-1">
-                              <Star className="h-4 w-4 text-amber-500 mr-2" />
-                              <h3 className="font-semibold text-base">
-                                <a href="#" className="hover:text-primary transition-colors">{topic.title}</a>
-                              </h3>
-                            </div>
-                            <div className="flex items-center text-sm text-muted-foreground space-x-4">
-                              <span className="flex items-center">
-                                <MessageCircle className="h-3 w-3 mr-1" />
-                                {topic.replies} respuestas
-                              </span>
-                              <span className="flex items-center">
-                                <Eye className="h-3 w-3 mr-1" />
-                                {topic.views} vistas
-                              </span>
-                              <span>{topic.category}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <span className="text-sm">{topic.author.name}</span>
-                            {getLevelBadge(topic.author.level)}
-                          </div>
-                          <span className="text-xs text-muted-foreground">{topic.lastActivity}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-center">
-                <Button variant="outline">Cargar más temas</Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="unanswered" className="space-y-4">
-              <div className="text-center py-24">
-                <HelpCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No hay temas sin respuesta</h3>
-                <p className="text-muted-foreground max-w-lg mx-auto mb-6">
-                  ¡Nuestra comunidad es muy activa! Todos los temas actuales han recibido al menos una respuesta.
-                </p>
-                <Button>Crear un nuevo tema</Button>
-              </div>
-            </TabsContent>
-          </Tabs>
+          )}
         </div>
-      </main>
+        
+        {/* Temas y filtros */}
+        <Tabs defaultValue="recientes" className="w-full" value={activeTab} onValueChange={setActiveTab}>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+            <TabsList className="h-auto">
+              <TabsTrigger value="recientes" className="data-[state=active]:bg-[#0050FF] data-[state=active]:text-white">
+                Recientes
+              </TabsTrigger>
+              <TabsTrigger value="populares" className="data-[state=active]:bg-[#0050FF] data-[state=active]:text-white">
+                Populares
+              </TabsTrigger>
+              <TabsTrigger value="sin-respuesta" className="data-[state=active]:bg-[#0050FF] data-[state=active]:text-white">
+                Sin respuesta
+              </TabsTrigger>
+            </TabsList>
+            
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Filter size={16} />
+              <span>Filtrar por:</span>
+              <select className="bg-transparent border rounded px-2 py-1">
+                <option value="all">Todas las categorías</option>
+                {categories && categories.map((category: ForumCategory) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
+          <TabsContent value="recientes" className="mt-0">
+            <TopicList 
+              topics={currentTopics} 
+              isLoading={topicsLoading}
+              emptyMessage="No hay temas recientes disponibles"
+            />
+          </TabsContent>
+          
+          <TabsContent value="populares" className="mt-0">
+            <TopicList 
+              topics={currentTopics} 
+              isLoading={topicsLoading}
+              emptyMessage="No hay temas populares disponibles"
+            />
+          </TabsContent>
+          
+          <TabsContent value="sin-respuesta" className="mt-0">
+            <TopicList 
+              topics={currentTopics} 
+              isLoading={topicsLoading}
+              emptyMessage="No hay temas sin respuesta disponibles"
+            />
+          </TabsContent>
+        </Tabs>
+        
+        {/* Paginación */}
+        {filteredTopics.length > 0 && totalPages > 1 && (
+          <Pagination className="mt-6">
+            <PaginationContent>
+              {currentPage > 1 && (
+                <PaginationItem>
+                  <PaginationPrevious onClick={() => setCurrentPage(currentPage - 1)} />
+                </PaginationItem>
+              )}
+              
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <PaginationItem key={i}>
+                  <PaginationLink
+                    isActive={currentPage === i + 1}
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              
+              {currentPage < totalPages && (
+                <PaginationItem>
+                  <PaginationNext onClick={() => setCurrentPage(currentPage + 1)} />
+                </PaginationItem>
+              )}
+            </PaginationContent>
+          </Pagination>
+        )}
+      </div>
     </Layout>
   );
+};
+
+interface TopicListProps {
+  topics: ForumTopic[];
+  isLoading: boolean;
+  emptyMessage: string;
 }
+
+const TopicList: React.FC<TopicListProps> = ({ topics, isLoading, emptyMessage }) => {
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {Array(5).fill(0).map((_, i) => (
+          <Skeleton key={i} className="h-[120px] rounded-md" />
+        ))}
+      </div>
+    );
+  }
+  
+  if (topics.length === 0) {
+    return (
+      <div className="py-12 text-center border rounded-md">
+        <p className="text-muted-foreground">{emptyMessage}</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="space-y-4">
+      {topics.map((topic) => (
+        <Card key={topic.id} className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <CardTitle className="text-lg">
+                  <Link href={`/forum/topic/${topic.slug}`}>
+                    <a className="hover:text-primary transition-colors">
+                      {topic.title}
+                    </a>
+                  </Link>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {topic.isPinned && (
+                      <Badge variant="secondary" className="bg-amber-100 text-amber-800 hover:bg-amber-200">
+                        Destacado
+                      </Badge>
+                    )}
+                    {topic.isClosed && (
+                      <Badge variant="secondary" className="bg-red-100 text-red-800 hover:bg-red-200">
+                        Cerrado
+                      </Badge>
+                    )}
+                  </div>
+                </CardTitle>
+                <CardDescription className="line-clamp-2 mt-1">
+                  {topic.content.replace(/<[^>]*>?/gm, '').substring(0, 150)}...
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardFooter className="pt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <User size={14} />
+              <span>{topic.author?.name || 'Usuario desconocido'}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock size={14} />
+              <span>{timeAgo(topic.createdAt)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Eye size={14} />
+              <span>{topic.viewCount} vistas</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <MessageSquare size={14} />
+              <span>{topic.replyCount || 0} respuestas</span>
+            </div>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+export default ForumPage;

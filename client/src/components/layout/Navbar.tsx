@@ -14,11 +14,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Loader2, LogOut, User } from "lucide-react";
+import { Loader2, LogOut, User, Menu } from "lucide-react";
+import { useState } from "react";
 
 export function Navbar() {
   const { user, isLoading, logoutMutation } = useAuth();
   const [_, navigate] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logoutMutation.mutate(undefined, {
@@ -32,15 +34,26 @@ export function Navbar() {
     <header className="bg-white border-b border-border/40 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/">
-          <a className="text-xl font-bold text-primary">EditoresLATAM</a>
+          <a className="text-xl font-bold bg-gradient-to-r from-[#041C32] to-[#0050FF] bg-clip-text text-transparent">
+            latamvideos<span className="text-[#0050FF]">.com</span>
+          </a>
         </Link>
 
+        {/* Mobile menu button */}
+        <button 
+          className="md:hidden" 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+
+        {/* Desktop navigation */}
         <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/">
-            <a className="hover:text-primary transition-colors">Inicio</a>
+          <Link href="/#como-funciona">
+            <a className="hover:text-primary transition-colors">Cómo funciona</a>
           </Link>
-          <Link href="/search">
-            <a className="hover:text-primary transition-colors">Buscar Editores</a>
+          <Link href="/faq">
+            <a className="hover:text-primary transition-colors">FAQ</a>
           </Link>
           <Link href="/forum">
             <a className="hover:text-primary transition-colors">Foro</a>
@@ -102,17 +115,66 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center space-x-2">
-              <Button variant="ghost" asChild>
+            <div className="flex items-center space-x-3">
+              <Button 
+                variant="outline" 
+                asChild 
+                className="border-[#0050FF] text-[#0050FF] hover:bg-blue-50"
+              >
                 <Link href="/login">Iniciar Sesión</Link>
               </Button>
-              <Button asChild>
+              <Button 
+                asChild 
+                className="bg-[#0050FF] hover:bg-[#0040E0]"
+              >
                 <Link href="/register">Registrarse</Link>
               </Button>
             </div>
           )}
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden px-4 py-3 bg-white border-t border-border/40">
+          <nav className="flex flex-col space-y-3">
+            <Link href="/#como-funciona">
+              <a className="hover:text-primary transition-colors" 
+                 onClick={() => setMobileMenuOpen(false)}>
+                Cómo funciona
+              </a>
+            </Link>
+            <Link href="/faq">
+              <a className="hover:text-primary transition-colors"
+                 onClick={() => setMobileMenuOpen(false)}>
+                FAQ
+              </a>
+            </Link>
+            <Link href="/forum">
+              <a className="hover:text-primary transition-colors"
+                 onClick={() => setMobileMenuOpen(false)}>
+                Foro
+              </a>
+            </Link>
+            {user?.userType === "editor" && (
+              <Link href="/dashboard">
+                <a className="hover:text-primary transition-colors"
+                   onClick={() => setMobileMenuOpen(false)}>
+                  Mi Portafolio
+                </a>
+              </Link>
+            )}
+            {user?.userType === "client" && (
+              <Link href="/dashboard">
+                <a className="hover:text-primary transition-colors"
+                   onClick={() => setMobileMenuOpen(false)}>
+                  Mis Proyectos
+                </a>
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
