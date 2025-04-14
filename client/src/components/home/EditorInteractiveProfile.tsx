@@ -346,10 +346,12 @@ const EditorInteractiveProfile = () => {
           {/* Botones de acción */}
           <div className="p-4 bg-gray-50 flex justify-end">
             <Button 
-              className="bg-[#0050FF] hover:bg-[#0069d9] text-white"
+              className="bg-[#0050FF] hover:bg-[#0040E0] text-white"
               asChild
             >
-              <Link href={`/editor/${editorProfile.id}`}>Ver perfil completo</Link>
+              <Link href="/editor/1">
+                Ver perfil completo
+              </Link>
             </Button>
           </div>
         </div>
