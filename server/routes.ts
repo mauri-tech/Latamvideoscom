@@ -52,6 +52,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Ruta para obtener todos los usuarios (solo para administradores)
+  app.get("/api/users", async (req, res) => {
+    try {
+      // Verificar que el usuario está autenticado
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      // Verificar que el usuario es administrador
+      const currentUser = req.user as Express.User;
+      if (currentUser.userType !== "admin") {
+        return res.status(403).json({ message: "Forbidden: Admin access required" });
+      }
+      
+      const users = await storage.getAllUsers();
+      
+      // No devolver las contraseñas
+      const safeUsers = users.map(user => {
+        const { password, ...userData } = user;
+        return userData;
+      });
+      
+      res.json(safeUsers);
+    } catch (error) {
+      console.error("Error getting all users:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
   app.get("/api/users/:id", async (req, res) => {
     try {
       const user = await storage.getUser(parseInt(req.params.id));

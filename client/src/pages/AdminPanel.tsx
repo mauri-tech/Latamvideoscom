@@ -39,9 +39,14 @@ import {
   Trash, 
   LineChart, 
   User, 
-  Globe
+  Globe,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useQuery } from '@tanstack/react-query';
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Datos de ejemplo para la sección de editores
 const mockEditors = [
@@ -150,21 +155,144 @@ const mockStats = [
   { name: "Países con cobertura", value: "12", icon: <Globe size={24} className="text-amber-500" /> }
 ];
 
+// Interfaz para el usuario
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  profilePicture: string | null;
+  bio: string | null;
+  country: string | null;
+  timezone: string | null;
+  yearsOfExperience: number | null;
+  userType: string;
+  createdAt: Date | null;
+}
+
+// Componente para la sección de Usuarios (admins y usuarios comunes)
+const UsersSection: React.FC = () => {
+  const { data: users, isLoading, error } = useQuery<User[]>({
+    queryKey: ['/api/users'],
+    staleTime: 60000, // 1 minuto
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <span className="ml-2">Cargando usuarios...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive" className="mb-4">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          {error instanceof Error ? error.message : 'Ocurrió un error al cargar los usuarios'}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // Formatear fecha
+  const formatDate = (dateString: Date | null) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('es', { 
+      day: 'numeric', 
+      month: 'short', 
+      year: 'numeric' 
+    }).format(date);
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>Gestión de Usuarios</CardTitle>
+            <CardDescription>Administradores y usuarios registrados en la plataforma</CardDescription>
+          </div>
+          <Button size="sm">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Añadir usuario
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {(!users || users.length === 0) ? (
+          <div className="text-center py-6 text-gray-500">
+            No hay usuarios registrados
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>País</TableHead>
+                <TableHead>Experiencia</TableHead>
+                <TableHead>Miembro desde</TableHead>
+                <TableHead>Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map(user => (
+                <TableRow key={user.id}>
+                  <TableCell className="font-medium">{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    {user.userType === 'admin' ? (
+                      <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+                        Administrador
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">Usuario</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>{user.country || 'No especificado'}</TableCell>
+                  <TableCell>{user.yearsOfExperience ? `${user.yearsOfExperience} años` : 'No especificado'}</TableCell>
+                  <TableCell>{formatDate(user.createdAt)}</TableCell>
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <Button variant="ghost" size="icon">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="text-red-500">
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
 const AdminPanel: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState("overview");
   const [, setLocation] = useLocation();
 
-  // Estado para el modo autenticado (en producción esto vendría de un hook de autenticación)
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  // Estado para verificar autenticación y permisos de administrador
+  const { data: currentUser, isLoading } = useQuery({
+    queryKey: ['/api/user'],
+    retry: false,
+  });
 
-  // Simulación de verificación de autenticación
+  // Redirección si no es administrador
   useEffect(() => {
-    // En un caso real, aquí verificaríamos si el usuario tiene rol de administrador
-    // Si no lo tiene, redirigiríamos
-    if (!isAuthenticated) {
+    if (!isLoading && (!currentUser || currentUser.userType !== 'admin')) {
       setLocation('/');
     }
-  }, [isAuthenticated, setLocation]);
+  }, [currentUser, isLoading, setLocation]);
 
   // Badge de estado con colores según el valor
   const getStatusBadge = (status: string) => {
@@ -203,8 +331,26 @@ const AdminPanel: React.FC = () => {
     return <Badge variant={variant}>{status}</Badge>;
   };
 
-  if (!isAuthenticated) {
-    return <div>Redirigiendo...</div>;
+  // Pantalla de carga mientras se verifica la autenticación
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+        <p>Verificando credenciales...</p>
+      </div>
+    );
+  }
+  
+  // Redireccionar si no es un admin
+  if (!currentUser || currentUser.userType !== 'admin') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <AlertCircle className="h-10 w-10 text-red-500 mb-4" />
+        <h2 className="text-xl font-bold mb-2">Acceso denegado</h2>
+        <p className="mb-4">No tienes permisos para acceder al panel de administración.</p>
+        <Button onClick={() => setLocation('/')}>Volver al inicio</Button>
+      </div>
+    );
   }
 
   return (
@@ -233,10 +379,14 @@ const AdminPanel: React.FC = () => {
             </div>
             
             <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-              <TabsList className="grid grid-cols-5 w-full max-w-4xl">
+              <TabsList className="grid grid-cols-6 w-full max-w-5xl">
                 <TabsTrigger value="overview">
                   <LineChart className="mr-2 h-4 w-4" />
                   Vista general
+                </TabsTrigger>
+                <TabsTrigger value="users">
+                  <User className="mr-2 h-4 w-4" />
+                  Usuarios
                 </TabsTrigger>
                 <TabsTrigger value="editors">
                   <Users className="mr-2 h-4 w-4" />
@@ -255,6 +405,11 @@ const AdminPanel: React.FC = () => {
                   Cursos
                 </TabsTrigger>
               </TabsList>
+              
+              {/* Sección de Usuarios */}
+              <TabsContent value="users">
+                <UsersSection />
+              </TabsContent>
               
               {/* Vista General */}
               <TabsContent value="overview" className="space-y-6">

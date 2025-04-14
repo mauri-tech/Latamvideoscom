@@ -1,0 +1,120 @@
+INSTRUCCIONES TÉCNICAS – FORO DE COMUNIDAD LATAMVIDEOS
+
+⸻
+
+OBJETIVO DEL FORO
+
+Crear un espacio de comunidad organizado, profesional y visualmente limpio, donde editores, videógrafos y diseñadores puedan compartir dudas, recursos, oportunidades y conocimientos.
+Inspirado en la estética de Notion + Apple, y con una estructura de gamificación tipo Reddit para fomentar participación.
+
+⸻
+
+ESTRUCTURA GENERAL
+
+1. Secciones principales del foro:
+	•	Foro de editores de video
+	•	Foro de videógrafos
+	•	Foro de diseñadores
+	•	Foro de audio/música
+	•	Foro de producción y dirección
+	•	Foro general / novedades / off-topic
+
+Cada foro puede tener salas internas (subcategorías) según temas específicos, como:
+	•	Portafolios
+	•	Software (Premiere, DaVinci, etc.)
+	•	Tarifas y cotizaciones
+	•	Oportunidades de trabajo
+	•	Feedback y críticas
+	•	Herramientas y equipo
+	•	Inspiración
+
+⸻
+
+2. Jerarquía de usuarios (gamificación tipo Reddit)
+
+Sistema de 5 niveles que suben automáticamente conforme el usuario interactúe (posteando, respondiendo, recibiendo votos positivos, etc.)
+
+Niveles propuestos:
+	1.	Explorador
+	•	Acceso básico para leer y comentar
+	•	Solo puede publicar 1 post cada 24 hrs
+	•	No puede calificar ni votar
+	2.	Colaborador
+	•	Puede postear libremente
+	•	Puede votar +1
+	•	Tiene acceso a feedback rooms y recursos
+	•	Gana insignia si mantiene buen karma
+	3.	Conector
+	•	Nivel medio: puede crear hilos especiales
+	•	Acceso a salas privadas de networking
+	•	Puede marcar respuestas como útiles
+	•	Notificaciones personalizadas
+	4.	Mentor
+	•	Reconocido por participación útil y constante
+	•	Destacado por sistema
+	•	Sus respuestas aparecen resaltadas
+	•	Puede moderar contenido dentro de su categoría
+	5.	Maestro
+	•	Nivel más alto
+	•	Invitado a pruebas beta
+	•	Etiqueta especial y acceso a todos los foros
+	•	Participa en decisiones de comunidad y mejoras
+
+Métrica de progresión:
+	•	Cada acción suma puntos:
+	•	Crear post: +5
+	•	Comentar: +2
+	•	Voto positivo recibido: +3
+	•	Respuesta marcada como útil: +10
+	•	Denuncia aceptada: +15
+	•	Voto negativo recibido: -2
+
+⸻
+
+3. Funcionalidades esenciales del foro
+	•	Posts con formato enriquecido (textos, listas, imágenes, videos embebidos)
+	•	Reacciones y sistema de votos (+1 / -1)
+	•	Respuestas anidadas (como Reddit)
+	•	Filtros por más reciente / más votado / más respondido
+	•	Búsqueda interna potente
+	•	Modo oscuro/claro automático
+	•	Bookmark para guardar publicaciones
+	•	Botón “Marcar como útil” para respuestas
+	•	Sistema de reportes moderado por la comunidad
+	•	Perfil visible de cada usuario con su nivel, especialidad y redes sociales
+
+⸻
+
+Diseño visual
+
+Inspiración:
+	•	Notion: limpio, espacioso, bloques separados con mucho white space
+	•	Apple: interfaz visualmente sobria, elegante, sin distracciones, minimalista
+
+Colores y estilo:
+	•	Fondo #F9F9F9
+	•	Tarjetas con fondo blanco #FFFFFF y bordes suaves
+	•	Tipografía: Satoshi
+	•	Colores de nivel de usuario:
+	•	Explorador: gris claro
+	•	Colaborador: azul claro
+	•	Conector: azul Apple #007AFF
+	•	Mentor: verde esmeralda #2A9D8F
+	•	Maestro: dorado suave #CDA85C
+
+⸻
+
+Panel de moderación (para admins o staff)
+	•	Aprobar / eliminar publicaciones reportadas
+	•	Silenciar usuarios temporalmente
+	•	Destacar publicaciones útiles
+	•	Ver métricas por foro: participación, votos, karma promedio
+	•	Crear nuevas salas
+
+⸻
+
+Integraciones sugeridas (opcional)
+	•	Notion-style editor con bloques drag & drop
+	•	Firebase / Supabase para autenticación y base de datos
+	•	Tailwind CSS para interfaz responsiva
+	•	Fathom / Plausible analytics para medir uso del foro sin sacrificar privacidad
