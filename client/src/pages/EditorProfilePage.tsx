@@ -6,13 +6,14 @@ import ProfileCard from '@/components/editor/ProfileCard';
 import BriefForm from '@/components/client/BriefForm';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ExternalLink, PencilIcon } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { ExternalLink, PencilIcon, Star, ThumbsUp } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Helmet } from 'react-helmet';
+import { format } from 'date-fns';
 
 const EditorProfilePage = () => {
   const { id } = useParams();
@@ -49,6 +50,45 @@ const EditorProfilePage = () => {
   } = useQuery({
     queryKey: [`/api/portfolio/${editorId}`],
     enabled: !isNaN(editorId),
+  });
+  
+  // Fetch reviews
+  const { 
+    data: reviews = [], 
+    isLoading: reviewsLoading,
+    error: reviewsError,
+    refetch: refetchReviews,
+  } = useQuery({
+    queryKey: [`/api/reviews/editor/${editorId}`],
+    enabled: !isNaN(editorId),
+  });
+  
+  // Create a review mutation
+  const createReviewMutation = useMutation({
+    mutationFn: async (reviewData: { 
+      editorProfileId: number; 
+      clientId: number; 
+      rating: number; 
+      comment: string;
+    }) => {
+      const res = await apiRequest('POST', '/api/reviews', reviewData);
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Reseña publicada",
+        description: "Tu reseña ha sido publicada exitosamente.",
+      });
+      // Refresh reviews data
+      refetchReviews();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error al publicar reseña",
+        description: error.message || "Ha ocurrido un error al publicar tu reseña.",
+        variant: "destructive",
+      });
+    },
   });
   
   useEffect(() => {
@@ -224,6 +264,12 @@ const EditorProfilePage = () => {
                 className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
               >
                 Portfolio
+              </TabsTrigger>
+              <TabsTrigger 
+                value="reviews" 
+                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+              >
+                Reseñas
               </TabsTrigger>
               <TabsTrigger 
                 value="equipment" 

@@ -1814,6 +1814,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Reviews Routes
+  app.get("/api/reviews/:id", async (req, res) => {
+    try {
+      const review = await storage.getReview(parseInt(req.params.id));
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+      res.json(review);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.get("/api/reviews/editor/:editorProfileId", async (req, res) => {
+    try {
+      const reviews = await storage.getReviewsByEditorProfileId(parseInt(req.params.editorProfileId));
+      res.json(reviews);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.get("/api/reviews/client/:clientId", async (req, res) => {
+    try {
+      const reviews = await storage.getReviewsByClientId(parseInt(req.params.clientId));
+      res.json(reviews);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.post("/api/reviews", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const reviewData = insertReviewSchema.parse(req.body);
+
+      // Verificar que el perfil existe
+      const profile = await storage.getEditorProfile(reviewData.editorProfileId);
+      if (!profile) {
+        return res.status(404).json({ message: "Editor profile not found" });
+      }
+
+      // Verificar que el cliente existe
+      const client = await storage.getUser(reviewData.clientId);
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+
+      // Verificar que el usuario autenticado es el cliente o un administrador
+      const currentUser = req.user as Express.User;
+      if (currentUser.id !== reviewData.clientId && currentUser.userType !== "admin") {
+        return res.status(403).json({ message: "Forbidden: You can only create reviews for yourself" });
+      }
+
+      const review = await storage.createReview(reviewData);
+      res.status(201).json(review);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+  });
+
+  app.put("/api/reviews/:id", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const id = parseInt(req.params.id);
+      const review = await storage.getReview(id);
+      
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+
+      // Verificar que el usuario autenticado es el cliente que creó la reseña o un administrador
+      const currentUser = req.user as Express.User;
+      if (currentUser.id !== review.clientId && currentUser.userType !== "admin") {
+        return res.status(403).json({ message: "Forbidden: You can only update your own reviews" });
+      }
+
+      const updatedReview = await storage.updateReview(id, req.body);
+      res.json(updatedReview);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.delete("/api/reviews/:id", async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const id = parseInt(req.params.id);
+      const review = await storage.getReview(id);
+      
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+
+      // Verificar que el usuario autenticado es el cliente que creó la reseña o un administrador
+      const currentUser = req.user as Express.User;
+      if (currentUser.id !== review.clientId && currentUser.userType !== "admin") {
+        return res.status(403).json({ message: "Forbidden: You can only delete your own reviews" });
+      }
+
+      const success = await storage.deleteReview(id);
+      
+      if (success) {
+        res.json({ success: true });
+      } else {
+        res.status(500).json({ message: "Failed to delete review" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
   // Create HTTP server
   const httpServer = createServer(app);
   return httpServer;
