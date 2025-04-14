@@ -134,6 +134,8 @@ const EditorProfilePage = () => {
     country: "México",
     software: ["Premiere Pro", "After Effects"],
     styles: ["YouTube", "Reels"],
+    editingStyles: [1, 2],
+    yearsOfExperience: 5,
     experience: "5 años de experiencia en edición de videos para marcas y creadores de contenido.",
     bio: "Editor de video profesional especializado en contenido para redes sociales y plataformas digitales. Mi enfoque se centra en contar historias cautivadoras mediante una edición dinámica y visualmente atractiva.",
     equipment: [
@@ -180,6 +182,7 @@ const EditorProfilePage = () => {
     country: userData.country,
     bio: userData.bio || '',
     software: profileData.software || [],
+    styles: profileData.editingStyles || [],
     editingStyles: profileData.editingStyles || [],
     yearsOfExperience: userData.yearsOfExperience,
     experience: `${userData.yearsOfExperience || ''} años de experiencia.`,
@@ -350,10 +353,10 @@ const EditorProfilePage = () => {
                 
                 <div className="border-t border-gray-100 pt-6">
                   <h4 className="text-lg font-medium mb-4">Especialidad</h4>
-                  {editor.editingStyles && editor.editingStyles.length > 0 ? (
+                  {editor.styles && editor.styles.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {Array.isArray(editingStylesList) && editingStylesList.filter(style => 
-                        Array.isArray(editor.editingStyles) && editor.editingStyles.includes(style.id)
+                        Array.isArray(editor.styles) && editor.styles.includes(style.id)
                       ).map(style => (
                         <span key={style.id} className="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">
                           {style.name}
