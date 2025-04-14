@@ -18,7 +18,7 @@ import {
   lessonProgress, LessonProgress, InsertLessonProgress
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, inArray, lte, desc } from "drizzle-orm";
+import { eq, and, inArray, lte, desc, sql } from "drizzle-orm";
 import connectPg from "connect-pg-simple";
 import session from "express-session";
 import { pool } from "./db";
@@ -1039,6 +1039,220 @@ export class DatabaseStorage implements IStorage {
       createTableIfMissing: true,
     });
   }
+  
+  // Forum Methods - Categories
+  async getAllForumCategories(): Promise<ForumCategory[]> {
+    return db.select().from(forumCategories).orderBy(forumCategories.order);
+  }
+  
+  async getForumCategory(id: number): Promise<ForumCategory | undefined> {
+    const [category] = await db
+      .select()
+      .from(forumCategories)
+      .where(eq(forumCategories.id, id));
+    return category;
+  }
+  
+  async getForumCategoryBySlug(slug: string): Promise<ForumCategory | undefined> {
+    const [category] = await db
+      .select()
+      .from(forumCategories)
+      .where(eq(forumCategories.slug, slug));
+    return category;
+  }
+  
+  async createForumCategory(data: InsertForumCategory): Promise<ForumCategory> {
+    const [category] = await db
+      .insert(forumCategories)
+      .values(data)
+      .returning();
+    return category;
+  }
+  
+  async updateForumCategory(id: number, data: Partial<ForumCategory>): Promise<ForumCategory | undefined> {
+    const [category] = await db
+      .update(forumCategories)
+      .set(data)
+      .where(eq(forumCategories.id, id))
+      .returning();
+    return category;
+  }
+  
+  async deleteForumCategory(id: number): Promise<boolean> {
+    await db
+      .delete(forumCategories)
+      .where(eq(forumCategories.id, id));
+    return true;
+  }
+  
+  // Forum Methods - Topics
+  async getForumTopics(categoryId?: number): Promise<ForumTopic[]> {
+    let queryBuilder = db.select().from(forumTopics);
+    
+    if (categoryId) {
+      queryBuilder = queryBuilder.where(eq(forumTopics.categoryId, categoryId));
+    }
+    
+    return queryBuilder.orderBy(desc(forumTopics.createdAt));
+  }
+  
+  async getForumTopic(id: number): Promise<ForumTopic | undefined> {
+    const [topic] = await db
+      .select()
+      .from(forumTopics)
+      .where(eq(forumTopics.id, id));
+    return topic;
+  }
+  
+  async incrementTopicView(id: number): Promise<void> {
+    await db
+      .update(forumTopics)
+      .set({ viewCount: sql`${forumTopics.viewCount} + 1` })
+      .where(eq(forumTopics.id, id));
+  }
+  
+  async getForumTopicBySlug(slug: string): Promise<ForumTopic | undefined> {
+    const [topic] = await db
+      .select()
+      .from(forumTopics)
+      .where(eq(forumTopics.slug, slug));
+    return topic;
+  }
+  
+  async getForumTopicsByAuthor(authorId: number): Promise<ForumTopic[]> {
+    return db
+      .select()
+      .from(forumTopics)
+      .where(eq(forumTopics.authorId, authorId))
+      .orderBy(desc(forumTopics.createdAt));
+  }
+  
+  async createForumTopic(data: InsertForumTopic): Promise<ForumTopic> {
+    const [topic] = await db
+      .insert(forumTopics)
+      .values(data)
+      .returning();
+    return topic;
+  }
+  
+  async updateForumTopic(id: number, data: Partial<ForumTopic>): Promise<ForumTopic | undefined> {
+    const [topic] = await db
+      .update(forumTopics)
+      .set(data)
+      .where(eq(forumTopics.id, id))
+      .returning();
+    return topic;
+  }
+  
+  async deleteForumTopic(id: number): Promise<boolean> {
+    await db
+      .delete(forumTopics)
+      .where(eq(forumTopics.id, id));
+    return true;
+  }
+  
+  async togglePinTopic(id: number, isPinned: boolean): Promise<ForumTopic | undefined> {
+    const [topic] = await db
+      .update(forumTopics)
+      .set({ isPinned })
+      .where(eq(forumTopics.id, id))
+      .returning();
+    return topic;
+  }
+  
+  async toggleCloseTopic(id: number, isClosed: boolean): Promise<ForumTopic | undefined> {
+    const [topic] = await db
+      .update(forumTopics)
+      .set({ isClosed })
+      .where(eq(forumTopics.id, id))
+      .returning();
+    return topic;
+  }
+  
+  // Forum Methods - Posts
+  async getForumPosts(topicId: number): Promise<ForumPost[]> {
+    return db
+      .select()
+      .from(forumPosts)
+      .where(eq(forumPosts.topicId, topicId))
+      .orderBy(forumPosts.createdAt);
+  }
+  
+  async getForumPost(id: number): Promise<ForumPost | undefined> {
+    const [post] = await db
+      .select()
+      .from(forumPosts)
+      .where(eq(forumPosts.id, id));
+    return post;
+  }
+  
+  async getForumPostsByAuthor(authorId: number): Promise<ForumPost[]> {
+    return db
+      .select()
+      .from(forumPosts)
+      .where(eq(forumPosts.authorId, authorId))
+      .orderBy(desc(forumPosts.createdAt));
+  }
+  
+  async createForumPost(data: InsertForumPost): Promise<ForumPost> {
+    const [post] = await db
+      .insert(forumPosts)
+      .values(data)
+      .returning();
+    return post;
+  }
+  
+  async updateForumPost(id: number, data: Partial<ForumPost>): Promise<ForumPost | undefined> {
+    const [post] = await db
+      .update(forumPosts)
+      .set(data)
+      .where(eq(forumPosts.id, id))
+      .returning();
+    return post;
+  }
+  
+  async deleteForumPost(id: number): Promise<boolean> {
+    await db
+      .delete(forumPosts)
+      .where(eq(forumPosts.id, id));
+    return true;
+  }
+  
+  async markPostAsAcceptedAnswer(id: number, isAccepted: boolean): Promise<ForumPost | undefined> {
+    const [post] = await db
+      .update(forumPosts)
+      .set({ isAcceptedAnswer: isAccepted })
+      .where(eq(forumPosts.id, id))
+      .returning();
+    return post;
+  }
+  
+  // Course Methods - implementar según se necesite
+  async getAllCourseCategories(): Promise<CourseCategory[]> {
+    return []; // Implementar cuando sea necesario
+  }
+  
+  async getCourseCategory(id: number): Promise<CourseCategory | undefined> {
+    return undefined; // Implementar cuando sea necesario
+  }
+  
+  async getCourseCategoryBySlug(slug: string): Promise<CourseCategory | undefined> {
+    return undefined; // Implementar cuando sea necesario
+  }
+  
+  async createCourseCategory(data: InsertCourseCategory): Promise<CourseCategory> {
+    throw new Error('Not implemented'); // Implementar cuando sea necesario
+  }
+  
+  async updateCourseCategory(id: number, data: Partial<CourseCategory>): Promise<CourseCategory | undefined> {
+    return undefined; // Implementar cuando sea necesario
+  }
+  
+  async deleteCourseCategory(id: number): Promise<boolean> {
+    return false; // Implementar cuando sea necesario
+  }
+  
+  // User Methods
   
   // User Methods
   async getUser(id: number): Promise<User | undefined> {

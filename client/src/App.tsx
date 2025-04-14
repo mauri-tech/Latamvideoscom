@@ -14,6 +14,8 @@ import DashboardPage from "@/pages/DashboardPage";
 import AdminPanel from "@/pages/AdminPanel";
 import AdminPage from "@/pages/AdminPage";
 import ForumPage from "@/pages/ForumPage";
+import NewTopicPage from "@/pages/NewTopicPage";
+import TopicDetailPage from "@/pages/TopicDetailPage";
 import FAQPage from "@/pages/FAQPage";
 import TermsPage from "@/pages/TermsPage";
 import AboutPage from "@/pages/AboutPage";
@@ -33,6 +35,8 @@ function Router() {
       <Route path="/editor/:id" component={EditorProfilePage} />
       <Route path="/search" component={SearchPage} />
       <Route path="/forum" component={ForumPage} />
+      <Route path="/forum/new-topic" component={NewTopicPage} />
+      <Route path="/forum/topic/:slug" component={TopicDetailPage} />
       <Route path="/faq" component={FAQPage} />
       <Route path="/terms" component={TermsPage} />
       <Route path="/about" component={AboutPage} />
