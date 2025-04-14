@@ -104,111 +104,17 @@ const EditorInteractiveProfiles = () => {
   const profiles = [sampleInteractiveProfile];
   const profile = profiles[0];
   
-  // Referencia para el contenedor de tarjetas
-  const cardsContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Función para cambiar a una categoría específica con animación suave
-  const scrollToCategory = (categoryId: CategoryType) => {
+  // Cambiar a una categoría específica
+  const selectCategory = (categoryId: CategoryType) => {
     setActiveCategory(categoryId);
-    
-    // Encuentra la posición de desplazamiento para la categoría seleccionada
-    if (cardsContainerRef.current) {
-      const categoryIndex = categories.findIndex(c => c.id === categoryId);
-      const cardWidth = cardsContainerRef.current.offsetWidth;
-      const scrollPosition = categoryIndex * cardWidth;
-      
-      // Desplazamiento suave
-      cardsContainerRef.current.scrollTo({
-        left: scrollPosition,
-        behavior: 'smooth'
-      });
-    }
   };
   
-  // Efecto para manejar el desplazamiento y actualizar la categoría activa
-  useEffect(() => {
-    const container = cardsContainerRef.current;
-    if (!container) return;
-    
-    const handleScroll = () => {
-      if (!container) return;
-      
-      const scrollPosition = container.scrollLeft;
-      const cardWidth = container.offsetWidth;
-      const categoryIndex = Math.round(scrollPosition / cardWidth);
-      
-      const newCategory = categories[categoryIndex]?.id;
-      if (newCategory && newCategory !== activeCategory) {
-        setActiveCategory(newCategory);
-      }
-    };
-    
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, [activeCategory]);
-  
-  return (
-    <div className="py-10">
-      <h3 className="text-2xl font-bold mb-4 text-center">Perfiles Interactivos</h3>
-      <p className="text-[#8E8E93] mb-8 text-center max-w-2xl mx-auto">
-        Explora un ejemplo de perfil interactivo. Desliza horizontalmente para ver diferentes secciones.
-      </p>
-      
-      {/* Tarjeta principal con cabecera fija y contenido deslizable */}
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
-        {/* Cabecera fija */}
-        <div className="px-5 py-5 text-center relative">
-          {/* Fondo con gradiente */}
-          <div 
-            className="absolute inset-0 -z-10"
-            style={{
-              background: "linear-gradient(135deg, #0075FF 0%, #00D1FF 100%)",
-              opacity: 0.05
-            }}
-          />
-          
-          <img 
-            src={profile.profilePicture} 
-            alt={profile.name}
-            className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border-2 border-[#007AFF] shadow-lg"
-          />
-          <h3 className="font-bold text-xl">{profile.name}</h3>
-          <p className="text-[#8E8E93] text-sm">{profile.country}</p>
-        </div>
-        
-        {/* Navegación por categorías */}
-        <div className="border-t border-b border-[#E5E5EA]">
-          <div className="flex overflow-x-auto hide-scrollbar">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => scrollToCategory(category.id)}
-                className={`flex-1 flex flex-col items-center justify-center py-3 px-2 min-w-[80px] transition-colors ${
-                  activeCategory === category.id 
-                    ? 'text-[#007AFF] border-b-2 border-[#007AFF]' 
-                    : 'text-[#8E8E93] hover:text-[#007AFF]/80'
-                }`}
-              >
-                <div className="mb-1">{category.icon}</div>
-                <span className="text-xs font-medium">{category.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-        
-        {/* Contenedor para deslizar horizontalmente entre categorías */}
-        <div 
-          ref={cardsContainerRef}
-          className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar"
-          style={{ 
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-            scrollSnapType: 'x mandatory'
-          }}
-        >
-          {/* Tarjeta 1: Información */}
-          <div className="min-w-full flex-shrink-0 snap-start p-5">
+  // Renderizar el contenido según la categoría activa
+  const renderContent = () => {
+    switch (activeCategory) {
+      case 'info':
+        return (
+          <div className="p-5">
             {/* Mini Bio */}
             <div className="mb-4">
               <h4 className="text-sm font-medium text-[#8E8E93] mb-2">Bio</h4>
@@ -239,9 +145,11 @@ const EditorInteractiveProfiles = () => {
               </div>
             </div>
           </div>
-          
-          {/* Tarjeta 2: Portafolio */}
-          <div className="min-w-full flex-shrink-0 snap-start p-5">
+        );
+        
+      case 'portfolio':
+        return (
+          <div className="p-5">
             <h4 className="text-sm font-medium text-[#8E8E93] mb-3">Proyectos destacados</h4>
             <div className="grid grid-cols-1 gap-4">
               {profile.portafolio.map((item, idx) => (
@@ -263,9 +171,11 @@ const EditorInteractiveProfiles = () => {
               ))}
             </div>
           </div>
-          
-          {/* Tarjeta 3: Equipamiento */}
-          <div className="min-w-full flex-shrink-0 snap-start p-5">
+        );
+        
+      case 'equipamiento':
+        return (
+          <div className="p-5">
             <h4 className="text-sm font-medium text-[#8E8E93] mb-3">Equipamiento profesional</h4>
             <div className="space-y-3">
               {profile.equipamiento.map((equip, idx) => (
@@ -276,9 +186,11 @@ const EditorInteractiveProfiles = () => {
               ))}
             </div>
           </div>
-          
-          {/* Tarjeta 4: Tarifas */}
-          <div className="min-w-full flex-shrink-0 snap-start p-5">
+        );
+        
+      case 'tarifas':
+        return (
+          <div className="p-5">
             <h4 className="text-sm font-medium text-[#8E8E93] mb-3">Planes de servicio</h4>
             <div className="space-y-4">
               <div className="border rounded-lg p-4 bg-white">
@@ -306,10 +218,68 @@ const EditorInteractiveProfiles = () => {
               </div>
             </div>
           </div>
+        );
+        
+      default:
+        return null;
+    }
+  };
+  
+  return (
+    <div className="py-10">
+      <h3 className="text-2xl font-bold mb-4 text-center">Perfiles Interactivos</h3>
+      <p className="text-[#8E8E93] mb-8 text-center max-w-2xl mx-auto">
+        Explora un ejemplo de perfil interactivo. Haz clic en las categorías para ver diferentes secciones.
+      </p>
+      
+      {/* Tarjeta principal con cabecera fija y contenido por categorías */}
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
+        {/* Cabecera fija con gradiente */}
+        <div 
+          className="px-5 py-5 text-center relative"
+          style={{
+            background: "linear-gradient(135deg, #0093E9 0%, #80D0C7 100%)",
+          }}
+        >
+          {/* Efecto brillante */}
+          <div className="absolute top-0 left-0 right-0 h-1/2 bg-white opacity-10 blur-xl transform -translate-y-1/2"></div>
+          
+          <img 
+            src={profile.profilePicture} 
+            alt={profile.name}
+            className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border-2 border-white shadow-lg"
+          />
+          <h3 className="font-bold text-xl text-white">{profile.name}</h3>
+          <p className="text-white/80 text-sm">{profile.country}</p>
+        </div>
+        
+        {/* Navegación por categorías */}
+        <div className="border-t border-b border-[#E5E5EA] bg-white">
+          <div className="flex">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => selectCategory(category.id)}
+                className={`flex-1 flex flex-col items-center justify-center py-3 px-2 transition-colors ${
+                  activeCategory === category.id 
+                    ? 'text-[#007AFF] border-b-2 border-[#007AFF]' 
+                    : 'text-[#8E8E93] hover:text-[#007AFF]/80'
+                }`}
+              >
+                <div className="mb-1">{category.icon}</div>
+                <span className="text-xs font-medium">{category.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        {/* Contenido según la categoría seleccionada */}
+        <div className="min-h-[300px] bg-[#FAFAFA]">
+          {renderContent()}
         </div>
         
         {/* CTA */}
-        <div className="p-5 border-t border-[#E5E5EA]">
+        <div className="p-5 border-t border-[#E5E5EA] bg-white">
           <Link href={`/editor/${profile.id}`}>
             <Button className="w-full bg-[#007AFF] hover:bg-[#0069d9]">
               Ver perfil completo
