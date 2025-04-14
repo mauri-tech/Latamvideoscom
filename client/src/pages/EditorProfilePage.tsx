@@ -193,7 +193,7 @@ const EditorProfilePage = () => {
   // Use real portfolio items if available
   const portfolio = portfolioItems.length > 0 ? portfolioItems : mockPortfolioItems;
   
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   
   const handleContactClick = () => {
     // If user is not logged in, show toast message
@@ -218,8 +218,8 @@ const EditorProfilePage = () => {
         subject: `Consulta para ${editorName}`
       }));
       
-      // Navegar a la página de mensajes
-      navigate('/mensajes');
+      // Navegar a la página de mensajes usando setLocation de wouter
+      setLocation('/mensajes');
     } else {
       toast({
         title: "Error",

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'wouter';
+import { useLocation } from 'wouter';
 import { Helmet } from 'react-helmet';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,7 +65,7 @@ const VIDEO_TYPES = [
 ];
 
 const ManagePortfolioPage = () => {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -96,7 +96,7 @@ const ManagePortfolioPage = () => {
         description: "Debes iniciar sesión para gestionar tu portafolio",
         variant: "destructive",
       });
-      navigate('/auth');
+      setLocation('/auth');
     }
   });
   
@@ -117,7 +117,7 @@ const ManagePortfolioPage = () => {
           description: "Primero debes crear tu perfil profesional",
           variant: "destructive",
         });
-        navigate('/edit-profile');
+        setLocation('/edit-profile');
       }
     }
   });

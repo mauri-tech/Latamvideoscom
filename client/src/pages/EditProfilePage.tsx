@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'wouter';
+import { useLocation } from 'wouter';
 import { Helmet } from 'react-helmet';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,7 +65,7 @@ const PROFESSIONAL_TYPES = [
 ];
 
 const EditProfilePage = () => {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("basic-info");
@@ -125,7 +125,7 @@ const EditProfilePage = () => {
         description: "Debes iniciar sesión para editar tu perfil",
         variant: "destructive",
       });
-      navigate('/auth');
+      setLocation('/auth');
     }
   });
   
