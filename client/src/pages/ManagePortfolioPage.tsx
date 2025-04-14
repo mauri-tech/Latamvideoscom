@@ -330,7 +330,7 @@ const ManagePortfolioPage = () => {
               variant="outline" 
               size="sm" 
               className="mb-2"
-              onClick={() => navigate('/edit-profile')}
+              onClick={() => setLocation('/edit-profile')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" /> Volver a perfil
             </Button>
