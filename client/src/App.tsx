@@ -11,6 +11,7 @@ import LoginPage from "@/pages/LoginPage";
 import EditorProfilePage from "@/pages/EditorProfilePage";
 import SearchPage from "@/pages/SearchPage";
 import DashboardPage from "@/pages/DashboardPage";
+import AdminPanel from "@/pages/AdminPanel";
 
 function Router() {
   return (
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/editor/:id" component={EditorProfilePage} />
       <Route path="/search" component={SearchPage} />
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
+      <ProtectedRoute path="/admin" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>
   );

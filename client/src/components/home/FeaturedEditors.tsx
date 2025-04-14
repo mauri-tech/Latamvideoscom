@@ -61,11 +61,74 @@ const featuredEditors: FeaturedEditor[] = [
 
 const FeaturedEditors = () => {
   const scrollContainer = React.useRef<HTMLDivElement>(null);
+  const [autoScrollEnabled, setAutoScrollEnabled] = React.useState(true);
+  const autoScrollIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
   
+  // Función para desplazamiento manual
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainer.current) {
       const scrollAmount = direction === 'left' ? -320 : 320;
       scrollContainer.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+  
+  // Iniciar autoscroll
+  React.useEffect(() => {
+    const startAutoScroll = () => {
+      if (autoScrollEnabled && scrollContainer.current) {
+        autoScrollIntervalRef.current = setInterval(() => {
+          if (scrollContainer.current) {
+            // Verificar si estamos al final del scroll
+            const isAtEnd = 
+              scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth >= 
+              scrollContainer.current.scrollWidth - 10;
+              
+            if (isAtEnd) {
+              // Si estamos al final, volver al inicio
+              scrollContainer.current.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+              // Si no, continuar avanzando
+              scrollContainer.current.scrollBy({ left: 320, behavior: 'smooth' });
+            }
+          }
+        }, 5000); // Scroll cada 5 segundos
+      }
+    };
+    
+    startAutoScroll();
+    
+    // Limpiar intervalo cuando el componente se desmonte
+    return () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+    };
+  }, [autoScrollEnabled]);
+  
+  // Pausar autoscroll cuando el usuario interactúa con el carrusel
+  const handleMouseEnter = () => {
+    if (autoScrollIntervalRef.current) {
+      clearInterval(autoScrollIntervalRef.current);
+      autoScrollIntervalRef.current = null;
+    }
+  };
+  
+  // Reanudar autoscroll cuando el usuario deja de interactuar
+  const handleMouseLeave = () => {
+    if (!autoScrollIntervalRef.current && autoScrollEnabled) {
+      autoScrollIntervalRef.current = setInterval(() => {
+        if (scrollContainer.current) {
+          const isAtEnd = 
+            scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth >= 
+            scrollContainer.current.scrollWidth - 10;
+            
+          if (isAtEnd) {
+            scrollContainer.current.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            scrollContainer.current.scrollBy({ left: 320, behavior: 'smooth' });
+          }
+        }
+      }, 5000);
     }
   };
   
@@ -98,6 +161,8 @@ const FeaturedEditors = () => {
             ref={scrollContainer}
             className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             {featuredEditors.map((editor) => (
               <div 
