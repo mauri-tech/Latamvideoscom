@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'wouter';
+import { useParams, useLocation } from 'wouter';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ProfileCard from '@/components/editor/ProfileCard';
@@ -193,12 +193,37 @@ const EditorProfilePage = () => {
   // Use real portfolio items if available
   const portfolio = portfolioItems.length > 0 ? portfolioItems : mockPortfolioItems;
   
+  const navigate = useNavigate();
+  
   const handleContactClick = () => {
     // If user is not logged in, show toast message
     if (!user) {
       toast({
         title: "Necesitas iniciar sesión",
         description: "Para contactar al editor, primero debes iniciar sesión o registrarte.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Navegar a la página de mensajes con parámetros para crear una nueva conversación
+    const editorUserId = profileData?.userId;
+    const editorName = userData?.name || 'Editor';
+    
+    // Guardar en sessionStorage para usar en la página de mensajes
+    if (editorUserId) {
+      sessionStorage.setItem('newConversation', JSON.stringify({
+        recipientId: editorUserId,
+        recipientName: editorName,
+        subject: `Consulta para ${editorName}`
+      }));
+      
+      // Navegar a la página de mensajes
+      navigate('/mensajes');
+    } else {
+      toast({
+        title: "Error",
+        description: "No se pudo obtener la información del editor para contactarlo.",
         variant: "destructive"
       });
     }

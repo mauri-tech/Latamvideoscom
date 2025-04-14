@@ -201,6 +201,32 @@ const MessagesPage = () => {
   const isPendingSend = sendMessageMutation.isPending;
   const isPendingCreate = createConversationMutation.isPending;
   
+  // Revisar si hay solicitud de nueva conversación en sessionStorage
+  useEffect(() => {
+    const newConversationData = sessionStorage.getItem('newConversation');
+    if (newConversationData) {
+      try {
+        const data = JSON.parse(newConversationData);
+        console.log("Iniciando nueva conversación desde sessionStorage:", data);
+        
+        // Limpiar sessionStorage para no iniciar la misma conversación más de una vez
+        sessionStorage.removeItem('newConversation');
+        
+        // Solo si tenemos los datos necesarios
+        if (data.recipientId) {
+          setShowNewConversation(true);
+          // Establecer los valores del formulario
+          newConversationForm.setValue("recipientId", data.recipientId);
+          if (data.subject) {
+            newConversationForm.setValue("subject", data.subject);
+          }
+        }
+      } catch (error) {
+        console.error("Error al procesar datos de nueva conversación:", error);
+      }
+    }
+  }, [currentUser]); // Se ejecuta cuando el usuario está cargado
+  
   // Formatear fecha
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
