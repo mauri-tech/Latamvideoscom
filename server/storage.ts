@@ -1094,6 +1094,86 @@ export class DatabaseStorage implements IStorage {
     });
   }
   
+  // Reviews Methods
+  async getReview(id: number): Promise<Review | undefined> {
+    try {
+      const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
+      return review;
+    } catch (error) {
+      console.error("Error en getReview:", error);
+      return undefined;
+    }
+  }
+  
+  async getReviewsByEditorProfileId(editorProfileId: number): Promise<Review[]> {
+    try {
+      console.log("Buscando reviews para editorProfileId:", editorProfileId);
+      const reviewsList = await db.select().from(reviews).where(eq(reviews.editorProfileId, editorProfileId));
+      console.log("Reviews encontradas:", reviewsList.length);
+      return reviewsList.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
+    } catch (error) {
+      console.error("Error en getReviewsByEditorProfileId:", error);
+      return [];
+    }
+  }
+  
+  async getReviewsByClientId(clientId: number): Promise<Review[]> {
+    try {
+      const reviewsList = await db.select().from(reviews).where(eq(reviews.clientId, clientId));
+      return reviewsList.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
+    } catch (error) {
+      console.error("Error en getReviewsByClientId:", error);
+      return [];
+    }
+  }
+  
+  async createReview(data: InsertReview): Promise<Review> {
+    try {
+      console.log("Creando review con datos:", JSON.stringify(data));
+      const [review] = await db.insert(reviews).values(data).returning();
+      console.log("Review creada:", review);
+      return review;
+    } catch (error) {
+      console.error("Error en createReview:", error);
+      throw error;
+    }
+  }
+  
+  async updateReview(id: number, data: Partial<Review>): Promise<Review | undefined> {
+    try {
+      const [updatedReview] = await db
+        .update(reviews)
+        .set(data)
+        .where(eq(reviews.id, id))
+        .returning();
+      return updatedReview;
+    } catch (error) {
+      console.error("Error en updateReview:", error);
+      return undefined;
+    }
+  }
+  
+  async deleteReview(id: number): Promise<boolean> {
+    try {
+      const result = await db
+        .delete(reviews)
+        .where(eq(reviews.id, id))
+        .returning({ id: reviews.id });
+      return result.length > 0;
+    } catch (error) {
+      console.error("Error en deleteReview:", error);
+      return false;
+    }
+  }
+  
   // Forum Methods - Categories
   async getAllForumCategories(): Promise<ForumCategory[]> {
     return db.select().from(forumCategories).orderBy(forumCategories.order);
