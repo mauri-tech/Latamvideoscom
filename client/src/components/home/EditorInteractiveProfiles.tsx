@@ -189,7 +189,7 @@ const EditorInteractiveProfiles = () => {
                 <img 
                   src={profile.profilePicture} 
                   alt={profile.name}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                  className="w-16 h-16 rounded-full object-cover border-2 border-[#2A9D8F]"
                 />
                 <div className="ml-4">
                   <h3 className="font-bold text-lg">{profile.name}</h3>
@@ -212,16 +212,16 @@ const EditorInteractiveProfiles = () => {
               {/* 3. Estilos (como badges) */}
               <div className="flex flex-wrap gap-2 mb-3">
                 {profile.styles.map((style, idx) => (
-                  <Badge key={idx} className="bg-primary/10 text-primary font-normal">
+                  <Badge key={idx} className="bg-[#2A9D8F]/10 text-[#2A9D8F] font-normal">
                     {style}
                   </Badge>
                 ))}
               </div>
               
               {/* 4. Cuota base */}
-              <div className="bg-primary/5 p-3 rounded-lg flex justify-between items-center mb-4">
+              <div className="bg-[#2A9D8F]/5 p-3 rounded-lg flex justify-between items-center mb-4">
                 <span className="text-sm text-gray-700">Cuota inicial</span>
-                <span className="text-xl font-bold text-primary">Desde ${profile.tarifas.basic.price} USD</span>
+                <span className="text-xl font-bold text-[#2A9D8F]">Desde ${profile.tarifas.basic.price} USD</span>
               </div>
             </div>
             
@@ -256,15 +256,15 @@ const EditorInteractiveProfiles = () => {
                 <div className="border rounded-lg p-3">
                   <div className="flex justify-between items-center mb-1">
                     <h5 className="font-medium">Básico</h5>
-                    <span className="text-primary font-bold">${profile.tarifas.basic.price} USD</span>
+                    <span className="text-[#2A9D8F] font-bold">${profile.tarifas.basic.price} USD</span>
                   </div>
                   <p className="text-xs text-gray-500">{profile.tarifas.basic.description}</p>
                 </div>
                 
-                <div className="border rounded-lg p-3 border-primary bg-primary/5">
+                <div className="border rounded-lg p-3 border-[#2A9D8F] bg-[#2A9D8F]/5">
                   <div className="flex justify-between items-center mb-1">
                     <h5 className="font-medium">Estándar</h5>
-                    <span className="text-primary font-bold">${profile.tarifas.standard.price} USD</span>
+                    <span className="text-[#2A9D8F] font-bold">${profile.tarifas.standard.price} USD</span>
                   </div>
                   <p className="text-xs text-gray-500">{profile.tarifas.standard.description}</p>
                 </div>
@@ -272,7 +272,7 @@ const EditorInteractiveProfiles = () => {
                 <div className="border rounded-lg p-3">
                   <div className="flex justify-between items-center mb-1">
                     <h5 className="font-medium">Premium</h5>
-                    <span className="text-primary font-bold">${profile.tarifas.premium.price} USD</span>
+                    <span className="text-[#2A9D8F] font-bold">${profile.tarifas.premium.price} USD</span>
                   </div>
                   <p className="text-xs text-gray-500">{profile.tarifas.premium.description}</p>
                 </div>
@@ -297,7 +297,7 @@ const EditorInteractiveProfiles = () => {
             {/* 8. CTA */}
             <div className="p-5">
               <Link href={`/editor/${profile.id}`}>
-                <Button className="w-full bg-[#007aff] hover:bg-[#007aff]/90">Ver perfil completo</Button>
+                <Button className="w-full bg-[#2A9D8F] hover:bg-[#21867A]">Ver perfil completo</Button>
               </Link>
             </div>
           </div>
