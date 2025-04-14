@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Briefcase, Package, Monitor, DollarSign } from 'lucide-react';
 
-// Perfil interactivo según las nuevas especificaciones
+// Perfil interactivo con categorías para el deslizamiento horizontal
 interface EditorInteractiveProfile {
   id: number;
   name: string;
@@ -37,6 +37,17 @@ interface EditorInteractiveProfile {
     };
   };
 }
+
+// Tipos de categorías para el deslizamiento horizontal
+type CategoryType = 'info' | 'portfolio' | 'equipamiento' | 'tarifas';
+
+// Definición de categorías disponibles
+const categories: { id: CategoryType; label: string; icon: React.ReactNode }[] = [
+  { id: 'info', label: 'Información', icon: <Monitor className="w-5 h-5" /> },
+  { id: 'portfolio', label: 'Portafolio', icon: <Briefcase className="w-5 h-5" /> },
+  { id: 'equipamiento', label: 'Equipamiento', icon: <Package className="w-5 h-5" /> },
+  { id: 'tarifas', label: 'Tarifas', icon: <DollarSign className="w-5 h-5" /> }
+];
 
 // Datos de ejemplo actualizados según las especificaciones
 const sampleInteractiveProfile: EditorInteractiveProfile = {
@@ -86,224 +97,225 @@ const sampleInteractiveProfile: EditorInteractiveProfile = {
 };
 
 const EditorInteractiveProfiles = () => {
-  const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
+  // Estado para la categoría activa
+  const [activeCategory, setActiveCategory] = useState<CategoryType>('info');
   
-  // Para simplificar, usamos un solo perfil de muestra, pero se podría expandir a múltiples
+  // Perfiles (por ahora solo uno)
   const profiles = [sampleInteractiveProfile];
-  const activeProfile = profiles[currentProfileIndex];
+  const profile = profiles[0];
   
-  // Referencia para el scroll horizontal de las tarjetas
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // Referencia para el contenedor de tarjetas
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
   
-  // Gestión del scroll horizontal con física tipo iOS
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.pageX - (scrollContainerRef.current?.offsetLeft || 0));
-    setScrollLeft(scrollContainerRef.current?.scrollLeft || 0);
-  };
-  
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
-  
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-  
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - (scrollContainerRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 1.5; // Multiplicador de velocidad
-    if (scrollContainerRef.current) {
-      // Aplicamos límites para evitar que el scroll se bloquee
-      const maxScrollLeft = scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth;
-      const newScrollLeft = scrollLeft - walk;
-      scrollContainerRef.current.scrollLeft = Math.max(0, Math.min(maxScrollLeft, newScrollLeft));
+  // Función para cambiar a una categoría específica con animación suave
+  const scrollToCategory = (categoryId: CategoryType) => {
+    setActiveCategory(categoryId);
+    
+    // Encuentra la posición de desplazamiento para la categoría seleccionada
+    if (cardsContainerRef.current) {
+      const categoryIndex = categories.findIndex(c => c.id === categoryId);
+      const cardWidth = cardsContainerRef.current.offsetWidth;
+      const scrollPosition = categoryIndex * cardWidth;
+      
+      // Desplazamiento suave
+      cardsContainerRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
     }
   };
   
-  // Para móvil, manejar toques
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].clientX - (scrollContainerRef.current?.offsetLeft || 0));
-    setScrollLeft(scrollContainerRef.current?.scrollLeft || 0);
-  };
-  
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    const x = e.touches[0].clientX - (scrollContainerRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 1.5;
-    if (scrollContainerRef.current) {
-      // Aplicamos los mismos límites para dispositivos táctiles
-      const maxScrollLeft = scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth;
-      const newScrollLeft = scrollLeft - walk;
-      scrollContainerRef.current.scrollLeft = Math.max(0, Math.min(maxScrollLeft, newScrollLeft));
-    }
-  };
-  
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
+  // Efecto para manejar el desplazamiento y actualizar la categoría activa
+  useEffect(() => {
+    const container = cardsContainerRef.current;
+    if (!container) return;
+    
+    const handleScroll = () => {
+      if (!container) return;
+      
+      const scrollPosition = container.scrollLeft;
+      const cardWidth = container.offsetWidth;
+      const categoryIndex = Math.round(scrollPosition / cardWidth);
+      
+      const newCategory = categories[categoryIndex]?.id;
+      if (newCategory && newCategory !== activeCategory) {
+        setActiveCategory(newCategory);
+      }
+    };
+    
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [activeCategory]);
   
   return (
-    <div className="py-8">
-      <h3 className="text-2xl font-bold mb-6">Perfiles Interactivos</h3>
-      <p className="text-gray-600 mb-6">
-        Explora un ejemplo de perfil interactivo. Desliza verticalmente para ver toda la información.
+    <div className="py-10">
+      <h3 className="text-2xl font-bold mb-4 text-center">Perfiles Interactivos</h3>
+      <p className="text-[#8E8E93] mb-8 text-center max-w-2xl mx-auto">
+        Explora un ejemplo de perfil interactivo. Desliza horizontalmente para ver diferentes secciones.
       </p>
       
-      <div 
-        ref={scrollContainerRef}
-        className="flex overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch',
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {profiles.map((profile, index) => (
+      {/* Tarjeta principal con cabecera fija y contenido deslizable */}
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
+        {/* Cabecera fija */}
+        <div className="px-5 py-5 text-center relative">
+          {/* Fondo con gradiente */}
           <div 
-            key={profile.id}
-            className="rounded-xl shadow-lg w-[350px] flex-shrink-0 mx-auto snap-center overflow-y-auto max-h-[700px] hide-scrollbar border border-[#E5E5EA]"
+            className="absolute inset-0 -z-10"
             style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch',
-              background: 'linear-gradient(to bottom, #ffffff, #f8f9fa)',
-              boxShadow: '0 10px 40px -10px rgba(0, 0, 0, 0.1)'
+              background: "linear-gradient(135deg, #0075FF 0%, #00D1FF 100%)",
+              opacity: 0.05
             }}
-          >
-            {/* 1. Encabezado con datos esenciales */}
-            <div className="p-5 border-b">
-              <div className="flex items-center mb-3">
-                <img 
-                  src={profile.profilePicture} 
-                  alt={profile.name}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-[#2A9D8F]"
-                />
-                <div className="ml-4">
-                  <h3 className="font-bold text-lg">{profile.name}</h3>
-                  <p className="text-gray-600 text-sm">{profile.country}</p>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {profile.specialties.map((specialty, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs bg-gray-50">
-                        {specialty}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              {/* 2. Mini Bio */}
-              <div className="mb-3">
-                <p className="text-sm text-gray-700">{profile.miniBio}</p>
-              </div>
-              
-              {/* 3. Estilos (como badges) */}
+          />
+          
+          <img 
+            src={profile.profilePicture} 
+            alt={profile.name}
+            className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border-2 border-[#007AFF] shadow-lg"
+          />
+          <h3 className="font-bold text-xl">{profile.name}</h3>
+          <p className="text-[#8E8E93] text-sm">{profile.country}</p>
+        </div>
+        
+        {/* Navegación por categorías */}
+        <div className="border-t border-b border-[#E5E5EA]">
+          <div className="flex overflow-x-auto hide-scrollbar">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => scrollToCategory(category.id)}
+                className={`flex-1 flex flex-col items-center justify-center py-3 px-2 min-w-[80px] transition-colors ${
+                  activeCategory === category.id 
+                    ? 'text-[#007AFF] border-b-2 border-[#007AFF]' 
+                    : 'text-[#8E8E93] hover:text-[#007AFF]/80'
+                }`}
+              >
+                <div className="mb-1">{category.icon}</div>
+                <span className="text-xs font-medium">{category.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        {/* Contenedor para deslizar horizontalmente entre categorías */}
+        <div 
+          ref={cardsContainerRef}
+          className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar"
+          style={{ 
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+            scrollSnapType: 'x mandatory'
+          }}
+        >
+          {/* Tarjeta 1: Información */}
+          <div className="min-w-full flex-shrink-0 snap-start p-5">
+            {/* Mini Bio */}
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-[#8E8E93] mb-2">Bio</h4>
+              <p className="text-sm">{profile.miniBio}</p>
+            </div>
+            
+            {/* Especialidades */}
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-[#8E8E93] mb-2">Especialidades</h4>
               <div className="flex flex-wrap gap-2 mb-3">
+                {profile.specialties.map((specialty, idx) => (
+                  <Badge key={idx} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
+                    {specialty}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            
+            {/* Estilos */}
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-[#8E8E93] mb-2">Estilos</h4>
+              <div className="flex flex-wrap gap-2">
                 {profile.styles.map((style, idx) => (
-                  <Badge key={idx} className="bg-[#2A9D8F]/10 text-[#2A9D8F] font-normal">
+                  <Badge key={idx} className="bg-[#007AFF]/5 text-[#007AFF] border-0">
                     {style}
                   </Badge>
                 ))}
               </div>
-              
-              {/* 4. Cuota base */}
-              <div className="bg-[#2A9D8F]/5 p-3 rounded-lg flex justify-between items-center mb-4">
-                <span className="text-sm text-gray-700">Cuota inicial</span>
-                <span className="text-xl font-bold text-[#2A9D8F]">Desde ${profile.tarifas.basic.price} USD</span>
-              </div>
-            </div>
-            
-            {/* 5. Portafolio */}
-            {profile.portafolio.length > 0 && (
-              <div className="p-5 border-b">
-                <h4 className="font-medium text-base mb-3">🎞️ Portafolio</h4>
-                <div className="grid grid-cols-1 gap-4">
-                  {profile.portafolio.map((item, idx) => (
-                    <div key={idx} className="relative rounded-lg overflow-hidden">
-                      <img 
-                        src={item.thumbnail} 
-                        alt={item.title}
-                        className="w-full h-[120px] object-cover rounded-lg"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity">
-                        <Button size="sm" className="bg-white text-black hover:bg-white/90">
-                          Ver proyecto
-                        </Button>
-                      </div>
-                      <p className="mt-1 text-sm font-medium">{item.title}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* 6. Tarifas */}
-            <div className="p-5 border-b">
-              <h4 className="font-medium text-base mb-3">💰 Tarifas</h4>
-              <div className="space-y-3">
-                <div className="border rounded-lg p-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <h5 className="font-medium">Básico</h5>
-                    <span className="text-[#2A9D8F] font-bold">${profile.tarifas.basic.price} USD</span>
-                  </div>
-                  <p className="text-xs text-gray-500">{profile.tarifas.basic.description}</p>
-                </div>
-                
-                <div className="border rounded-lg p-3 border-[#2A9D8F] bg-[#2A9D8F]/5">
-                  <div className="flex justify-between items-center mb-1">
-                    <h5 className="font-medium">Estándar</h5>
-                    <span className="text-[#2A9D8F] font-bold">${profile.tarifas.standard.price} USD</span>
-                  </div>
-                  <p className="text-xs text-gray-500">{profile.tarifas.standard.description}</p>
-                </div>
-                
-                <div className="border rounded-lg p-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <h5 className="font-medium">Premium</h5>
-                    <span className="text-[#2A9D8F] font-bold">${profile.tarifas.premium.price} USD</span>
-                  </div>
-                  <p className="text-xs text-gray-500">{profile.tarifas.premium.description}</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* 7. Equipamiento */}
-            {profile.equipamiento.length > 0 && (
-              <div className="p-5 border-b">
-                <h4 className="font-medium text-base mb-3">⚙️ Equipamiento</h4>
-                <div className="space-y-2">
-                  {profile.equipamiento.map((equip, idx) => (
-                    <div key={idx} className="bg-gray-50 p-3 rounded-lg">
-                      <span className="text-sm font-medium">{equip.category}: </span>
-                      <span className="text-sm text-gray-700">{equip.item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* 8. CTA */}
-            <div className="p-5">
-              <Link href={`/editor/${profile.id}`}>
-                <Button className="w-full bg-[#2A9D8F] hover:bg-[#21867A]">Ver perfil completo</Button>
-              </Link>
             </div>
           </div>
-        ))}
+          
+          {/* Tarjeta 2: Portafolio */}
+          <div className="min-w-full flex-shrink-0 snap-start p-5">
+            <h4 className="text-sm font-medium text-[#8E8E93] mb-3">Proyectos destacados</h4>
+            <div className="grid grid-cols-1 gap-4">
+              {profile.portafolio.map((item, idx) => (
+                <div key={idx} className="relative rounded-lg overflow-hidden bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]">
+                  <img 
+                    src={item.thumbnail} 
+                    alt={item.title}
+                    className="w-full h-[160px] object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity">
+                    <Button size="sm" className="bg-[#007AFF] hover:bg-[#0069d9]">
+                      Ver proyecto
+                    </Button>
+                  </div>
+                  <div className="p-3">
+                    <h5 className="font-medium">{item.title}</h5>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Tarjeta 3: Equipamiento */}
+          <div className="min-w-full flex-shrink-0 snap-start p-5">
+            <h4 className="text-sm font-medium text-[#8E8E93] mb-3">Equipamiento profesional</h4>
+            <div className="space-y-3">
+              {profile.equipamiento.map((equip, idx) => (
+                <div key={idx} className="bg-gradient-to-r from-[#f8f9fa] to-[#e9ecef] p-3 rounded-lg">
+                  <span className="text-sm font-medium text-[#007AFF]">{equip.category}: </span>
+                  <span className="text-sm">{equip.item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Tarjeta 4: Tarifas */}
+          <div className="min-w-full flex-shrink-0 snap-start p-5">
+            <h4 className="text-sm font-medium text-[#8E8E93] mb-3">Planes de servicio</h4>
+            <div className="space-y-4">
+              <div className="border rounded-lg p-4 bg-white">
+                <div className="flex justify-between items-center mb-2">
+                  <h5 className="font-medium">Básico</h5>
+                  <span className="text-[#007AFF] font-bold">${profile.tarifas.basic.price} USD</span>
+                </div>
+                <p className="text-sm text-[#8E8E93]">{profile.tarifas.basic.description}</p>
+              </div>
+              
+              <div className="border-2 border-[#007AFF] rounded-lg p-4 bg-[#007AFF]/5">
+                <div className="flex justify-between items-center mb-2">
+                  <h5 className="font-medium">Estándar</h5>
+                  <span className="text-[#007AFF] font-bold">${profile.tarifas.standard.price} USD</span>
+                </div>
+                <p className="text-sm text-[#8E8E93]">{profile.tarifas.standard.description}</p>
+              </div>
+              
+              <div className="border rounded-lg p-4 bg-white">
+                <div className="flex justify-between items-center mb-2">
+                  <h5 className="font-medium">Premium</h5>
+                  <span className="text-[#007AFF] font-bold">${profile.tarifas.premium.price} USD</span>
+                </div>
+                <p className="text-sm text-[#8E8E93]">{profile.tarifas.premium.description}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* CTA */}
+        <div className="p-5 border-t border-[#E5E5EA]">
+          <Link href={`/editor/${profile.id}`}>
+            <Button className="w-full bg-[#007AFF] hover:bg-[#0069d9]">
+              Ver perfil completo
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );
