@@ -88,7 +88,7 @@ const Hero = () => {
                   onValueChange={setProfessionalType}
                 >
                   <SelectTrigger id="professionalType-mobile" className="w-full">
-                    <SelectValue placeholder="Todos los profesionales" />
+                    <SelectValue placeholder="Todos" />
                   </SelectTrigger>
                   <SelectContent>
                     {professionalTypes.map((type) => (
@@ -100,11 +100,47 @@ const Hero = () => {
                 </Select>
               </div>
               
+              <div>
+                <label htmlFor="country-mobile" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+                  País
+                </label>
+                <Select
+                  value={country}
+                  onValueChange={setCountry}
+                >
+                  <SelectTrigger id="country-mobile" className="w-full">
+                    <SelectValue placeholder="Todos los países" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los países</SelectItem>
+                    {countries.map((country) => (
+                      <SelectItem key={country.code} value={country.code}>
+                        {country.flag} {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label htmlFor="price-mobile" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+                  Presupuesto máximo: ${maxRate} USD
+                </label>
+                <Slider
+                  id="price-mobile"
+                  defaultValue={[maxRate]}
+                  max={500}
+                  min={0}
+                  step={10}
+                  onValueChange={(value) => setMaxRate(value[0])}
+                />
+              </div>
+              
               <Button
-                className="w-full bg-[#0050FF] hover:bg-[#0040E0] py-5 font-medium shadow-sm"
+                className="w-full bg-[#0050FF] hover:bg-[#0040E0] py-5 font-medium shadow-sm mt-2"
                 onClick={handleSearch}
               >
-                Buscar
+                Buscar profesionales
               </Button>
             </div>
           </div>
