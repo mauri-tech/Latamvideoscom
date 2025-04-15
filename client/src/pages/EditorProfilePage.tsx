@@ -386,6 +386,21 @@ const EditorProfilePage = () => {
                 </div>
                 
                 <div className="border-t border-gray-100 pt-6 mt-6">
+                  <h4 className="text-lg font-medium mb-4">Tecnologías</h4>
+                  {profileData?.technologyTags && profileData.technologyTags.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {profileData.technologyTags.map((tag, index) => (
+                        <span key={index} className="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">No se han especificado tecnologías.</p>
+                  )}
+                </div>
+                
+                <div className="border-t border-gray-100 pt-6 mt-6">
                   <h4 className="text-lg font-medium mb-4">Años de experiencia</h4>
                   <div className="flex items-center">
                     <div className="w-24 h-24 rounded-full bg-primary-50 flex items-center justify-center border-4 border-primary">
