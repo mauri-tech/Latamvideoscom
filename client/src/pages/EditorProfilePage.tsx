@@ -6,7 +6,7 @@ import ProfileCard from '@/components/editor/ProfileCard';
 import BriefForm from '@/components/client/BriefForm';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ExternalLink, PencilIcon, Star, ThumbsUp } from 'lucide-react';
+import { ExternalLink, PencilIcon, Star, ThumbsUp, EyeIcon, MailIcon, Clock, UserIcon, BriefcaseIcon, DollarSignIcon } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -684,17 +684,19 @@ const EditorProfilePage = () => {
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-xl font-semibold mb-6">Equipo técnico</h3>
                 
-                {editor.equipment.length === 0 ? (
+                {!editor.equipment || editor.equipment.length === 0 ? (
                   <p className="text-[#8E8E93] py-8 text-center">El editor aún no ha agregado información sobre su equipo.</p>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {editor.equipment.map((item, index) => (
+                    {Array.isArray(editor.equipment) && editor.equipment.map((item: any, index: number) => (
                       <div 
                         key={index} 
                         className="bg-gray-50 rounded-lg p-4 border border-gray-100 hover:shadow-sm transition-shadow"
                       >
-                        <h4 className="font-medium text-primary mb-2">{item.type}</h4>
-                        <p className="text-[#8E8E93] text-sm">{item.description}</p>
+                        <h4 className="font-medium text-primary mb-2">{typeof item === 'string' ? item : item.type}</h4>
+                        {typeof item !== 'string' && item.description && (
+                          <p className="text-[#8E8E93] text-sm">{item.description}</p>
+                        )}
                       </div>
                     ))}
                   </div>
