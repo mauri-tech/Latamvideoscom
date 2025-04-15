@@ -259,7 +259,7 @@ const EditorInteractiveProfile = () => {
                   {/* Barra de pestañas con scroll horizontal en móvil */}
                   <div className="flex overflow-x-auto whitespace-nowrap scrollbar-hide border-b border-gray-200">
                     <button 
-                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#020617] border-b-2 border-[#020617]' : 'text-gray-500 hover:text-gray-700'}`}
                       onClick={() => setActiveTab('portafolio')}
                     >
                       <div className="flex items-center gap-2">
@@ -268,7 +268,7 @@ const EditorInteractiveProfile = () => {
                       </div>
                     </button>
                     <button 
-                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#020617] border-b-2 border-[#020617]' : 'text-gray-500 hover:text-gray-700'}`}
                       onClick={() => setActiveTab('equipamiento')}
                     >
                       <div className="flex items-center gap-2">
@@ -277,7 +277,7 @@ const EditorInteractiveProfile = () => {
                       </div>
                     </button>
                     <button 
-                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#020617] border-b-2 border-[#020617]' : 'text-gray-500 hover:text-gray-700'}`}
                       onClick={() => setActiveTab('tarifas')}
                     >
                       <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ const EditorInteractiveProfile = () => {
                       </div>
                     </button>
                     <button 
-                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'reseñas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'reseñas' ? 'text-[#020617] border-b-2 border-[#020617]' : 'text-gray-500 hover:text-gray-700'}`}
                       onClick={() => setActiveTab('reseñas')}
                     >
                       <div className="flex items-center gap-2">
@@ -410,12 +410,12 @@ const EditorInteractiveProfile = () => {
                           </div>
                           <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
                             <h5 className="font-medium text-indigo-700">Paquete Estándar</h5>
-                            <p className="text-2xl text-[#0050FF] font-bold my-2">${editorProfile.price.min * 2}</p>
+                            <p className="text-2xl text-[#020617] font-bold my-2">${editorProfile.price.min * 2}</p>
                             <p className="text-sm text-gray-700">Edición profesional con efectos básicos, hasta 10 minutos.</p>
                           </div>
                           <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
                             <h5 className="font-medium text-sky-700">Paquete Premium</h5>
-                            <p className="text-2xl text-[#0050FF] font-bold my-2">${editorProfile.price.min * 3}</p>
+                            <p className="text-2xl text-[#020617] font-bold my-2">${editorProfile.price.min * 3}</p>
                             <p className="text-sm text-gray-700">Edición avanzada con efectos, corrección de color y hasta 20 minutos.</p>
                           </div>
                         </div>
@@ -467,7 +467,7 @@ const EditorInteractiveProfile = () => {
               {/* Botones de acción */}
               <div className="p-5 bg-gradient-to-b from-gray-50 to-white flex justify-end">
                 <Button 
-                  className="bg-[#0050FF] hover:bg-[#0040E0] text-white py-6 px-6 font-medium shadow-md transition-all hover:shadow-lg"
+                  className="bg-[#020617] hover:bg-[#1E293B] text-white py-6 px-6 font-medium shadow-md transition-all hover:shadow-lg"
                   asChild
                 >
                   <Link href={`/editor/${editorProfile.id}`}>
@@ -481,7 +481,7 @@ const EditorInteractiveProfile = () => {
             <div className="text-center mt-8">
               <Button 
                 variant="outline" 
-                className="border-[#0050FF] text-[#0050FF] hover:bg-[#0050FF]/5 py-6 px-8 text-base font-medium"
+                className="border-[#020617] text-[#020617] hover:bg-[#020617]/5 py-6 px-8 text-base font-medium"
                 asChild
               >
                 <Link href="/search">Explorar todos los editores</Link>
