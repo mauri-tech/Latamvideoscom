@@ -57,22 +57,25 @@ const HowItWorks = () => {
               key={step.id}
               className="relative"
             >
-              <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-all">
-                <div className="flex flex-col items-center text-center mb-4">
-                  <div className="inline-block bg-[#0050FF] text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center mb-3">
+              <div className={`${step.bgColor} rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 relative overflow-hidden`}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-white/30 transform translate-x-12 -translate-y-12 opacity-50"></div>
+                <div className="flex flex-col items-center text-center mb-4 relative z-10">
+                  <div className="inline-block bg-[#0050FF] text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center mb-3 shadow-sm">
                     {step.id}
                   </div>
-                  <h3 className="text-lg font-bold mb-3 tracking-tight">{step.title}</h3>
-                  <div className={`${step.bgColor} p-4 rounded-full mb-3`}>
+                  <h3 className="text-lg font-bold mb-3 tracking-tight text-gray-800">{step.title}</h3>
+                  <div className="bg-white/70 backdrop-blur-sm p-4 rounded-full mb-3 shadow-md">
                     <div className={step.iconColor}>{step.icon}</div>
                   </div>
-                  <p className="text-gray-600 leading-snug text-sm">{step.description}</p>
+                  <p className="text-gray-700 leading-relaxed text-sm">{step.description}</p>
                 </div>
               </div>
               
               {step.id < steps.length && (
-                <div className="absolute left-1/2 -bottom-6 transform -translate-x-1/2 text-[#0050FF]">
-                  <ArrowRight className="h-5 w-5 rotate-90" />
+                <div className="absolute left-1/2 -bottom-6 transform -translate-x-1/2">
+                  <div className="p-1.5 rounded-full bg-white/80 backdrop-blur-sm shadow-md">
+                    <ArrowRight className="h-5 w-5 text-[#0050FF] rotate-90" fill="#E6F0FF" stroke="#0050FF" strokeWidth={2} />
+                  </div>
                 </div>
               )}
             </div>
@@ -83,23 +86,24 @@ const HowItWorks = () => {
         <div className="hidden md:grid md:grid-cols-3 gap-8">
           {steps.map((step, index) => (
             <div key={step.id} className="relative group">
-              <div className="bg-white rounded-xl p-8 shadow-md h-full border border-gray-100 transition-all group-hover:shadow-xl group-hover:translate-y-[-5px] duration-300">
-                <div className="flex flex-col items-center text-center mb-6">
-                  <div className="bg-[#0050FF] text-white text-lg font-bold rounded-full w-10 h-10 flex items-center justify-center mb-6 shrink-0">
+              <div className={`${step.bgColor} rounded-xl p-8 shadow-lg h-full border border-gray-100 transition-all group-hover:shadow-xl group-hover:translate-y-[-5px] duration-300 overflow-hidden relative`}>
+                <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/30 transform translate-x-16 -translate-y-16 opacity-50"></div>
+                <div className="flex flex-col items-center text-center mb-6 relative z-10">
+                  <div className="bg-[#0050FF] text-white text-lg font-bold rounded-full w-10 h-10 flex items-center justify-center mb-6 shrink-0 shadow-md">
                     {step.id}
                   </div>
-                  <h3 className="text-xl font-bold mb-3 tracking-tight">{step.title}</h3>
-                  <div className={`${step.bgColor} p-5 rounded-full mb-4`}>
+                  <h3 className="text-xl font-bold mb-3 tracking-tight text-gray-800">{step.title}</h3>
+                  <div className="bg-white/70 backdrop-blur-sm p-5 rounded-full mb-4 shadow-md">
                     <div className={step.iconColor}>{step.icon}</div>
                   </div>
-                  <p className="text-gray-600 leading-snug text-sm">{step.description}</p>
+                  <p className="text-gray-700 leading-relaxed text-sm">{step.description}</p>
                 </div>
               </div>
               
               {index < steps.length - 1 && (
                 <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 z-10">
-                  <div className="bg-white rounded-full p-1 shadow-md">
-                    <ArrowRight className="h-5 w-5 text-[#0050FF]" />
+                  <div className="bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-md">
+                    <ArrowRight className="h-5 w-5 text-[#0050FF]" fill="#E6F0FF" stroke="#0050FF" strokeWidth={2} />
                   </div>
                 </div>
               )}
