@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Button } from '@/components/ui/button';
+import { CustomButton } from '@/components/ui/custom-button';
 import editorImage from '../../assets/editor-hero.jpg';
 import { 
   Select,
@@ -136,12 +136,14 @@ const Hero = () => {
                 />
               </div>
               
-              <Button
-                className="w-full bg-[#0050FF] hover:bg-[#0040E0] py-5 font-medium shadow-sm mt-2"
+              <CustomButton
+                variant="dark"
+                size="lg"
+                className="w-full py-5 mt-2"
                 onClick={handleSearch}
               >
                 Buscar profesionales
-              </Button>
+              </CustomButton>
             </div>
           </div>
           
@@ -225,12 +227,14 @@ const Hero = () => {
                   />
                 </div>
                 
-                <Button
-                  className="w-full bg-[#0050FF] hover:bg-[#0040E0] py-6 font-medium shadow-sm"
+                <CustomButton
+                  variant="dark"
+                  size="lg"
+                  className="w-full py-6"
                   onClick={handleSearch}
                 >
                   Buscar profesionales
-                </Button>
+                </CustomButton>
               </div>
               
               {/* Botones removidos por petición del usuario */}
