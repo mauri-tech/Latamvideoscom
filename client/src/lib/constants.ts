@@ -79,3 +79,35 @@ export const paymentMethods = [
   { id: "wise", label: "Wise" },
   { id: "crypto", label: "Criptomonedas" },
 ];
+
+// Color palette for the application
+export const colorPalette = {
+  // Primary grays for buttons, banners, and main UI elements
+  grayscale: {
+    primary: "#020617", // Dark gray (almost black)
+    hover: "#1E293B",   // Slightly lighter for hover states
+    light: "#F2F2F7",   // Light gray for backgrounds
+    ultraLight: "#FAFAFA", // Ultralight gray for subtle backgrounds
+  },
+  
+  // Pastel palette for icons, accents, and visual elements
+  pastel: {
+    blue: "#6BA6FF",       // Light blue (like in equipment cards)
+    indigo: "#818CF8",     // Light indigo
+    purple: "#C084FC",     // Light purple
+    sky: "#38BDF8",        // Sky blue
+    teal: "#2DD4BF",       // Teal
+    green: "#4ADE80",      // Light green
+    yellow: "#FACC15",     // Yellow (for ratings)
+    pink: "#F9A8D4",       // Light pink
+  },
+  
+  // Gradients for special elements
+  gradients: {
+    blueIndigo: "linear-gradient(to right, #6BA6FF, #818CF8)",
+    bluePurple: "linear-gradient(to right, #6BA6FF, #C084FC)",
+    skyTeal: "linear-gradient(to right, #38BDF8, #2DD4BF)",
+    indigoViolet: "linear-gradient(to right, #818CF8, #C084FC)",
+    tealGreen: "linear-gradient(to right, #2DD4BF, #4ADE80)",
+  }
+};

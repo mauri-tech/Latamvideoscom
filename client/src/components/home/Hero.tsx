@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { countries } from '@/lib/constants';
+import { countries, colorPalette } from '@/lib/constants';
 
 const Hero = () => {
   const [, setLocation] = useLocation();
@@ -66,7 +66,17 @@ const Hero = () => {
           
           <h1 className="text-2xl font-bold text-center tracking-tight mb-2 leading-none">
             Encuentra a profesionales<br />
-            <span className="text-[#020617] tracking-tighter">en video de LATAM</span>
+            <span 
+              className="tracking-tighter font-extrabold"
+              style={{ 
+                background: colorPalette.gradients.bluePurple,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text"
+              }}
+            >
+              en video de LATAM
+            </span>
           </h1>
           
           <p className="text-gray-600 text-base md:text-lg mb-4 leading-snug text-center">
@@ -140,6 +150,7 @@ const Hero = () => {
                 variant="dark"
                 size="lg"
                 className="w-full py-5 mt-2"
+                style={{ backgroundColor: colorPalette.grayscale.primary, color: "white" }}
                 onClick={handleSearch}
               >
                 Buscar profesionales
@@ -158,7 +169,17 @@ const Hero = () => {
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 leading-none">
                 <span>Encuentra a</span><br />
                 <span>profesionales</span><br />
-                <span className="text-[#020617] tracking-tighter">en video de<br />LATAM</span>
+                <span 
+                  className="tracking-tighter font-extrabold"
+                  style={{ 
+                    background: colorPalette.gradients.bluePurple,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text"
+                  }}
+                >
+                  en video de<br />LATAM
+                </span>
               </h1>
               
               <p className="text-gray-600 text-lg md:text-xl mb-6 leading-snug">
@@ -231,6 +252,7 @@ const Hero = () => {
                   variant="dark"
                   size="lg"
                   className="w-full py-6"
+                  style={{ backgroundColor: colorPalette.grayscale.primary, color: "white" }}
                   onClick={handleSearch}
                 >
                   Buscar profesionales

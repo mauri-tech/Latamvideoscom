@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, UserCheck, Video, ArrowRight } from 'lucide-react';
+import { colorPalette } from '@/lib/constants';
 
 // Interfaz para los pasos
 interface Step {
