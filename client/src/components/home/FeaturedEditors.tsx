@@ -260,10 +260,7 @@ const FeaturedEditors = () => {
             size="lg"
             asChild
             style={{ 
-              backgroundColor: colorPalette.grayscale.primary,
-              ':hover': {
-                backgroundColor: colorPalette.grayscale.secondary
-              }
+              backgroundColor: colorPalette.grayscale.primary
             }}
           >
             <Link href="/search">Ver todos los talentos</Link>
