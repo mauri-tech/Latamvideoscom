@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Star, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { colorPalette } from '@/lib/constants';
 
 // Interfaz para los editores destacados
 interface FeaturedEditor {
@@ -144,14 +145,14 @@ const FeaturedEditors = () => {
               className="p-2 rounded-full border border-[#E5E5EA] bg-white hover:border-[#020617]/30 transition-colors"
               aria-label="Anterior"
             >
-              <ChevronLeft className="w-5 h-5 text-[#020617]" />
+              <ChevronLeft className="w-5 h-5" style={{ color: colorPalette.grayscale.primary }} />
             </button>
             <button 
               onClick={() => scroll('right')}
               className="p-2 rounded-full border border-[#E5E5EA] bg-white hover:border-[#020617]/30 transition-colors"
               aria-label="Siguiente"
             >
-              <ChevronRight className="w-5 h-5 text-[#020617]" />
+              <ChevronRight className="w-5 h-5" style={{ color: colorPalette.grayscale.primary }} />
             </button>
           </div>
         </div>
@@ -178,8 +179,14 @@ const FeaturedEditors = () => {
                         className="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
                       />
                       {editor.verified && (
-                        <span className="absolute bottom-0 right-0 text-[#020617] bg-white rounded-full p-0.5 shadow">
-                          <CheckCircle className="w-3.5 h-3.5 fill-[#020617]" />
+                        <span className="absolute bottom-0 right-0 bg-white rounded-full p-0.5 shadow">
+                          <CheckCircle 
+                            className="w-3.5 h-3.5" 
+                            style={{ 
+                              fill: colorPalette.pastel.blue, 
+                              color: colorPalette.pastel.blue 
+                            }} 
+                          />
                         </span>
                       )}
                     </div>
@@ -227,7 +234,11 @@ const FeaturedEditors = () => {
                       <Button 
                         variant="outline" 
                         size="sm"
-                        className="border-[#020617] text-[#020617] hover:bg-[#020617]/5"
+                        style={{ 
+                          borderColor: colorPalette.grayscale.primary,
+                          color: colorPalette.grayscale.primary
+                        }}
+                        className="hover:bg-gray-100"
                         asChild
                       >
                         <Link href={`/search?id=${editor.id}`}>Ver más</Link>
@@ -245,9 +256,15 @@ const FeaturedEditors = () => {
         
         <div className="text-center mt-10">
           <Button 
-            className="bg-[#020617] hover:bg-[#1E293B] text-white"
+            className="text-white"
             size="lg"
             asChild
+            style={{ 
+              backgroundColor: colorPalette.grayscale.primary,
+              ':hover': {
+                backgroundColor: colorPalette.grayscale.secondary
+              }
+            }}
           >
             <Link href="/search">Ver todos los talentos</Link>
           </Button>
