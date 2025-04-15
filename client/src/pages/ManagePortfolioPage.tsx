@@ -117,7 +117,7 @@ const ManagePortfolioPage = () => {
           description: "Primero debes crear tu perfil profesional",
           variant: "destructive",
         });
-        setLocation('/edit-profile');
+        setLocation('/editar-perfil');
       }
     }
   });
@@ -330,7 +330,7 @@ const ManagePortfolioPage = () => {
               variant="outline" 
               size="sm" 
               className="mb-2"
-              onClick={() => setLocation('/edit-profile')}
+              onClick={() => setLocation('/editar-perfil')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" /> Volver a perfil
             </Button>
