@@ -141,17 +141,17 @@ const FeaturedEditors = () => {
           <div className="hidden md:flex items-center space-x-2">
             <button 
               onClick={() => scroll('left')}
-              className="p-2 rounded-full border border-[#E5E5EA] bg-white hover:border-[#007AFF]/30 transition-colors"
+              className="p-2 rounded-full border border-[#E5E5EA] bg-white hover:border-[#020617]/30 transition-colors"
               aria-label="Anterior"
             >
-              <ChevronLeft className="w-5 h-5 text-[#007AFF]" />
+              <ChevronLeft className="w-5 h-5 text-[#020617]" />
             </button>
             <button 
               onClick={() => scroll('right')}
-              className="p-2 rounded-full border border-[#E5E5EA] bg-white hover:border-[#007AFF]/30 transition-colors"
+              className="p-2 rounded-full border border-[#E5E5EA] bg-white hover:border-[#020617]/30 transition-colors"
               aria-label="Siguiente"
             >
-              <ChevronRight className="w-5 h-5 text-[#007AFF]" />
+              <ChevronRight className="w-5 h-5 text-[#020617]" />
             </button>
           </div>
         </div>
@@ -178,8 +178,8 @@ const FeaturedEditors = () => {
                         className="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
                       />
                       {editor.verified && (
-                        <span className="absolute bottom-0 right-0 text-[#007AFF] bg-white rounded-full p-0.5 shadow">
-                          <CheckCircle className="w-3.5 h-3.5 fill-[#007AFF]" />
+                        <span className="absolute bottom-0 right-0 text-[#020617] bg-white rounded-full p-0.5 shadow">
+                          <CheckCircle className="w-3.5 h-3.5 fill-[#020617]" />
                         </span>
                       )}
                     </div>
@@ -220,17 +220,17 @@ const FeaturedEditors = () => {
                     <div className="flex justify-between items-center mt-6">
                       <div>
                         <p className="text-gray-500 text-xs">Tarifa base</p>
-                        <p className="text-[#007AFF] font-bold">
+                        <p className="text-[#020617] font-bold">
                           ${editor.baseRate} {editor.currency}
                         </p>
                       </div>
                       <Button 
                         variant="outline" 
                         size="sm"
-                        className="border-[#007AFF] text-[#007AFF] hover:bg-[#007AFF]/5"
+                        className="border-[#020617] text-[#020617] hover:bg-[#020617]/5"
                         asChild
                       >
-                        <Link href={`/editor/${editor.id}`}>Ver más</Link>
+                        <Link href={`/search?id=${editor.id}`}>Ver más</Link>
                       </Button>
                     </div>
                   </div>
@@ -245,11 +245,11 @@ const FeaturedEditors = () => {
         
         <div className="text-center mt-10">
           <Button 
-            className="bg-[#007AFF] hover:bg-[#007AFF]/80 text-white"
+            className="bg-[#020617] hover:bg-[#1E293B] text-white"
             size="lg"
             asChild
           >
-            <Link href="/editors">Ver todos los talentos</Link>
+            <Link href="/search">Ver todos los talentos</Link>
           </Button>
         </div>
       </div>
