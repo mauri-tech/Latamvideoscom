@@ -233,15 +233,15 @@ const EditorInteractiveProfile = () => {
                   </div>
                   
                   <div className="grid grid-cols-3 gap-2 w-full mb-4">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 text-center shadow-sm">
+                    <div className="bg-[#6BA6FF]/10 rounded-lg p-3 text-center shadow-sm">
                       <p className="text-md font-bold text-[#020617]">{editorProfile.portfolioCount}</p>
                       <p className="text-xs text-gray-600">Proyectos</p>
                     </div>
-                    <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-3 text-center shadow-sm">
+                    <div className="bg-[#818CF8]/10 rounded-lg p-3 text-center shadow-sm">
                       <p className="text-md font-bold text-[#020617]">${editorProfile.price.min}</p>
                       <p className="text-xs text-gray-600">Desde</p>
                     </div>
-                    <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-3 text-center shadow-sm">
+                    <div className="bg-[#C084FC]/10 rounded-lg p-3 text-center shadow-sm">
                       <p className="text-md font-bold text-[#020617]">{editorProfile.experience}</p>
                       <p className="text-xs text-gray-600">Años exp.</p>
                     </div>
@@ -377,30 +377,30 @@ const EditorInteractiveProfile = () => {
                       <div>
                         <h4 className="text-lg font-medium mb-4">Equipo de trabajo</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <div className="flex items-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-sm">
-                            <div className="mr-3 bg-blue-100 p-2 rounded-full">
+                          <div className="flex items-center p-3 bg-[#6BA6FF]/10 rounded-lg shadow-sm">
+                            <div className="mr-3 bg-[#6BA6FF]/20 p-2 rounded-full">
                               <Monitor className="h-5 w-5" style={{ color: colorPalette.pastel.blue }} />
                             </div>
                             <span className="font-medium text-gray-800">MacBook Pro M1 Max</span>
                           </div>
-                          <div className="flex items-center p-3 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg shadow-sm">
-                            <div className="mr-3 bg-indigo-100 p-2 rounded-full">
+                          <div className="flex items-center p-3 bg-[#818CF8]/10 rounded-lg shadow-sm">
+                            <div className="mr-3 bg-[#818CF8]/20 p-2 rounded-full">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke={colorPalette.pastel.indigo}>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                               </svg>
                             </div>
                             <span className="font-medium text-gray-800">Cámara Sony A7III</span>
                           </div>
-                          <div className="flex items-center p-3 bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg shadow-sm">
-                            <div className="mr-3 bg-sky-100 p-2 rounded-full">
+                          <div className="flex items-center p-3 bg-[#A5B4FC]/10 rounded-lg shadow-sm">
+                            <div className="mr-3 bg-[#A5B4FC]/20 p-2 rounded-full">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke={colorPalette.pastel.sky}>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                               </svg>
                             </div>
                             <span className="font-medium text-gray-800">Micrófono Rode PodMic</span>
                           </div>
-                          <div className="flex items-center p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-sm">
-                            <div className="mr-3 bg-purple-100 p-2 rounded-full">
+                          <div className="flex items-center p-3 bg-[#C084FC]/10 rounded-lg shadow-sm">
+                            <div className="mr-3 bg-[#C084FC]/20 p-2 rounded-full">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke={colorPalette.pastel.purple}>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                               </svg>
@@ -415,18 +415,18 @@ const EditorInteractiveProfile = () => {
                       <div>
                         <h4 className="text-lg font-medium mb-4">Paquetes y tarifas</h4>
                         <div className="space-y-4">
-                          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
-                            <h5 className="font-medium text-blue-700">Paquete Básico</h5>
+                          <div className="bg-[#6BA6FF]/10 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
+                            <h5 className="font-medium text-[#6BA6FF]">Paquete Básico</h5>
                             <p className="text-2xl text-[#020617] font-bold my-2">${editorProfile.price.min}</p>
                             <p className="text-sm text-gray-700">Edición básica de video, hasta 5 minutos de duración.</p>
                           </div>
-                          <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
-                            <h5 className="font-medium text-indigo-700">Paquete Estándar</h5>
+                          <div className="bg-[#818CF8]/10 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
+                            <h5 className="font-medium text-[#818CF8]">Paquete Estándar</h5>
                             <p className="text-2xl text-[#020617] font-bold my-2">${editorProfile.price.min * 2}</p>
                             <p className="text-sm text-gray-700">Edición profesional con efectos básicos, hasta 10 minutos.</p>
                           </div>
-                          <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
-                            <h5 className="font-medium text-sky-700">Paquete Premium</h5>
+                          <div className="bg-[#C084FC]/10 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
+                            <h5 className="font-medium text-[#C084FC]">Paquete Premium</h5>
                             <p className="text-2xl text-[#020617] font-bold my-2">${editorProfile.price.min * 3}</p>
                             <p className="text-sm text-gray-700">Edición avanzada con efectos, corrección de color y hasta 20 minutos.</p>
                           </div>

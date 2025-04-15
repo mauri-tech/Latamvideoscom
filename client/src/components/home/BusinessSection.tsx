@@ -69,9 +69,10 @@ const BusinessSection = () => {
             </div>
             
             <Button 
-              className="text-white rounded-lg font-medium bg-gradient-to-r from-[#6BA6FF] to-[#C084FC]"
+              className="text-white rounded-lg font-medium"
               size="lg"
               asChild
+              style={{ backgroundColor: colorPalette.pastel.blue }}
             >
               <Link href="/search">Buscar profesionales</Link>
             </Button>
