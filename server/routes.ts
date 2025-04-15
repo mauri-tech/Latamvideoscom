@@ -1,5 +1,7 @@
 import type { Express, Request, Response } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
+import path from "path";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { 
@@ -18,6 +20,7 @@ import {
 } from "@shared/schema";
 import { ZodError } from "zod";
 import { createAdminUser } from "./createAdminUser";
+import { uploadProfileImage, uploadPortfolioFile } from "./uploadMiddleware";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create admin user if it doesn't exist
@@ -30,6 +33,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Setup authentication
   setupAuth(app);
+  
+  // Servir archivos estáticos
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
   
   // Health check
   app.get("/api/health", (_req, res) => {
