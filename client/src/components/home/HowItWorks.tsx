@@ -18,7 +18,7 @@ const steps: Step[] = [
     title: "Encuentra al profesional perfecto",
     description: "Usa nuestros filtros por especialidad, equipo y presupuesto para encontrar el talento ideal para tu proyecto.",
     icon: <Search className="h-8 w-8" />,
-    bgColor: "bg-gradient-to-br from-blue-50 to-blue-100",
+    bgColor: "bg-gradient-to-br from-white to-[#f2f2f7]",
     iconColor: "text-[#0050FF]"
   },
   {
@@ -26,7 +26,7 @@ const steps: Step[] = [
     title: "Revisa perfiles detallados",
     description: "Explora portafolios, reseñas verificadas y la experiencia del profesional antes de contactar.",
     icon: <UserCheck className="h-8 w-8" />,
-    bgColor: "bg-gradient-to-br from-indigo-50 to-indigo-100",
+    bgColor: "bg-gradient-to-br from-[#fafafa] to-[#f2f2f7]",
     iconColor: "text-[#0050FF]"
   },
   {
@@ -34,7 +34,7 @@ const steps: Step[] = [
     title: "Obtén resultados profesionales",
     description: "Recibe un trabajo de calidad y solicita revisiones según el paquete contratado.",
     icon: <Video className="h-8 w-8" />,
-    bgColor: "bg-gradient-to-br from-sky-50 to-sky-100",
+    bgColor: "bg-gradient-to-br from-white to-[#fafafa]",
     iconColor: "text-[#0050FF]"
   }
 ];

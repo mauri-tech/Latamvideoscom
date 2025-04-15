@@ -76,7 +76,7 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
       <CardContent className="p-0">
         <div className="flex flex-col lg:flex-row">
           {/* Sidebar - Información del profesional */}
-          <div className="lg:w-1/3 bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-50 p-8 flex flex-col items-center text-center border-r border-gray-100 relative overflow-hidden">
+          <div className="lg:w-1/3 bg-gradient-to-br from-white via-[#fafafa] to-[#f2f2f7] p-8 flex flex-col items-center text-center border-r border-gray-100 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/30 transform translate-x-20 -translate-y-20 opacity-50"></div>
             <div className="w-36 h-36 rounded-full overflow-hidden bg-gray-200 mb-6 border-4 border-white shadow-lg relative z-10">
               {editor.profilePicture ? (
@@ -101,14 +101,14 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
             
             {/* Estadísticas clave */}
             <div className="grid grid-cols-2 gap-4 w-full mb-8 relative z-10">
-              <div className="bg-gradient-to-br from-blue-100/80 to-indigo-100/80 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
+              <div className="bg-gradient-to-br from-white to-[#f2f2f7] backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-12 h-12 rounded-full bg-white/30 transform translate-x-6 -translate-y-6 opacity-50"></div>
                 <BriefcaseIcon className="h-5 w-5 text-primary mb-1 relative z-10" />
                 <span className="text-xs text-[#525252] relative z-10">Experiencia</span>
                 <span className="text-lg font-bold text-[#1c1c1e] relative z-10">{editor.yearsOfExperience || "N/A"} años</span>
               </div>
               
-              <div className="bg-gradient-to-br from-indigo-100/80 to-sky-100/80 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
+              <div className="bg-gradient-to-br from-[#fafafa] to-[#f2f2f7] backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-12 h-12 rounded-full bg-white/30 transform translate-x-6 -translate-y-6 opacity-50"></div>
                 <DollarSignIcon className="h-5 w-5 text-primary mb-1 relative z-10" />
                 <span className="text-xs text-[#525252] relative z-10">Desde</span>
