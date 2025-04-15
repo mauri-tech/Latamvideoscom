@@ -25,8 +25,8 @@ const HiringProcess = () => {
         <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-12">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="flex items-start">
-              <div className="bg-[#007AFF] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <Search className="h-6 w-6 text-[#007AFF]" />
+              <div className="bg-[#6BA6FF]/20 rounded-full p-3 mr-4 flex-shrink-0">
+                <Search className="h-6 w-6 text-[#6BA6FF]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Busca con filtros precisos</h3>
@@ -37,8 +37,8 @@ const HiringProcess = () => {
             </div>
             
             <div className="flex items-start">
-              <div className="bg-[#007AFF] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <Eye className="h-6 w-6 text-[#007AFF]" />
+              <div className="bg-[#818CF8]/20 rounded-full p-3 mr-4 flex-shrink-0">
+                <Eye className="h-6 w-6 text-[#818CF8]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Revisa portafolios</h3>
@@ -49,8 +49,8 @@ const HiringProcess = () => {
             </div>
             
             <div className="flex items-start">
-              <div className="bg-[#007AFF] bg-opacity-10 rounded-full p-3 mr-4 flex-shrink-0">
-                <MessageSquare className="h-6 w-6 text-[#007AFF]" />
+              <div className="bg-[#C084FC]/20 rounded-full p-3 mr-4 flex-shrink-0">
+                <MessageSquare className="h-6 w-6 text-[#C084FC]" />
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Contacta directamente</h3>
@@ -159,14 +159,14 @@ const HiringProcess = () => {
                 </div>
                 
                 <Link href="/search">
-                  <Button className="w-full bg-[#007AFF] text-white px-4 py-2 rounded-md hover:bg-[#0060CF] transition font-medium">
+                  <Button className="w-full text-white px-4 py-2 rounded-md transition font-medium bg-gradient-to-r from-[#6BA6FF] to-[#C084FC]">
                     Buscar editores
                   </Button>
                 </Link>
               </form>
             </div>
             
-            <div className="bg-[#007AFF] text-white p-8 md:p-12 flex flex-col justify-center">
+            <div className="bg-gradient-to-r from-[#6BA6FF] to-[#818CF8] text-white p-8 md:p-12 flex flex-col justify-center">
               <h3 className="text-2xl font-semibold mb-6">¿Necesitas ayuda con tu búsqueda?</h3>
               <p className="mb-6">
                 Si prefieres que nosotros te ayudemos a encontrar al editor perfecto para tu proyecto, cuéntanos qué necesitas y te conectaremos con los mejores talentos.
@@ -174,7 +174,8 @@ const HiringProcess = () => {
               <Link href="/contact" className="inline-block">
                 <Button 
                   variant="secondary" 
-                  className="px-6 py-3 bg-white text-[#007AFF] font-medium rounded-md hover:bg-gray-100 transition w-fit"
+                  className="px-6 py-3 bg-white font-medium rounded-md hover:bg-gray-100 transition w-fit"
+                  style={{ color: "#6BA6FF" }}
                 >
                   Solicitar recomendación
                 </Button>

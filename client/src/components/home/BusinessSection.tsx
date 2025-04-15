@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import { BarChart3, Briefcase, PieChart } from 'lucide-react';
+import { colorPalette } from '@/lib/constants';
 
 const BusinessSection = () => {
   return (
@@ -19,8 +20,8 @@ const BusinessSection = () => {
             </div>
             
             {/* Decoración de forma orgánica */}
-            <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-[#007AFF]/10 -z-10"></div>
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-[#A0C4FF]/20 -z-10"></div>
+            <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-[#6BA6FF]/20 -z-10"></div>
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full bg-[#C084FC]/20 -z-10"></div>
           </div>
           
           {/* Texto y bullet points */}
@@ -37,8 +38,8 @@ const BusinessSection = () => {
             
             <div className="space-y-6 mb-10">
               <div className="flex items-start gap-4">
-                <div className="mt-1 bg-[#007AFF]/10 p-2 rounded-lg">
-                  <Briefcase className="w-5 h-5 text-[#007AFF]" />
+                <div className="mt-1 bg-[#6BA6FF]/20 p-2 rounded-lg">
+                  <Briefcase className="w-5 h-5 text-[#6BA6FF]" />
                 </div>
                 <div>
                   <h3 className="font-medium text-lg mb-1">Encuentra profesionales verificados</h3>
@@ -47,8 +48,8 @@ const BusinessSection = () => {
               </div>
               
               <div className="flex items-start gap-4">
-                <div className="mt-1 bg-[#007AFF]/10 p-2 rounded-lg">
-                  <BarChart3 className="w-5 h-5 text-[#007AFF]" />
+                <div className="mt-1 bg-[#818CF8]/20 p-2 rounded-lg">
+                  <BarChart3 className="w-5 h-5 text-[#818CF8]" />
                 </div>
                 <div>
                   <h3 className="font-medium text-lg mb-1">Contenido adaptado a tus objetivos</h3>
@@ -57,8 +58,8 @@ const BusinessSection = () => {
               </div>
               
               <div className="flex items-start gap-4">
-                <div className="mt-1 bg-[#007AFF]/10 p-2 rounded-lg">
-                  <PieChart className="w-5 h-5 text-[#007AFF]" />
+                <div className="mt-1 bg-[#C084FC]/20 p-2 rounded-lg">
+                  <PieChart className="w-5 h-5 text-[#C084FC]" />
                 </div>
                 <div>
                   <h3 className="font-medium text-lg mb-1">Optimiza tu presupuesto</h3>
@@ -68,7 +69,7 @@ const BusinessSection = () => {
             </div>
             
             <Button 
-              className="bg-[#007AFF] hover:bg-[#007AFF]/80 text-white rounded-lg font-medium"
+              className="text-white rounded-lg font-medium bg-gradient-to-r from-[#6BA6FF] to-[#C084FC]"
               size="lg"
               asChild
             >
