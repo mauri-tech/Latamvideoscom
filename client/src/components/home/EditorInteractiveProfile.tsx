@@ -316,7 +316,7 @@ const EditorInteractiveProfile = () => {
                         <div className="grid grid-cols-2 gap-4">
                           {/* Miniatura de Reel 1 */}
                           <div className="relative rounded-lg overflow-hidden shadow-md">
-                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                            <div className="bg-gray-800 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
                               <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1595341888016-a392ef81b7de?q=80&w=300)' }}></div>
                               <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
                                 <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
@@ -330,7 +330,7 @@ const EditorInteractiveProfile = () => {
 
                           {/* Miniatura de Reel 2 */}
                           <div className="relative rounded-lg overflow-hidden shadow-md">
-                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                            <div className="bg-gray-800 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
                               <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1551292831-023188e78222?q=80&w=300)' }}></div>
                               <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
                                 <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
@@ -344,7 +344,7 @@ const EditorInteractiveProfile = () => {
 
                           {/* Miniatura de Reel 3 */}
                           <div className="relative rounded-lg overflow-hidden shadow-md">
-                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                            <div className="bg-gray-800 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
                               <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=300)' }}></div>
                               <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
                                 <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
@@ -358,7 +358,7 @@ const EditorInteractiveProfile = () => {
 
                           {/* Miniatura de Reel 4 */}
                           <div className="relative rounded-lg overflow-hidden shadow-md">
-                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                            <div className="bg-gray-800 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
                               <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=300)' }}></div>
                               <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
                                 <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
@@ -439,7 +439,7 @@ const EditorInteractiveProfile = () => {
                         <h4 className="text-lg font-medium mb-4">Lo que dicen los clientes</h4>
                         <div className="space-y-4">
                           {editorReviews.map(review => (
-                            <div key={review.id} className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-4 shadow-sm border border-gray-100">
+                            <div key={review.id} className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                               <div className="flex items-start mb-3">
                                 <div className="bg-blue-100 rounded-full h-10 w-10 flex items-center justify-center mr-3 text-blue-600 font-bold">
                                   {review.author.charAt(0)}
@@ -477,7 +477,7 @@ const EditorInteractiveProfile = () => {
               </div>
               
               {/* Botones de acción */}
-              <div className="p-5 bg-gradient-to-b from-gray-50 to-white flex justify-end">
+              <div className="p-5 bg-gray-50 flex justify-end">
                 <Button 
                   className="bg-[#020617] hover:bg-[#1E293B] text-white py-6 px-6 font-medium shadow-md transition-all hover:shadow-lg"
                   asChild
