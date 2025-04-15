@@ -159,14 +159,14 @@ const HiringProcess = () => {
                 </div>
                 
                 <Link href="/search">
-                  <Button className="w-full text-white px-4 py-2 rounded-md transition font-medium" style={{ backgroundColor: "#6BA6FF" }}>
+                  <Button className="w-full text-white px-4 py-2 rounded-md transition font-medium bg-[#020617] hover:bg-[#1E293B]">
                     Buscar editores
                   </Button>
                 </Link>
               </form>
             </div>
             
-            <div className="bg-[#6BA6FF] text-white p-8 md:p-12 flex flex-col justify-center">
+            <div className="bg-[#020617] text-white p-8 md:p-12 flex flex-col justify-center">
               <h3 className="text-2xl font-semibold mb-6">¿Necesitas ayuda con tu búsqueda?</h3>
               <p className="mb-6">
                 Si prefieres que nosotros te ayudemos a encontrar al editor perfecto para tu proyecto, cuéntanos qué necesitas y te conectaremos con los mejores talentos.
@@ -175,7 +175,7 @@ const HiringProcess = () => {
                 <Button 
                   variant="secondary" 
                   className="px-6 py-3 bg-white font-medium rounded-md hover:bg-gray-100 transition w-fit"
-                  style={{ color: "#6BA6FF" }}
+                  style={{ color: "#020617" }}
                 >
                   Solicitar recomendación
                 </Button>
