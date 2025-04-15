@@ -2,22 +2,32 @@ import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'wouter';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import ProfileCard from '@/components/editor/ProfileCard';
-import BriefForm from '@/components/client/BriefForm';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ExternalLink, PencilIcon, Star, ThumbsUp, EyeIcon, MailIcon, Clock, UserIcon, BriefcaseIcon, DollarSignIcon } from 'lucide-react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { 
+  ExternalLink, 
+  Star, 
+  ThumbsUp, 
+  EyeIcon, 
+  MailIcon, 
+  DollarSign, 
+  BriefcaseIcon, 
+  MessageSquare,
+  Settings,
+  MapPin
+} from 'lucide-react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Helmet } from 'react-helmet';
 import { format } from 'date-fns';
+import BriefForm from '@/components/client/BriefForm';
 
 const EditorProfilePage = () => {
   const { id } = useParams();
-  const editorId = parseInt(id);
+  const editorId = parseInt(id || '0');
   const { user } = useAuth();
   const { toast } = useToast();
   const [viewIncremented, setViewIncremented] = useState(false);
@@ -63,8 +73,7 @@ const EditorProfilePage = () => {
   // Fetch portfolio items
   const { 
     data: portfolioItems = [], 
-    isLoading: portfolioLoading,
-    error: portfolioError
+    isLoading: portfolioLoading
   } = useQuery({
     queryKey: [`/api/portfolio/${editorId}`],
     enabled: !isNaN(editorId),
@@ -74,7 +83,6 @@ const EditorProfilePage = () => {
   const { 
     data: reviews = [], 
     isLoading: reviewsLoading,
-    error: reviewsError,
     refetch: refetchReviews,
   } = useQuery({
     queryKey: [`/api/reviews/editor/${editorId}`],
@@ -198,7 +206,7 @@ const EditorProfilePage = () => {
   } : mockEditorData;
   
   // Use real portfolio items if available
-  const portfolio = portfolioItems.length > 0 ? portfolioItems : mockPortfolioItems;
+  const portfolio = portfolioItems && portfolioItems.length > 0 ? portfolioItems : mockPortfolioItems;
   
   const [, setLocation] = useLocation();
   
@@ -238,7 +246,7 @@ const EditorProfilePage = () => {
   
   if (profileLoading || userLoading) {
     return (
-      <div className="min-h-screen bg-[#F2F2F7]">
+      <div className="min-h-screen bg-white">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-5xl mx-auto">
@@ -261,11 +269,11 @@ const EditorProfilePage = () => {
 
   if (profileError || userError) {
     return (
-      <div className="min-h-screen bg-[#F2F2F7]">
+      <div className="min-h-screen bg-white">
         <Header />
         <div className="container mx-auto px-4 py-12 text-center">
           <h1 className="text-2xl font-bold mb-4">Error al cargar el perfil</h1>
-          <p className="text-[#8E8E93] mb-6">No pudimos encontrar el perfil solicitado. El editor podría no existir o hubo un problema al cargar los datos.</p>
+          <p className="text-gray-500 mb-6">No pudimos encontrar el perfil solicitado. El editor podría no existir o hubo un problema al cargar los datos.</p>
           <Button onClick={() => window.history.back()}>Volver atrás</Button>
         </div>
         <Footer />
@@ -274,580 +282,472 @@ const EditorProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F2F2F7]">
+    <div className="min-h-screen bg-white">
       <Helmet>
-        <title>{editor.name} | Editor de video | EditoresLATAM</title>
+        <title>{editor.name} | Editor de video | LatamVideos</title>
         <meta name="description" content={`${editor.name} - Editor de video en ${editor.location}. ${editor.experience}`} />
       </Helmet>
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-5xl mx-auto">
-          {/* Editor Profile Card */}
-          <div className="mb-8">
-            <ProfileCard editor={editor} onContactClick={handleContactClick} />
-          </div>
-          
-          {/* Tabs for Portfolio, Reviews, Equipment, Rates */}
-          <Tabs defaultValue="portfolio" className="mb-6">
-            <TabsList className="w-full border-b border-gray-200 bg-transparent p-0 mb-4 flex justify-start overflow-x-auto gap-4">
-              <TabsTrigger 
-                value="portfolio" 
-                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Portafolio">📝</span>
-                  <span>Portafolio</span>
-                </span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="about" 
-                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Acerca de mí">🎞</span>
-                  <span>Multimedia</span>
-                </span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="equipment" 
-                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Equipo Técnico">⚙️</span>
-                  <span>Equipo</span>
-                </span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="rates" 
-                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Tarifas">💰</span>
-                  <span>Tarifas</span>
-                </span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="reviews" 
-                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Reseñas">⭐</span>
-                  <span>Reseñas</span>
-                </span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="statistics" 
-                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Estadísticas">📊</span>
-                  <span>Estadísticas</span>
-                </span>
-              </TabsTrigger>
-            </TabsList>
-            
-            {/* About Me Tab */}
-            <TabsContent value="about" className="mt-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold mb-4">Acerca de mí</h3>
-                <div className="mb-6">
-                  <p className="text-gray-700 leading-relaxed mb-4">
-                    {editor.bio || 'Este editor aún no ha añadido una biografía.'}
-                  </p>
-                  
-                  {editor.experience && (
-                    <div className="mt-6">
-                      <h4 className="text-lg font-medium mb-2">Experiencia</h4>
-                      <p className="text-gray-700 leading-relaxed">{editor.experience}</p>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="border-t border-gray-100 pt-6">
-                  <h4 className="text-lg font-medium mb-4">Especialidad</h4>
-                  {editor.styles && editor.styles.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(editingStylesList) && editingStylesList.filter(style => 
-                        Array.isArray(editor.styles) && editor.styles.includes(style.id)
-                      ).map(style => (
-                        <span key={style.id} className="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">
-                          {style.name}
-                        </span>
-                      ))}
-                    </div>
+      <div className="container mx-auto px-0 md:px-4 py-0 md:py-8">
+        <div className="max-w-6xl mx-auto bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
+          <div className="flex flex-col md:flex-row">
+            {/* SIDEBAR - Columna izquierda fija */}
+            <div className="md:w-1/4 border-r border-gray-100 p-8">
+              {/* Foto de perfil */}
+              <div className="flex flex-col items-center mb-6">
+                <div className="w-36 h-36 rounded-full overflow-hidden bg-gray-100 mb-4 border border-gray-200">
+                  {editor.profilePicture ? (
+                    <img 
+                      src={editor.profilePicture} 
+                      alt={`Foto de ${editor.name}`} 
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    <p className="text-gray-500">No se han especificado estilos de edición.</p>
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      Photo
+                    </div>
                   )}
                 </div>
                 
-                <div className="border-t border-gray-100 pt-6 mt-6">
-                  <h4 className="text-lg font-medium mb-4">Software</h4>
-                  {editor.software && editor.software.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(softwareList) && softwareList.filter(sw => 
-                        Array.isArray(editor.software) && editor.software.includes(sw.id)
-                      ).map(sw => (
-                        <span key={sw.id} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
-                          {sw.name}
-                        </span>
-                      ))}
-                    </div>
+                {/* Nombre y ubicación */}
+                <h1 className="text-2xl font-bold text-[#1C1C1E] text-center mb-1">{editor.name}</h1>
+                <div className="flex items-center justify-center text-gray-500 text-sm mb-4">
+                  <MapPin className="h-3.5 w-3.5 mr-1" />
+                  <span>{editor.location || "International"}</span>
+                </div>
+                
+                {/* Rating stars */}
+                <div className="flex items-center mb-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`h-4 w-4 ${i < 5 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
+                    />
+                  ))}
+                </div>
+                <div className="text-sm text-gray-500 mb-6">4.9</div>
+              </div>
+              
+              {/* About me */}
+              <div className="mb-6">
+                <h3 className="text-base font-semibold mb-3">About me</h3>
+                <p className="text-sm text-gray-600 mb-6">
+                  {editor.bio || `Editor de video con ${editor.experience}`}
+                </p>
+              </div>
+              
+              {/* Tags/Especialidades */}
+              <div className="mb-6">
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {editor.technologyTags && editor.technologyTags.length > 0 ? (
+                    editor.technologyTags.map((tag, index) => (
+                      <span key={index} className="inline-flex bg-gray-100 text-gray-800 text-xs px-2.5 py-1.5 rounded-full">
+                        {tag}
+                      </span>
+                    ))
                   ) : (
-                    <p className="text-gray-500">No se ha especificado software.</p>
+                    <>
+                      <span className="inline-flex bg-gray-100 text-gray-800 text-xs px-2.5 py-1.5 rounded-full">Tag</span>
+                      <span className="inline-flex bg-gray-100 text-gray-800 text-xs px-2.5 py-1.5 rounded-full">Tag</span>
+                      <span className="inline-flex bg-gray-100 text-gray-800 text-xs px-2.5 py-1.5 rounded-full">Tag</span>
+                    </>
                   )}
-                </div>
-                
-                <div className="border-t border-gray-100 pt-6 mt-6">
-                  <h4 className="text-lg font-medium mb-4">Tecnologías</h4>
-                  {profileData?.technologyTags && profileData.technologyTags.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {profileData.technologyTags.map((tag, index) => (
-                        <span key={index} className="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500">No se han especificado tecnologías.</p>
-                  )}
-                </div>
-                
-                <div className="border-t border-gray-100 pt-6 mt-6">
-                  <h4 className="text-lg font-medium mb-4">Años de experiencia</h4>
-                  <div className="flex items-center">
-                    <div className="w-24 h-24 rounded-full bg-primary-50 flex items-center justify-center border-4 border-primary">
-                      <span className="text-3xl font-bold text-primary">{editor.yearsOfExperience || '0'}</span>
-                    </div>
-                    <div className="ml-6">
-                      <p className="text-gray-700">
-                        {editor.yearsOfExperience ? (
-                          `${editor.yearsOfExperience} años de experiencia profesional en edición de video.`
-                        ) : (
-                          'Experiencia no especificada.'
-                        )}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
-            </TabsContent>
+              
+              {/* Edit profile button - visible only to owner */}
+              {user && user.id === profileData?.userId && (
+                <Button 
+                  variant="outline" 
+                  className="w-full mb-4"
+                  onClick={() => setLocation(`/editar-perfil/${editorId}`)}
+                >
+                  Edit profile
+                </Button>
+              )}
+              
+              {/* Contact button - not visible to owner */}
+              {(!user || (user && user.id !== profileData?.userId)) && (
+                <Button 
+                  className="w-full bg-[#007AFF] hover:bg-[#0066CC] text-white mb-4"
+                  onClick={handleContactClick}
+                >
+                  Contactar
+                </Button>
+              )}
+            </div>
             
-            {/* Portfolio Tab */}
-            <TabsContent value="portfolio" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {portfolioLoading ? (
-                  <>
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <Skeleton key={i} className="aspect-[4/3] rounded-xl" />
-                    ))}
-                  </>
-                ) : portfolio && portfolio.length === 0 ? (
-                  <div className="col-span-full text-center py-12 bg-white rounded-lg shadow-sm">
-                    <p className="text-[#8E8E93]">El profesional aún no ha agregado proyectos a su portafolio.</p>
-                  </div>
-                ) : portfolio && (
-                  Array.isArray(portfolio) && portfolio.map((item: any) => (
-                    <div key={item.id} className="group bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all transform hover:translate-y-[-3px] duration-300">
-                      <div className="aspect-[16/9] bg-gray-100 relative overflow-hidden">
-                        {item.thumbnailUrl ? (
-                          <>
-                            <img 
-                              src={item.thumbnailUrl} 
-                              alt={item.title} 
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                              <a 
-                                href={item.videoUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="bg-[#0050FF] text-white px-3 py-2 rounded-md text-sm font-medium flex items-center shadow-md hover:bg-[#0050FF]/90 transition-colors"
-                              >
-                                Ver proyecto
-                                <ExternalLink className="ml-1 h-3.5 w-3.5" />
-                              </a>
-                            </div>
-                          </>
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[#8E8E93]">
-                            No preview available
+            {/* CONTENT AREA - Columna derecha con tabs */}
+            <div className="md:w-3/4 p-0">
+              {/* Tabs navigation */}
+              <Tabs defaultValue="portfolio" className="w-full h-full">
+                <div className="border-b border-gray-200">
+                  <TabsList className="flex p-0 bg-transparent border-0">
+                    <TabsTrigger 
+                      value="portfolio" 
+                      className="flex-1 py-4 px-6 data-[state=active]:border-b-2 data-[state=active]:border-[#007AFF] rounded-none border-0 bg-transparent data-[state=active]:text-[#007AFF] data-[state=active]:shadow-none"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <BriefcaseIcon className="h-4 w-4" />
+                        <span>Portfolio</span>
+                      </div>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="equipment" 
+                      className="flex-1 py-4 px-6 data-[state=active]:border-b-2 data-[state=active]:border-[#007AFF] rounded-none border-0 bg-transparent data-[state=active]:text-[#007AFF] data-[state=active]:shadow-none"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <Settings className="h-4 w-4" />
+                        <span>Herramientas</span>
+                      </div>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="rates" 
+                      className="flex-1 py-4 px-6 data-[state=active]:border-b-2 data-[state=active]:border-[#007AFF] rounded-none border-0 bg-transparent data-[state=active]:text-[#007AFF] data-[state=active]:shadow-none"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <DollarSign className="h-4 w-4" />
+                        <span>Tarifas</span>
+                      </div>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="reviews" 
+                      className="flex-1 py-4 px-6 data-[state=active]:border-b-2 data-[state=active]:border-[#007AFF] rounded-none border-0 bg-transparent data-[state=active]:text-[#007AFF] data-[state=active]:shadow-none"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <MessageSquare className="h-4 w-4" />
+                        <span>Reseñas</span>
+                      </div>
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                
+                {/* Portafolio Tab */}
+                <TabsContent value="portfolio" className="p-6">
+                  <h2 className="text-2xl font-bold mb-8">Proyectos destacados</h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {portfolioLoading ? (
+                      <>
+                        {[1, 2, 3, 4].map((i) => (
+                          <Skeleton key={i} className="w-full aspect-video rounded-lg" />
+                        ))}
+                      </>
+                    ) : portfolio && portfolio.length === 0 ? (
+                      <div className="col-span-full text-center py-12">
+                        <p className="text-gray-500">El profesional aún no ha agregado proyectos a su portafolio.</p>
+                      </div>
+                    ) : (
+                      portfolio.map((item: any) => (
+                        <div key={item.id} className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all">
+                          <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                            {item.thumbnailUrl ? (
+                              <>
+                                <img 
+                                  src={item.thumbnailUrl} 
+                                  alt={item.title} 
+                                  className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <a 
+                                    href={item.videoUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="bg-black/70 text-white w-12 h-12 rounded-full flex items-center justify-center"
+                                  >
+                                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                      <path d="M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm3.33 10.72l-4.33 3a.8.8 0 0 1-1.25-.72V7a.8.8 0 0 1 1.25-.72l4.33 3a.8.8 0 0 1 0 1.44z" />
+                                    </svg>
+                                  </a>
+                                </div>
+                              </>
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                No preview available
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <div className="p-5">
-                        <h3 className="text-lg font-bold mb-2 text-[#1c1c1e] line-clamp-1">{item.title}</h3>
-                        {item.description && (
-                          <p className="text-[#8E8E93] text-sm leading-relaxed line-clamp-2">{item.description}</p>
-                        )}
-                      </div>
+                          <div className="p-4">
+                            <h3 className="font-semibold text-lg">{item.title}</h3>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </TabsContent>
+                
+                {/* Equipment Tab */}
+                <TabsContent value="equipment" className="p-6">
+                  <h2 className="text-2xl font-bold mb-8">Herramientas y Equipos</h2>
+                  
+                  <div className="bg-white rounded-lg p-6 mb-8">
+                    <h3 className="text-xl font-semibold mb-4">Software</h3>
+                    <div className="flex flex-wrap gap-3 mb-6">
+                      {editor.software && editor.software.length > 0 ? (
+                        softwareList
+                          .filter((sw: any) => editor.software.includes(sw.id))
+                          .map((sw: any) => (
+                            <span key={sw.id} className="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg text-sm flex items-center">
+                              {sw.name}
+                            </span>
+                          ))
+                      ) : (
+                        <p className="text-gray-500">No se ha especificado software.</p>
+                      )}
                     </div>
-                  ))
-                )}
-              </div>
-            </TabsContent>
-            
-            {/* Statistics Tab */}
-            <TabsContent value="statistics" className="mt-6">
-              <div className="bg-white rounded-xl shadow-sm p-8">
-                <h3 className="text-xl font-bold mb-6 text-[#1c1c1e]">Estadísticas del perfil</h3>
+                    
+                    <h3 className="text-xl font-semibold mb-4">Equipo técnico</h3>
+                    {editor.equipment && editor.equipment.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {Array.isArray(editor.equipment) && editor.equipment.map((item: any, index: number) => (
+                          <div 
+                            key={index} 
+                            className="bg-gray-50 rounded-lg p-4 border border-gray-200"
+                          >
+                            <h4 className="font-medium text-[#007AFF] mb-2">
+                              {typeof item === 'string' ? item : item.type}
+                            </h4>
+                            {typeof item !== 'string' && item.description && (
+                              <p className="text-gray-600 text-sm">{item.description}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500">No se ha especificado equipo técnico.</p>
+                    )}
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-4">Especialidades</h3>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {editor.styles && editor.styles.length > 0 ? (
+                        editingStylesList
+                          .filter((style: any) => editor.styles.includes(style.id))
+                          .map((style: any) => (
+                            <span key={style.id} className="bg-blue-50 text-[#007AFF] px-3 py-2 rounded-lg text-sm">
+                              {style.name}
+                            </span>
+                          ))
+                      ) : (
+                        <p className="text-gray-500">No se han especificado estilos de edición.</p>
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                  <div className="bg-[#F9F9F9] rounded-lg p-6 flex flex-col items-center text-center">
-                    <EyeIcon className="h-10 w-10 text-[#0050FF] mb-3 opacity-80" />
-                    <span className="text-3xl font-bold text-[#1c1c1e]">{profileData?.viewCount || 0}</span>
-                    <span className="text-[#8E8E93] text-sm mt-1">Visitas al perfil</span>
+                {/* Rates Tab */}
+                <TabsContent value="rates" className="p-6">
+                  <h2 className="text-2xl font-bold mb-8">Tarifas y Servicios</h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div className="border rounded-lg p-6 text-center bg-white hover:shadow-md transition-all">
+                      <div className="mb-4">
+                        <h3 className="text-lg font-medium">Básica</h3>
+                        <div className="h-1 w-12 bg-blue-200 mx-auto mt-2"></div>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-4">Edición simple, sin efectos complejos</p>
+                      <div className="text-3xl font-bold text-[#007AFF] mb-6">
+                        ${editor.basicRate} <span className="text-sm font-normal text-gray-500">USD</span>
+                      </div>
+                      <ul className="text-left mb-6 text-sm space-y-2">
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Cortes simples
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Ajustes básicos de audio
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Transiciones sencillas
+                        </li>
+                      </ul>
+                      <Button
+                        className="w-full" 
+                        onClick={handleContactClick}
+                      >
+                        Contactar
+                      </Button>
+                    </div>
+                    
+                    <div className="border-2 border-[#007AFF] rounded-lg p-6 text-center bg-white shadow-md hover:shadow-lg transition-all relative">
+                      <div className="absolute -top-3 left-0 right-0 mx-auto w-max px-3 py-1 bg-[#007AFF] text-white text-xs rounded-full">
+                        Más popular
+                      </div>
+                      <div className="mb-4">
+                        <h3 className="text-lg font-medium">Media</h3>
+                        <div className="h-1 w-12 bg-[#007AFF] mx-auto mt-2"></div>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-4">Edición con efectos básicos, corrección de color</p>
+                      <div className="text-3xl font-bold text-[#007AFF] mb-6">
+                        ${editor.mediumRate} <span className="text-sm font-normal text-gray-500">USD</span>
+                      </div>
+                      <ul className="text-left mb-6 text-sm space-y-2">
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Todo lo básico
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Corrección de color
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Efectos de movimiento
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Mezcla de sonido
+                        </li>
+                      </ul>
+                      <Button
+                        className="w-full" 
+                        onClick={handleContactClick}
+                      >
+                        Contactar
+                      </Button>
+                    </div>
+                    
+                    <div className="border rounded-lg p-6 text-center bg-white hover:shadow-md transition-all">
+                      <div className="mb-4">
+                        <h3 className="text-lg font-medium">Avanzada</h3>
+                        <div className="h-1 w-12 bg-blue-200 mx-auto mt-2"></div>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-4">Edición compleja, animaciones, efectos especiales</p>
+                      <div className="text-3xl font-bold text-[#007AFF] mb-6">
+                        ${editor.advancedRate} <span className="text-sm font-normal text-gray-500">USD</span>
+                      </div>
+                      <ul className="text-left mb-6 text-sm space-y-2">
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Todo lo de tarifa media
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Animaciones personalizadas
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Efectos visuales avanzados
+                        </li>
+                        <li className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          Producción de alta calidad
+                        </li>
+                      </ul>
+                      <Button
+                        className="w-full" 
+                        onClick={handleContactClick}
+                      >
+                        Contactar
+                      </Button>
+                    </div>
                   </div>
                   
-                  <div className="bg-[#F9F9F9] rounded-lg p-6 flex flex-col items-center text-center">
-                    <MailIcon className="h-10 w-10 text-[#0050FF] mb-3 opacity-80" />
-                    <span className="text-3xl font-bold text-[#1c1c1e]">{profileData?.contactCount || 0}</span>
-                    <span className="text-[#8E8E93] text-sm mt-1">Contactos recibidos</span>
+                  <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-500">
+                    * Las tarifas son referenciales. El precio final puede variar según los requerimientos específicos del proyecto.
                   </div>
-                  
-                  <div className="bg-[#F9F9F9] rounded-lg p-6 flex flex-col items-center text-center">
-                    <Star className="h-10 w-10 text-[#0050FF] mb-3 opacity-80" />
-                    <span className="text-3xl font-bold text-[#1c1c1e]">{reviews ? reviews.length : 0}</span>
-                    <span className="text-[#8E8E93] text-sm mt-1">Reseñas recibidas</span>
-                  </div>
-                </div>
+                </TabsContent>
                 
-                <h4 className="text-lg font-semibold mb-4 text-[#1c1c1e]">Actividad reciente</h4>
-                <div className="border-l-2 border-[#0050FF]/20 pl-5 ml-2 space-y-6">
-                  <div className="relative">
-                    <div className="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-[#0050FF]"></div>
-                    <p className="text-sm text-[#525252]">
-                      <span className="font-medium">Última actualización del perfil:</span> {" "}
-                      {profileData?.updatedAt 
-                        ? format(new Date(profileData.updatedAt), 'dd/MM/yyyy HH:mm') 
-                        : "No disponible"}
-                    </p>
+                {/* Reviews Tab */}
+                <TabsContent value="reviews" className="p-6">
+                  <div className="flex justify-between items-center mb-8">
+                    <h2 className="text-2xl font-bold">Reseñas</h2>
+                    
+                    {user && user.id !== profileData?.userId && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          // Mostrar un modal de revisión que llamaría a createReviewMutation
+                          // Por ahora, sólo mostraremos un toast informativo
+                          toast({
+                            title: "Dejar reseña",
+                            description: "Esta función estará disponible pronto.",
+                          });
+                        }}
+                      >
+                        Escribir una reseña
+                      </Button>
+                    )}
                   </div>
                   
-                  <div className="relative">
-                    <div className="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-[#0050FF]"></div>
-                    <p className="text-sm text-[#525252]">
-                      <span className="font-medium">Última reseña recibida:</span> {" "}
-                      {reviews && reviews.length > 0 
-                        ? format(new Date(reviews[0].createdAt), 'dd/MM/yyyy') 
-                        : "No hay reseñas"}
-                    </p>
-                  </div>
-                  
-                  <div className="relative">
-                    <div className="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-[#0050FF]"></div>
-                    <p className="text-sm text-[#525252]">
-                      <span className="font-medium">Perfil creado:</span> {" "}
-                      {profileData?.createdAt 
-                        ? format(new Date(profileData.createdAt), 'dd/MM/yyyy') 
-                        : "No disponible"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-            
-            {/* Reviews Tab */}
-            <TabsContent value="reviews" className="mt-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-semibold">Reseñas</h3>
-                  {user && user.id !== profileData?.userId && (
-                    <div>
-                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-6">
-                        <h4 className="text-sm font-medium mb-3">Escribe una reseña</h4>
-                        <div className="mb-3">
-                          <label className="block text-xs mb-1 text-gray-500">Calificación</label>
-                          <div className="flex space-x-2">
-                            {[1, 2, 3, 4, 5].map((value) => (
-                              <button
-                                key={value}
-                                type="button"
-                                onClick={() => {
-                                  const commentField = document.getElementById('reviewComment') as HTMLTextAreaElement;
-                                  const comment = commentField?.value || '';
-                                  
-                                  createReviewMutation.mutate({
-                                    editorProfileId: editorId,
-                                    clientId: user.id,
-                                    rating: value,
-                                    comment: comment
-                                  });
-                                  
-                                  // Limpiar el campo después de enviar
-                                  if (commentField) {
-                                    commentField.value = '';
+                  {reviewsLoading ? (
+                    <div className="space-y-4">
+                      {[1, 2, 3].map((i) => (
+                        <Skeleton key={i} className="w-full h-[100px] rounded-lg" />
+                      ))}
+                    </div>
+                  ) : reviews && Array.isArray(reviews) && reviews.length === 0 ? (
+                    <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+                      <p className="text-gray-500">Este profesional aún no tiene reseñas. ¡Sé el primero en compartir tu experiencia!</p>
+                    </div>
+                  ) : reviews && Array.isArray(reviews) && (
+                    <div className="space-y-6">
+                      {reviews.map((review: any) => (
+                        <div key={review.id} className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-sm transition-shadow">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <div className="flex items-center mb-1">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star 
+                                    key={i} 
+                                    className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} 
+                                  />
+                                ))}
+                                <span className="ml-2 text-sm font-medium">{review.rating}/5</span>
+                              </div>
+                              <p className="text-sm font-medium">{review.clientName || "Cliente"}</p>
+                            </div>
+                            <span className="text-xs text-gray-500">
+                              {review.createdAt ? format(new Date(review.createdAt), 'dd/MM/yyyy') : ''}
+                            </span>
+                          </div>
+                          
+                          <p className="text-sm text-gray-700 my-3">{review.comment}</p>
+                          
+                          <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
+                            <div className="flex items-center cursor-pointer hover:text-gray-700">
+                              <ThumbsUp className="h-3 w-3 mr-1" /> Útil
+                            </div>
+                            
+                            {/* Only show delete option for admin or the review author */}
+                            {user && (user.id === review.clientId || user.userType === "admin") && (
+                              <button 
+                                className="text-red-500 hover:text-red-600"
+                                onClick={async () => {
+                                  if (window.confirm("¿Seguro que deseas eliminar esta reseña?")) {
+                                    try {
+                                      await apiRequest('DELETE', `/api/reviews/${review.id}`);
+                                      toast({
+                                        title: "Reseña eliminada",
+                                        description: "La reseña ha sido eliminada exitosamente."
+                                      });
+                                      refetchReviews();
+                                    } catch (error) {
+                                      toast({
+                                        title: "Error",
+                                        description: "No se pudo eliminar la reseña.",
+                                        variant: "destructive"
+                                      });
+                                    }
                                   }
                                 }}
-                                className="p-2 rounded hover:bg-gray-100"
                               >
-                                <Star 
-                                  className={`h-6 w-6 cursor-pointer`} 
-                                  fill={value <= 5 ? "#FBBF24" : "none"}
-                                  color={value <= 5 ? "#FBBF24" : "#D1D5DB"}
-                                />
+                                Eliminar
                               </button>
-                            ))}
+                            )}
                           </div>
                         </div>
-                        <div className="mb-3">
-                          <label htmlFor="reviewComment" className="block text-xs mb-1 text-gray-500">Comentario</label>
-                          <textarea 
-                            id="reviewComment"
-                            className="w-full p-2 border border-gray-200 rounded text-sm" 
-                            rows={3}
-                            placeholder="Comparte tu experiencia con este profesional..."
-                          />
-                        </div>
-                        <div className="text-xs text-gray-500 mb-3">
-                          Tu reseña ayuda a otros usuarios a encontrar los mejores profesionales.
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   )}
-                </div>
-                
-                {reviewsLoading ? (
-                  <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="w-full h-[100px] rounded-lg" />
-                    ))}
-                  </div>
-                ) : reviews.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-[#8E8E93]">Este profesional aún no tiene reseñas. ¡Sé el primero en compartir tu experiencia!</p>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {reviews.map((review: any) => (
-                      <div key={review.id} className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow">
-                        <div className="flex justify-between mb-2">
-                          <div className="flex items-center">
-                            <div className="flex">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
-                                />
-                              ))}
-                            </div>
-                            <span className="ml-2 text-sm font-medium">{review.rating}/5</span>
-                          </div>
-                          <span className="text-xs text-[#8E8E93]">
-                            {review.createdAt ? format(new Date(review.createdAt), 'dd/MM/yyyy') : ''}
-                          </span>
-                        </div>
-                        <p className="text-sm mb-2">{review.comment}</p>
-                        <div className="text-xs text-[#8E8E93] flex items-center mt-3">
-                          <ThumbsUp className="h-3 w-3 mr-1" /> Útil
-                        </div>
-                        
-                        {/* Only show delete option for admin or the review author */}
-                        {user && (user.id === review.clientId || user.userType === "admin") && (
-                          <div className="mt-3 text-right">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="text-red-500 hover:text-red-600 hover:bg-red-50 text-xs"
-                              onClick={async () => {
-                                if (window.confirm("¿Seguro que deseas eliminar esta reseña?")) {
-                                  try {
-                                    await apiRequest('DELETE', `/api/reviews/${review.id}`);
-                                    toast({
-                                      title: "Reseña eliminada",
-                                      description: "La reseña ha sido eliminada exitosamente."
-                                    });
-                                    refetchReviews();
-                                  } catch (error) {
-                                    toast({
-                                      title: "Error",
-                                      description: "No se pudo eliminar la reseña.",
-                                      variant: "destructive"
-                                    });
-                                  }
-                                }
-                              }}
-                            >
-                              Eliminar
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-            
-            {/* Equipment Tab */}
-            <TabsContent value="equipment" className="mt-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold mb-6">Equipo técnico</h3>
-                
-                {!editor.equipment || editor.equipment.length === 0 ? (
-                  <p className="text-[#8E8E93] py-8 text-center">El editor aún no ha agregado información sobre su equipo.</p>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {Array.isArray(editor.equipment) && editor.equipment.map((item: any, index: number) => (
-                      <div 
-                        key={index} 
-                        className="bg-gray-50 rounded-lg p-4 border border-gray-100 hover:shadow-sm transition-shadow"
-                      >
-                        <h4 className="font-medium text-primary mb-2">{typeof item === 'string' ? item : item.type}</h4>
-                        {typeof item !== 'string' && item.description && (
-                          <p className="text-[#8E8E93] text-sm">{item.description}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                
-                <div className="mt-8 bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <h4 className="font-semibold mb-2 text-[#495057]">Acerca de mi equipo</h4>
-                  <p className="text-sm text-[#6C757D]">
-                    Todos mis equipos son de alta calidad y están actualizados para garantizar un trabajo profesional. 
-                    Realizo mantenimiento periódico para asegurar el mejor rendimiento en cada proyecto.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-            
-            {/* Rates Tab */}
-            <TabsContent value="rates" className="mt-6" id="contact">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold mb-6">Tarifas y Contacto</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-all bg-white hover:translate-y-[-3px] duration-300">
-                    <div className="mb-4">
-                      <h4 className="text-lg font-medium">Básica</h4>
-                      <div className="h-1 w-12 bg-blue-200 mx-auto mt-2"></div>
-                    </div>
-                    <p className="text-sm text-[#8E8E93] mb-4">Edición simple, sin efectos complejos</p>
-                    <div className="text-3xl font-bold text-primary mb-6">
-                      ${editor.basicRate} <span className="text-sm font-normal text-[#8E8E93]">USD</span>
-                    </div>
-                    <ul className="text-left mb-6 text-sm space-y-2">
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Cortes simples
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Ajustes básicos de audio
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Transiciones sencillas
-                      </li>
-                    </ul>
-                    <BriefForm editorId={editorId} />
-                  </div>
-                  
-                  <div className="border-2 border-primary rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all bg-white hover:translate-y-[-3px] duration-300 relative">
-                    <div className="absolute -top-3 left-0 right-0 mx-auto w-max px-3 py-1 bg-primary text-white text-xs rounded-full">
-                      Más popular
-                    </div>
-                    <div className="mb-4">
-                      <h4 className="text-lg font-medium">Media</h4>
-                      <div className="h-1 w-12 bg-primary mx-auto mt-2"></div>
-                    </div>
-                    <p className="text-sm text-[#8E8E93] mb-4">Edición con efectos básicos, corrección de color</p>
-                    <div className="text-3xl font-bold text-primary mb-6">
-                      ${editor.mediumRate} <span className="text-sm font-normal text-[#8E8E93]">USD</span>
-                    </div>
-                    <ul className="text-left mb-6 text-sm space-y-2">
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Todo lo básico
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Corrección de color
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Efectos de movimiento
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Mezcla de sonido
-                      </li>
-                    </ul>
-                    <BriefForm editorId={editorId} />
-                  </div>
-                  
-                  <div className="border rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-all bg-white hover:translate-y-[-3px] duration-300">
-                    <div className="mb-4">
-                      <h4 className="text-lg font-medium">Avanzada</h4>
-                      <div className="h-1 w-12 bg-blue-200 mx-auto mt-2"></div>
-                    </div>
-                    <p className="text-sm text-[#8E8E93] mb-4">Edición compleja, animaciones, efectos especiales</p>
-                    <div className="text-3xl font-bold text-primary mb-6">
-                      ${editor.advancedRate} <span className="text-sm font-normal text-[#8E8E93]">USD</span>
-                    </div>
-                    <ul className="text-left mb-6 text-sm space-y-2">
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Todo lo de tarifa media
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Animaciones personalizadas
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Efectos visuales avanzados
-                      </li>
-                      <li className="flex items-center">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Producción de alta calidad
-                      </li>
-                    </ul>
-                    <BriefForm editorId={editorId} />
-                  </div>
-                </div>
-                
-                <div className="mt-8">
-                  <p className="text-sm text-[#8E8E93]">
-                    * Las tarifas son referenciales. El precio final puede variar según los requerimientos específicos del proyecto.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-          
-          {/* Edit Profile Button (only visible to profile owner) */}
-          {user && user.id === profileData?.userId && (
-            <div className="text-right">
-              <Button variant="outline" className="mt-4">
-                <PencilIcon className="h-4 w-4 mr-2" />
-                Editar perfil
-              </Button>
+                </TabsContent>
+              </Tabs>
             </div>
-          )}
+          </div>
         </div>
       </div>
       

@@ -1,0 +1,62 @@
+El perfil de los creadores en latamvideos.com debe sentirse como una landing page personal profesional, no como una simple ficha.
+Debe proyectar orden, estética, claridad y destacar el talento.
+Se debe ver y sentir como si estuvieras navegando en una mezcla entre el perfil de un creativo en Notion y una ficha de Behance, con microinteracciones elegantes.
+
+🎯 Objetivos clave
+Objetivo	Qué debe lograr
+Aumentar conversiones	Dar confianza y claridad para que te contacten
+Mostrar lo esencial rápido	El cliente ve lo importante en segundos
+Visualmente impecable	Diseño suizo, minimalista, aireado y legible
+Fácil de editar	Todo perfil debe ser editable con campos visibles
+🧱 Arquitectura del Nuevo Perfil (Wireframe Base)
+📍Layout: estructura en dos columnas
+IZQUIERDA (Fija)	DERECHA (Tabs navegables)
+Foto del creador	Contenido modular por pestañas
+Nombre + ubicación	Tabs visibles con íconos
+Rating y número de reseñas ⭐	Contenido según cada tab
+Rol (ej. Videógrafo, Editor)	Cambia solo esta sección
+Nº de proyectos, precio mínimo, años experiencia	
+Tags / Especialidades	
+Review system con estrellas y CTA para dejar comentario	
+Botones de acción (contactar / cotizar / editar perfil)	
+🔄 Navegación por Tabs (parte derecha, tipo SPA)
+Estos tabs deben ser sticky arriba y con íconos agradables. Al hacer clic, solo cambia el contenido de la derecha.
+
+Icono	Tab	Contenido
+🎞	Portafolio	Videos destacados (imagen + duración + título)
+🛠	Herramientas	Software y equipo físico (mac, Sony, Capcut, etc.)
+💰	Tarifas	Tabla con Básico / Estándar / Premium
+✨	Reseñas	Comentarios y puntuaciones de clientes
+📊	Estadísticas	Vistas, clics en contacto, briefs recibidos
+🎨 Estilo Visual y UI
+Elemento	Detalles
+Tipografía	Sans serif moderna (ej. Inter o SF Pro)
+Colores	#007AFF (azul primario), #1C1C1E (texto fuerte), #F9FAFB (fondo), blanco total para tarjetas
+Espaciado	Mucho aire entre secciones. Margen lateral amplio.
+Tags	Estilo chips, con ícono si aplica (ej. 🎬 CapCut, 🖥 After Effects)
+Botones	Azul primario para CTA principales / negro o outline para secundarios
+Animaciones	Microtransiciones suaves entre tabs. Efecto de fade-in/fade-out o slide lateral.
+📱 Comportamiento en Mobile
+Elemento	Cómo se adapta
+Foto + datos	Ocupa el primer bloque en vertical
+Tabs	Sticky horizontal scroll con íconos (tipo carrusel minimalista)
+Secciones	Stackeadas verticalmente, con separación visual clara
+Botón "Editar perfil"	Siempre visible en sticky bottom o arriba a la derecha (ícono ✏️)
+🛠 Consideraciones Técnicas
+Área	Instrucciones
+Edición del perfil	Todos los campos deben ser editables in-place o con acceso rápido.
+Guardado	Cambios deben guardarse con confirmación visual (ej. check ✅)
+Tags	Guardar como JSONB en la tabla editor_profiles, campo technology_tags
+Review system	Mostrar promedio + número de reseñas, permitir subir nuevas reseñas
+Equipamiento y herramientas	Agrupar bajo un mismo campo dividido por tipo (software/físico)
+Diseño responsivo	Priorizar mobile-first, pero sin sacrificar estética desktop
+Indexación para SEO	Agregar title, meta y OG tags con nombre + especialidad del editor
+✍️ Ejemplo Visual
+Aquí tienes una vista previa del wireframe generado:
+
+📎 Wireframe Sketch en 16:9
+
+🔚 Resumen Final
+Este rediseño debe convertir los perfiles en vitrinas premium.
+Ya no son solo "usuarios", son creadores con presencia visual.
+La experiencia debe emocionar al cliente, generar confianza y claridad, y sobre todo… ¡hacer que contacten!
