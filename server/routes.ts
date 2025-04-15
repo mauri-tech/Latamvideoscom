@@ -105,6 +105,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Server error" });
     }
   });
+  
+  app.put("/api/users/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Verificar que el usuario está autenticado y es el mismo que se está actualizando
+      if (!req.isAuthenticated() || req.user.id !== id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const updatedUser = await storage.updateUser(id, req.body);
+      
+      // Don't return the password
+      const { password, ...userData } = updatedUser;
+      res.json(userData);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
 
   // Software Routes
   app.get("/api/software", async (_req, res) => {
