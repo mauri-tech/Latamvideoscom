@@ -72,6 +72,7 @@ export interface IStorage {
   
   // Portfolio Methods
   getPortfolioItems(editorProfileId: number): Promise<PortfolioItem[]>;
+  getPortfolioItem(id: number): Promise<PortfolioItem | undefined>;
   createPortfolioItem(data: InsertPortfolioItem): Promise<PortfolioItem>;
   updatePortfolioItem(id: number, data: Partial<PortfolioItem>): Promise<PortfolioItem | undefined>;
   deletePortfolioItem(id: number): Promise<boolean>;
@@ -410,6 +411,10 @@ export class MemStorage implements IStorage {
     return Array.from(this.portfolioItems.values())
       .filter(item => item.editorProfileId === editorProfileId)
       .sort((a, b) => a.order - b.order);
+  }
+  
+  async getPortfolioItem(id: number): Promise<PortfolioItem | undefined> {
+    return this.portfolioItems.get(id);
   }
   
   async createPortfolioItem(data: InsertPortfolioItem): Promise<PortfolioItem> {
@@ -1982,6 +1987,14 @@ export class DatabaseStorage implements IStorage {
       .from(portfolioItems)
       .where(eq(portfolioItems.editorProfileId, editorProfileId))
       .orderBy(portfolioItems.order);
+  }
+  
+  async getPortfolioItem(id: number): Promise<PortfolioItem | undefined> {
+    const [item] = await db
+      .select()
+      .from(portfolioItems)
+      .where(eq(portfolioItems.id, id));
+    return item || undefined;
   }
   
   async createPortfolioItem(data: InsertPortfolioItem): Promise<PortfolioItem> {
