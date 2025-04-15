@@ -90,23 +90,30 @@ const EditorInteractiveProfile = () => {
   const [activeTab, setActiveTab] = useState<'portafolio' | 'equipamiento' | 'tarifas' | 'reseñas'>('portafolio');
   
   // Obtener el usuario admin (ID:14 - Mauricio)
-  const { data: adminUser } = useQuery({
+  const { data: adminUser, isLoading: isLoadingUser } = useQuery({
     queryKey: ['/api/users/14'],
     enabled: true,
   });
   
   // Obtener el perfil del editor del admin
-  const { data: adminProfile, isLoading } = useQuery({
+  const { data: adminProfile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['/api/editor-profiles/user/14'],
     enabled: true,
   });
   
+  // Estado de carga
+  const isLoading = isLoadingUser || isLoadingProfile;
+  
+  // Mensaje para debugging
+  console.log("adminUser:", adminUser);
+  console.log("adminProfile:", adminProfile);
+  
   // Combinar datos del perfil con el fallback
-  const editorProfile = adminProfile ? {
+  const editorProfile = adminProfile && adminUser ? {
     id: adminProfile.id,
     userId: adminProfile.userId,
-    name: adminUser?.name || fallbackEditorProfile.name,
-    profilePicture: adminUser?.profilePicture || fallbackEditorProfile.profilePicture,
+    name: adminUser.name || fallbackEditorProfile.name,
+    profilePicture: adminUser.profilePicture || fallbackEditorProfile.profilePicture,
     location: adminProfile.country ? 
       `${countries.find(c => c.code === adminProfile.country)?.flag || ''} ${countries.find(c => c.code === adminProfile.country)?.name || adminProfile.country}` : 
       fallbackEditorProfile.location,
@@ -149,270 +156,278 @@ const EditorInteractiveProfile = () => {
           </p>
         </div>
         
-        {/* Área del perfil interactivo */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-10 border border-gray-200 max-w-5xl mx-auto">
-          {/* Cabecera del perfil */}
-          <div className="flex flex-col md:flex-row">
-            {/* Foto de perfil y detalles básicos */}
-            <div className="md:w-1/3 flex flex-col items-center p-6 text-center border-r border-gray-200">
-              <img 
-                src={editorProfile.profilePicture} 
-                alt={editorProfile.name}
-                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg mb-4"
-              />
-              <h3 className="text-xl font-bold flex items-center gap-1">
-                {editorProfile.name}
-                {editorProfile.verified && (
-                  <span className="text-[#007AFF]" title="Perfil verificado">
-                    <CheckCircle className="w-4 h-4 fill-[#007AFF]" />
-                  </span>
-                )}
-              </h3>
-              <p className="text-gray-600 text-sm mb-3">{editorProfile.location}</p>
-              
-              <div className="flex justify-center mb-4">
-                {renderRating(editorProfile.rating)}
-                <span className="text-gray-500 text-sm ml-1">({editorProfile.reviewCount})</span>
+        {isLoading ? (
+          <div className="flex justify-center items-center my-12">
+            <Loader2 className="h-12 w-12 animate-spin text-[#0050FF]" />
+            <span className="ml-2 text-lg text-gray-600">Cargando perfil...</span>
+          </div>
+        ) : (
+          <>
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-10 border border-gray-200 max-w-5xl mx-auto">
+              {/* Cabecera del perfil */}
+              <div className="flex flex-col md:flex-row">
+                {/* Foto de perfil y detalles básicos */}
+                <div className="md:w-1/3 flex flex-col items-center p-6 text-center border-r border-gray-200">
+                  <img 
+                    src={editorProfile.profilePicture} 
+                    alt={editorProfile.name}
+                    className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg mb-4"
+                  />
+                  <h3 className="text-xl font-bold flex items-center gap-1">
+                    {editorProfile.name}
+                    {editorProfile.verified && (
+                      <span className="text-[#007AFF]" title="Perfil verificado">
+                        <CheckCircle className="w-4 h-4 fill-[#007AFF]" />
+                      </span>
+                    )}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-3">{editorProfile.location}</p>
+                  
+                  <div className="flex justify-center mb-4">
+                    {renderRating(editorProfile.rating)}
+                    <span className="text-gray-500 text-sm ml-1">({editorProfile.reviewCount})</span>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2 justify-center mb-4">
+                    {editorProfile.specialties.map((specialty, idx) => (
+                      <Badge key={idx} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
+                        {specialty}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2 w-full mb-4">
+                    <div className="bg-gray-50 rounded p-2 text-center">
+                      <p className="text-sm font-bold text-[#0050FF]">{editorProfile.portfolioCount}</p>
+                      <p className="text-xs text-gray-500">Proyectos</p>
+                    </div>
+                    <div className="bg-gray-50 rounded p-2 text-center">
+                      <p className="text-sm font-bold text-[#0050FF]">${editorProfile.price.min}</p>
+                      <p className="text-xs text-gray-500">Desde</p>
+                    </div>
+                    <div className="bg-gray-50 rounded p-2 text-center">
+                      <p className="text-sm font-bold text-[#0050FF]">{editorProfile.experience}</p>
+                      <p className="text-xs text-gray-500">Años exp.</p>
+                    </div>
+                  </div>
+                  
+                  <Link href={`/editor/${editorProfile.id}`}>
+                    <Button className="w-full bg-[#0050FF] hover:bg-[#003CC0]">
+                      Ver perfil completo
+                    </Button>
+                  </Link>
+                </div>
+                
+                {/* Contenido de las pestañas */}
+                <div className="md:w-2/3 flex flex-col">
+                  {/* Barra de pestañas con scroll horizontal en móvil */}
+                  <div className="flex overflow-x-auto whitespace-nowrap scrollbar-hide border-b border-gray-200">
+                    <button 
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      onClick={() => setActiveTab('portafolio')}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="w-4 h-4" />
+                        <span>Portafolio</span>
+                      </div>
+                    </button>
+                    <button 
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      onClick={() => setActiveTab('equipamiento')}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Monitor className="w-4 h-4" />
+                        <span>Equipamiento</span>
+                      </div>
+                    </button>
+                    <button 
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      onClick={() => setActiveTab('tarifas')}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>Tarifas</span>
+                      </div>
+                    </button>
+                    <button 
+                      className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'reseñas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
+                      onClick={() => setActiveTab('reseñas')}
+                    >
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4" />
+                        <span>Reseñas</span>
+                      </div>
+                    </button>
+                  </div>
+                  
+                  {/* Contenido de la pestaña */}
+                  <div className="p-6">
+                    {activeTab === 'portafolio' && (
+                      <div>
+                        <h4 className="text-lg font-medium mb-4">Proyectos destacados</h4>
+                        <div className="grid grid-cols-2 gap-4">
+                          {/* Miniatura de Reel 1 */}
+                          <div className="relative rounded-lg overflow-hidden shadow-md">
+                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                              <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1595341888016-a392ef81b7de?q=80&w=300)' }}></div>
+                              <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                                  <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                                </div>
+                                <span className="text-xs text-white">00:25</span>
+                              </div>
+                            </div>
+                            <div className="p-2 text-sm font-medium">Reel promocional para marca de cosmética</div>
+                          </div>
+
+                          {/* Miniatura de Reel 2 */}
+                          <div className="relative rounded-lg overflow-hidden shadow-md">
+                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                              <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1551292831-023188e78222?q=80&w=300)' }}></div>
+                              <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                                  <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                                </div>
+                                <span className="text-xs text-white">00:58</span>
+                              </div>
+                            </div>
+                            <div className="p-2 text-sm font-medium">Edición ejecutiva para StartupLATAM</div>
+                          </div>
+
+                          {/* Miniatura de Reel 3 */}
+                          <div className="relative rounded-lg overflow-hidden shadow-md">
+                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                              <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=300)' }}></div>
+                              <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                                  <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                                </div>
+                                <span className="text-xs text-white">01:43</span>
+                              </div>
+                            </div>
+                            <div className="p-2 text-sm font-medium">Documental - Extracto comercial</div>
+                          </div>
+
+                          {/* Miniatura de Reel 4 */}
+                          <div className="relative rounded-lg overflow-hidden shadow-md">
+                            <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
+                              <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=300)' }}></div>
+                              <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
+                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                                  <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
+                                </div>
+                                <span className="text-xs text-white">00:36</span>
+                              </div>
+                            </div>
+                            <div className="p-2 text-sm font-medium">Vídeo de producto con técnica cinemática</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {activeTab === 'equipamiento' && (
+                      <div>
+                        <h4 className="text-lg font-medium mb-4">Equipo de trabajo</h4>
+                        <ul className="space-y-2">
+                          <li className="flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                            <span>MacBook Pro M1 Max</span>
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                            <span>Cámara Sony A7III</span>
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                            <span>Micrófono Rode PodMic</span>
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
+                            <span>Iluminación Aputure</span>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {activeTab === 'tarifas' && (
+                      <div>
+                        <h4 className="text-lg font-medium mb-4">Paquetes y tarifas</h4>
+                        <div className="space-y-4">
+                          <div className="border border-gray-200 rounded-lg p-4">
+                            <h5 className="font-medium">Paquete Básico</h5>
+                            <p className="text-[#0050FF] font-bold">${editorProfile.price.min}</p>
+                            <p className="text-sm text-gray-600">Edición básica de video, hasta 5 minutos de duración.</p>
+                          </div>
+                          <div className="border border-gray-200 rounded-lg p-4">
+                            <h5 className="font-medium">Paquete Estándar</h5>
+                            <p className="text-[#0050FF] font-bold">${editorProfile.price.min * 2}</p>
+                            <p className="text-sm text-gray-600">Edición profesional con efectos básicos, hasta 10 minutos.</p>
+                          </div>
+                          <div className="border border-gray-200 rounded-lg p-4">
+                            <h5 className="font-medium">Paquete Premium</h5>
+                            <p className="text-[#0050FF] font-bold">${editorProfile.price.min * 3}</p>
+                            <p className="text-sm text-gray-600">Edición avanzada con efectos, corrección de color y hasta 20 minutos.</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {activeTab === 'reseñas' && (
+                      <div>
+                        <h4 className="text-lg font-medium mb-4">Lo que dicen los clientes</h4>
+                        <div className="space-y-6">
+                          {editorReviews.map(review => (
+                            <div key={review.id} className="border-b border-gray-200 pb-5 last:border-0">
+                              <div className="flex items-center justify-between mb-2">
+                                <div>
+                                  <h5 className="font-medium">{review.author}</h5>
+                                  <p className="text-xs text-gray-500">{review.company}</p>
+                                </div>
+                                <div className="flex items-center">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star 
+                                      key={i} 
+                                      className={`w-3.5 h-3.5 ${i < Math.floor(review.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                                    />
+                                  ))}
+                                  <span className="ml-1 text-xs text-gray-600">{review.date}</span>
+                                </div>
+                              </div>
+                              <p className="text-sm text-gray-600">{review.comment}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               
-              <div className="flex flex-wrap gap-2 justify-center mb-4">
-                {editorProfile.specialties.map((specialty, idx) => (
-                  <Badge key={idx} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
-                    {specialty}
-                  </Badge>
-                ))}
-              </div>
-              
-              <div className="grid grid-cols-3 gap-2 w-full mb-4">
-                <div className="bg-gray-50 rounded p-2 text-center">
-                  <p className="text-sm font-bold text-[#0050FF]">{editorProfile.portfolioCount}</p>
-                  <p className="text-xs text-gray-500">Proyectos</p>
-                </div>
-                <div className="bg-gray-50 rounded p-2 text-center">
-                  <p className="text-sm font-bold text-[#0050FF]">${editorProfile.price.min}</p>
-                  <p className="text-xs text-gray-500">Desde</p>
-                </div>
-                <div className="bg-gray-50 rounded p-2 text-center">
-                  <p className="text-sm font-bold text-[#0050FF]">{editorProfile.experience}</p>
-                  <p className="text-xs text-gray-500">Años exp.</p>
-                </div>
-              </div>
-              
-              <Link href={`/editor/${editorProfile.id}`}>
-                <Button className="w-full bg-[#0050FF] hover:bg-[#003CC0]">
-                  Ver perfil completo
+              {/* Botones de acción */}
+              <div className="p-4 bg-gray-50 flex justify-end">
+                <Button 
+                  className="bg-[#0050FF] hover:bg-[#0040E0] text-white"
+                  asChild
+                >
+                  <Link href={`/editor/${editorProfile.id}`}>
+                    Ver perfil completo
+                  </Link>
                 </Button>
-              </Link>
+              </div>
             </div>
             
-            {/* Contenido de las pestañas */}
-            <div className="md:w-2/3 flex flex-col">
-              {/* Barra de pestañas con scroll horizontal en móvil */}
-              <div className="flex overflow-x-auto whitespace-nowrap scrollbar-hide border-b border-gray-200">
-                <button 
-                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'portafolio' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
-                  onClick={() => setActiveTab('portafolio')}
-                >
-                  <div className="flex items-center gap-2">
-                    <Briefcase className="w-4 h-4" />
-                    <span>Portafolio</span>
-                  </div>
-                </button>
-                <button 
-                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'equipamiento' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
-                  onClick={() => setActiveTab('equipamiento')}
-                >
-                  <div className="flex items-center gap-2">
-                    <Monitor className="w-4 h-4" />
-                    <span>Equipamiento</span>
-                  </div>
-                </button>
-                <button 
-                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'tarifas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
-                  onClick={() => setActiveTab('tarifas')}
-                >
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    <span>Tarifas</span>
-                  </div>
-                </button>
-                <button 
-                  className={`px-4 md:px-6 py-3 text-sm font-medium ${activeTab === 'reseñas' ? 'text-[#0050FF] border-b-2 border-[#0050FF]' : 'text-gray-500 hover:text-gray-700'}`}
-                  onClick={() => setActiveTab('reseñas')}
-                >
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4" />
-                    <span>Reseñas</span>
-                  </div>
-                </button>
-              </div>
-              
-              {/* Contenido de la pestaña */}
-              <div className="p-6">
-                {activeTab === 'portafolio' && (
-                  <div>
-                    <h4 className="text-lg font-medium mb-4">Proyectos destacados</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      {/* Miniatura de Reel 1 */}
-                      <div className="relative rounded-lg overflow-hidden shadow-md">
-                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
-                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1595341888016-a392ef81b7de?q=80&w=300)' }}></div>
-                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
-                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
-                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
-                            </div>
-                            <span className="text-xs text-white">00:25</span>
-                          </div>
-                        </div>
-                        <div className="p-2 text-sm font-medium">Reel promocional para marca de cosmética</div>
-                      </div>
-
-                      {/* Miniatura de Reel 2 */}
-                      <div className="relative rounded-lg overflow-hidden shadow-md">
-                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
-                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1551292831-023188e78222?q=80&w=300)' }}></div>
-                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
-                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
-                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
-                            </div>
-                            <span className="text-xs text-white">00:58</span>
-                          </div>
-                        </div>
-                        <div className="p-2 text-sm font-medium">Edición ejecutiva para StartupLATAM</div>
-                      </div>
-
-                      {/* Miniatura de Reel 3 */}
-                      <div className="relative rounded-lg overflow-hidden shadow-md">
-                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
-                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=300)' }}></div>
-                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
-                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
-                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
-                            </div>
-                            <span className="text-xs text-white">01:43</span>
-                          </div>
-                        </div>
-                        <div className="p-2 text-sm font-medium">Documental - Extracto comercial</div>
-                      </div>
-
-                      {/* Miniatura de Reel 4 */}
-                      <div className="relative rounded-lg overflow-hidden shadow-md">
-                        <div className="bg-gradient-to-b from-gray-700 to-gray-900 aspect-[9/16] md:aspect-video flex items-center justify-center relative">
-                          <div className="absolute inset-0 opacity-60 bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=300)' }}></div>
-                          <div className="absolute bottom-0 left-0 right-0 p-2 flex justify-between items-center">
-                            <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
-                              <div className="w-3.5 h-3.5 bg-white rounded-full"></div>
-                            </div>
-                            <span className="text-xs text-white">00:36</span>
-                          </div>
-                        </div>
-                        <div className="p-2 text-sm font-medium">Vídeo de producto con técnica cinemática</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {activeTab === 'equipamiento' && (
-                  <div>
-                    <h4 className="text-lg font-medium mb-4">Equipo de trabajo</h4>
-                    <ul className="space-y-2">
-                      <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
-                        <span>MacBook Pro M1 Max</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
-                        <span>Cámara Sony A7III</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
-                        <span>Micrófono Rode PodMic</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-[#0050FF]"></div>
-                        <span>Iluminación Aputure</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-                
-                {activeTab === 'tarifas' && (
-                  <div>
-                    <h4 className="text-lg font-medium mb-4">Paquetes y tarifas</h4>
-                    <div className="space-y-4">
-                      <div className="border border-gray-200 rounded-lg p-4">
-                        <h5 className="font-medium">Paquete Básico</h5>
-                        <p className="text-[#0050FF] font-bold">${editorProfile.price.min}</p>
-                        <p className="text-sm text-gray-600">Edición básica de video, hasta 5 minutos de duración.</p>
-                      </div>
-                      <div className="border border-gray-200 rounded-lg p-4">
-                        <h5 className="font-medium">Paquete Estándar</h5>
-                        <p className="text-[#0050FF] font-bold">${editorProfile.price.min * 2}</p>
-                        <p className="text-sm text-gray-600">Edición profesional con efectos básicos, hasta 10 minutos.</p>
-                      </div>
-                      <div className="border border-gray-200 rounded-lg p-4">
-                        <h5 className="font-medium">Paquete Premium</h5>
-                        <p className="text-[#0050FF] font-bold">${editorProfile.price.min * 3}</p>
-                        <p className="text-sm text-gray-600">Edición avanzada con efectos, corrección de color y hasta 20 minutos.</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {activeTab === 'reseñas' && (
-                  <div>
-                    <h4 className="text-lg font-medium mb-4">Lo que dicen los clientes</h4>
-                    <div className="space-y-6">
-                      {editorReviews.map(review => (
-                        <div key={review.id} className="border-b border-gray-200 pb-5 last:border-0">
-                          <div className="flex items-center justify-between mb-2">
-                            <div>
-                              <h5 className="font-medium">{review.author}</h5>
-                              <p className="text-xs text-gray-500">{review.company}</p>
-                            </div>
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`w-3.5 h-3.5 ${i < Math.floor(review.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
-                                />
-                              ))}
-                              <span className="ml-1 text-xs text-gray-600">{review.date}</span>
-                            </div>
-                          </div>
-                          <p className="text-sm text-gray-600">{review.comment}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+            {/* Botón para explorar más */}
+            <div className="text-center">
+              <Button 
+                variant="outline" 
+                className="border-[#0050FF] text-[#0050FF] hover:bg-[#0050FF]/5"
+                asChild
+              >
+                <Link href="/search">Explorar todos los editores</Link>
+              </Button>
             </div>
-          </div>
-          
-          {/* Botones de acción */}
-          <div className="p-4 bg-gray-50 flex justify-end">
-            <Button 
-              className="bg-[#0050FF] hover:bg-[#0040E0] text-white"
-              asChild
-            >
-              <Link href={`/editor/${editorProfile.id}`}>
-                Ver perfil completo
-              </Link>
-            </Button>
-          </div>
-        </div>
-        
-        {/* Botón para explorar más */}
-        <div className="text-center">
-          <Button 
-            variant="outline" 
-            className="border-[#0050FF] text-[#0050FF] hover:bg-[#0050FF]/5"
-            asChild
-          >
-            <Link href="/search">Explorar todos los editores</Link>
-          </Button>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
