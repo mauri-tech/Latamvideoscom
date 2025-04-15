@@ -433,13 +433,63 @@ const EditProfilePage = () => {
                         name="profilePicture"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>URL de foto de perfil</FormLabel>
-                            <FormControl>
-                              <Input placeholder="https://ejemplo.com/tu-foto.jpg" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              Ingresa la URL de tu foto de perfil
-                            </FormDescription>
+                            <FormLabel>Foto de perfil</FormLabel>
+                            <div className="space-y-4">
+                              {field.value && (
+                                <div className="relative w-24 h-24 rounded-full overflow-hidden">
+                                  <img 
+                                    src={field.value.startsWith('/uploads') ? field.value : field.value} 
+                                    alt="Foto de perfil"
+                                    className="w-full h-full object-cover" 
+                                  />
+                                </div>
+                              )}
+                              
+                              <div className="flex flex-col space-y-2">
+                                <Input 
+                                  type="file" 
+                                  accept="image/jpeg,image/png,image/gif,image/webp"
+                                  onChange={async (e) => {
+                                    if (e.target.files && e.target.files[0] && currentUser?.id) {
+                                      const formData = new FormData();
+                                      formData.append('profileImage', e.target.files[0]);
+                                      
+                                      try {
+                                        const res = await fetch(`/api/users/${currentUser.id}/profile-image`, {
+                                          method: 'POST',
+                                          credentials: 'include',
+                                          body: formData
+                                        });
+                                        
+                                        if (!res.ok) {
+                                          throw new Error('Error al subir la imagen');
+                                        }
+                                        
+                                        const data = await res.json();
+                                        field.onChange(data.profilePicture);
+                                        
+                                        toast({
+                                          title: "¡Éxito!",
+                                          description: "Imagen de perfil actualizada correctamente",
+                                        });
+                                        
+                                        // Invalidar la consulta del usuario para actualizar los datos en caché
+                                        queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+                                      } catch (error) {
+                                        toast({
+                                          title: "Error",
+                                          description: error instanceof Error ? error.message : "Error al subir la imagen",
+                                          variant: "destructive",
+                                        });
+                                      }
+                                    }
+                                  }}
+                                />
+                                <FormDescription>
+                                  Sube una imagen de hasta 5MB en formato JPG, PNG, GIF o WebP.
+                                </FormDescription>
+                              </div>
+                            </div>
                             <FormMessage />
                           </FormItem>
                         )}

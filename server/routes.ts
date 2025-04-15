@@ -136,6 +136,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Server error" });
     }
   });
+  
+  // Ruta para subir foto de perfil
+  app.post("/api/users/:id/profile-image", uploadProfileImage.single('profileImage'), async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Verificar que el usuario está autenticado y es el mismo que está subiendo la foto
+      if (!req.isAuthenticated() || req.user.id !== id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      // Verificar que se subió un archivo
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+      
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Construir la URL relativa del archivo
+      const relativeFilePath = `/uploads/profile-images/${req.file.filename}`;
+      
+      // Actualizar la foto de perfil del usuario en la base de datos
+      const updatedUser = await storage.updateUser(id, {
+        ...user,
+        profilePicture: relativeFilePath
+      });
+      
+      // No devolver la contraseña
+      const { password, ...userData } = updatedUser;
+      
+      res.json({
+        ...userData,
+        message: "Profile image uploaded successfully"
+      });
+    } catch (error) {
+      console.error("Error uploading profile image:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
 
   // Software Routes
   app.get("/api/software", async (_req, res) => {
@@ -417,6 +459,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         res.status(500).json({ message: "Server error" });
       }
+    }
+  });
+  
+  // Subir miniatura para un item de portafolio
+  app.post("/api/portfolio/:id/thumbnail", uploadPortfolioFile.single('thumbnail'), async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Verificar que el usuario está autenticado
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      // Verificar que se subió un archivo
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+      
+      // Obtener el item del portafolio
+      const item = await storage.getPortfolioItem(id);
+      if (!item) {
+        return res.status(404).json({ message: "Portfolio item not found" });
+      }
+      
+      // Obtener el perfil asociado al item
+      const profile = await storage.getEditorProfile(item.editorProfileId);
+      if (!profile) {
+        return res.status(404).json({ message: "Editor profile not found" });
+      }
+      
+      // Verificar que el usuario es el dueño del perfil
+      if (profile.userId !== req.user.id) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+      
+      // Construir la URL relativa del archivo
+      const relativeFilePath = `/uploads/portfolio/${req.file.filename}`;
+      
+      // Actualizar el thumbnail del item de portafolio
+      const updatedItem = await storage.updatePortfolioItem(id, {
+        ...item,
+        thumbnailUrl: relativeFilePath
+      });
+      
+      res.json({
+        ...updatedItem,
+        message: "Thumbnail uploaded successfully"
+      });
+    } catch (error) {
+      console.error("Error uploading portfolio thumbnail:", error);
+      res.status(500).json({ message: "Server error" });
     }
   });
 
