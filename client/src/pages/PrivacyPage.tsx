@@ -1,147 +1,119 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Helmet } from 'react-helmet';
 
 const PrivacyPage = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <>
       <Helmet>
-        <title>Política de Privacidad | latamvideos.com</title>
-        <meta name="description" content="Conoce nuestra política de privacidad y cómo protegemos los datos personales de los usuarios de latamvideos.com." />
+        <title>Política de Privacidad | LatamVideos</title>
       </Helmet>
-      <Header />
-      
-      <main className="container mx-auto px-4 py-12 md:py-16">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-10 text-[#041C32]">Política de Privacidad</h1>
-        
-        <div className="max-w-3xl mx-auto prose prose-slate">
-          <p className="text-sm text-[#8E8E93] mb-8 text-center">
-            Última actualización: 10 de abril de 2025
-          </p>
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8">Política de Privacidad</h1>
           
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">1. Introducción</h2>
-            <p>
-              En latamvideos.com, nos comprometemos a proteger tu privacidad y tus datos personales. Esta Política de Privacidad describe cómo recopilamos, utilizamos, almacenamos y compartimos tu información cuando utilizas nuestra plataforma.
+          <div className="prose prose-lg max-w-none">
+            <p className="lead text-lg text-gray-700 mb-8">
+              Última actualización: 15 de abril de 2025
             </p>
+            
             <p>
-              Al acceder o utilizar latamvideos.com, aceptas las prácticas descritas en esta política. Te recomendamos leerla detenidamente para entender nuestro enfoque respecto a tu información.
+              Esta Política de Privacidad describe cómo LatamVideos.com ("nosotros", "nuestro" o "la plataforma") 
+              recopila, utiliza, almacena y comparte su información cuando utiliza nuestro sitio web y servicios.
             </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">2. Información que recopilamos</h2>
-            <p>
-              Recopilamos la siguiente información:
-            </p>
-            <h3 className="text-xl font-medium mb-2 mt-4">2.1 Información proporcionada por ti</h3>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Información de registro: nombre, correo electrónico, contraseña, país de residencia.</li>
-              <li>Información de perfil: foto, biografía, experiencia profesional, portafolio de trabajos.</li>
-              <li>Datos de pago: información bancaria y financiera necesaria para procesar pagos (a través de procesadores de pago seguros).</li>
-              <li>Comunicaciones: mensajes e interacciones con otros usuarios a través de nuestra plataforma.</li>
+            
+            <h2>1. Información que Recopilamos</h2>
+            <p>Podemos recopilar los siguientes tipos de información:</p>
+            
+            <h3>Información personal que usted nos proporciona:</h3>
+            <ul>
+              <li>Información de registro: nombre, dirección de correo electrónico, contraseña</li>
+              <li>Información de perfil: foto, biografía, experiencia profesional, habilidades, tarifas</li>
+              <li>Contenido del portafolio: imágenes, videos, enlaces a trabajos</li>
+              <li>Información de contacto: número de teléfono, país, ciudad</li>
+              <li>Información de pago: si aplicable, para servicios premium</li>
             </ul>
             
-            <h3 className="text-xl font-medium mb-2 mt-4">2.2 Información recopilada automáticamente</h3>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Datos de uso: páginas visitadas, tiempo en la plataforma, interacciones.</li>
-              <li>Información del dispositivo: tipo de dispositivo, sistema operativo, navegador.</li>
-              <li>Datos de ubicación: ubicación general basada en la dirección IP.</li>
-              <li>Cookies y tecnologías similares: información almacenada en tu dispositivo para mejorar tu experiencia.</li>
+            <h3>Información recopilada automáticamente:</h3>
+            <ul>
+              <li>Datos de uso: páginas visitadas, tiempo en el sitio, enlaces en los que hace clic</li>
+              <li>Información del dispositivo: tipo de dispositivo, sistema operativo, navegador</li>
+              <li>Datos de ubicación: país, ciudad (basado en dirección IP)</li>
             </ul>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">3. Cómo utilizamos tu información</h2>
-            <p>
-              Utilizamos la información recopilada para:
-            </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Proporcionar, mantener y mejorar nuestros servicios.</li>
-              <li>Facilitar la conexión entre editores de video y clientes.</li>
-              <li>Procesar transacciones y gestionar pagos.</li>
-              <li>Personalizar tu experiencia en la plataforma.</li>
-              <li>Enviar notificaciones, actualizaciones y comunicaciones relacionadas con el servicio.</li>
-              <li>Proteger la seguridad e integridad de nuestra plataforma.</li>
-              <li>Cumplir con obligaciones legales.</li>
+            
+            <h2>2. Cómo Utilizamos Su Información</h2>
+            <p>Utilizamos la información recopilada para:</p>
+            <ul>
+              <li>Proporcionar, mantener y mejorar nuestros servicios</li>
+              <li>Facilitar la creación y autenticación de su cuenta</li>
+              <li>Mostrar su perfil profesional a potenciales clientes</li>
+              <li>Facilitar la comunicación entre profesionales y clientes</li>
+              <li>Enviar notificaciones, actualizaciones y comunicaciones de marketing</li>
+              <li>Analizar tendencias y mejorar la experiencia del usuario</li>
+              <li>Prevenir actividades fraudulentas y proteger la seguridad de los usuarios</li>
             </ul>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">4. Compartición de información</h2>
-            <p>
-              Podemos compartir tu información con:
-            </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Otros usuarios de la plataforma, según la naturaleza del servicio (editores con clientes potenciales).</li>
-              <li>Proveedores de servicios que nos ayudan a operar la plataforma (procesadores de pago, servicios de almacenamiento en la nube).</li>
-              <li>Autoridades legales cuando sea requerido por ley o para proteger nuestros derechos.</li>
+            
+            <h2>3. Compartición de Información</h2>
+            <p>Podemos compartir su información en las siguientes circunstancias:</p>
+            <ul>
+              <li>Con otros usuarios de la plataforma, según la funcionalidad del servicio</li>
+              <li>Con proveedores de servicios que nos ayudan a operar la plataforma</li>
+              <li>Para cumplir con obligaciones legales o en respuesta a solicitudes legales</li>
+              <li>Para proteger los derechos y la seguridad de LatamVideos y sus usuarios</li>
+              <li>En conexión con una fusión, venta o adquisición de la empresa</li>
             </ul>
-            <p>
-              No vendemos tu información personal a terceros.
-            </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">5. Seguridad de datos</h2>
-            <p>
-              Implementamos medidas de seguridad técnicas y organizativas para proteger tu información personal, incluyendo:
-            </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Encriptación de datos sensibles.</li>
-              <li>Protocolos de acceso seguro.</li>
-              <li>Revisiones regulares de seguridad.</li>
-              <li>Limitación de acceso a información personal.</li>
+            
+            <h2>4. Sus Derechos y Opciones</h2>
+            <p>Usted tiene los siguientes derechos respecto a su información personal:</p>
+            <ul>
+              <li>Acceder y actualizar su información desde la configuración de su cuenta</li>
+              <li>Solicitar una copia de sus datos personales</li>
+              <li>Solicitar la eliminación de su cuenta y datos personales</li>
+              <li>Objetar o restringir ciertos procesamientos de sus datos</li>
+              <li>Optar por no recibir comunicaciones de marketing</li>
             </ul>
+            
+            <h2>5. Seguridad de los Datos</h2>
             <p>
-              Sin embargo, ningún sistema puede garantizar una seguridad absoluta, por lo que te recomendamos también tomar medidas para proteger tu información.
+              Implementamos medidas de seguridad técnicas y organizativas diseñadas para proteger su información personal. 
+              Sin embargo, ninguna transmisión por Internet o sistema de almacenamiento electrónico es 100% seguro.
             </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">6. Tus derechos</h2>
+            
+            <h2>6. Retención de Datos</h2>
             <p>
-              Dependiendo de tu ubicación, tienes ciertos derechos sobre tu información personal:
+              Conservamos su información personal mientras mantenga una cuenta activa o según sea necesario para 
+              proporcionar servicios. Podemos retener cierta información para cumplir con obligaciones legales, 
+              resolver disputas y hacer cumplir nuestros acuerdos.
             </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Acceder a los datos que tenemos sobre ti.</li>
-              <li>Corregir información inexacta.</li>
-              <li>Eliminar tus datos (sujeto a ciertas excepciones).</li>
-              <li>Oponerte o limitar ciertos procesamientos de datos.</li>
-              <li>Solicitar la portabilidad de tus datos.</li>
-              <li>Retirar el consentimiento en cualquier momento.</li>
-            </ul>
+            
+            <h2>7. Uso Internacional de Datos</h2>
             <p>
-              Para ejercer estos derechos, contacta a nuestro equipo de privacidad a través de privacy@latamvideos.com.
+              LatamVideos opera en América Latina, pero sus servidores pueden estar ubicados en diferentes países. 
+              Su información puede ser transferida y procesada en países distintos a su país de residencia, 
+              donde las leyes de protección de datos pueden ser diferentes.
             </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">7. Cambios a esta política</h2>
+            
+            <h2>8. Privacidad de Menores</h2>
             <p>
-              Podemos actualizar esta Política de Privacidad ocasionalmente para reflejar cambios en nuestras prácticas o por razones legales. La versión más reciente se publicará en nuestra plataforma con la fecha de actualización.
+              Nuestros servicios no están dirigidos a personas menores de 18 años. No recopilamos 
+              intencionalmente información personal de menores. Si descubrimos que hemos recopilado 
+              información personal de un menor, tomaremos medidas para eliminar esa información.
             </p>
+            
+            <h2>9. Cambios a esta Política</h2>
             <p>
-              Te animamos a revisar periódicamente esta política. El uso continuado de nuestros servicios después de cualquier cambio constituye tu aceptación de la política actualizada.
+              Podemos actualizar esta Política de Privacidad periódicamente. Notificaremos cambios significativos 
+              mediante un aviso en nuestro sitio web o por correo electrónico. Le recomendamos revisar 
+              esta política regularmente.
             </p>
-          </section>
-          
-          <section>
-            <h2 className="text-2xl font-semibold mb-4 text-[#041C32]">8. Contacto</h2>
+            
+            <h2>10. Contacto</h2>
             <p>
-              Si tienes preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad o el manejo de tus datos personales, contáctanos a:
+              Si tiene preguntas o inquietudes sobre esta Política de Privacidad o nuestras prácticas de datos, 
+              contáctenos en privacy@latamvideos.com.
             </p>
-            <p className="mt-2">
-              <strong>Correo electrónico:</strong> privacy@latamvideos.com<br />
-              <strong>Dirección:</strong> Av. Insurgentes Sur 1602, Col. Crédito Constructor, Ciudad de México, CP 03940<br />
-              <strong>Teléfono:</strong> +52 55 1234 5678
-            </p>
-          </section>
+          </div>
         </div>
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </>
   );
 };
 

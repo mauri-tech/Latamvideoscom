@@ -6,8 +6,8 @@ import { Users, Briefcase } from 'lucide-react';
 const DoubleCTA = () => {
   return (
     <section className="py-20 relative overflow-hidden">
-      {/* Fondo con gradiente Apple-style */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1D2E47] via-[#6BA6FF]/30 to-[#C084FC]/20 z-0">
+      {/* Fondo negro */}
+      <div className="absolute inset-0 bg-[#020617] z-0">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgzMCkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmZmZmYwOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')]"></div>
       </div>
       
@@ -37,7 +37,7 @@ const DoubleCTA = () => {
               className="bg-white hover:bg-white/90 mt-auto" 
               size="lg"
               asChild
-              style={{ color: "#6BA6FF" }}
+              style={{ color: "#020617" }}
             >
               <Link href="/search">Explorar talento</Link>
             </Button>
