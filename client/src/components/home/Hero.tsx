@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import editorImage from '../../assets/editor-profile.png';
+import editorImage from '../../assets/editor-hero.jpg';
 import { 
   Select,
   SelectContent,
