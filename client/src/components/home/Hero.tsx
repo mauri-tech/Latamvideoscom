@@ -54,7 +54,7 @@ const Hero = () => {
       <div className="container mx-auto px-4">
         {/* Versión móvil con imagen arriba */}
         <div className="flex flex-col md:hidden mb-8">
-          <div className="bg-gradient-to-br from-white via-[#fafafa] to-[#f2f2f7] rounded-xl p-4 shadow-lg mb-6">
+          <div className="bg-white rounded-xl p-4 shadow-lg mb-6">
             <div className="aspect-video rounded-lg overflow-hidden shadow-inner">
               <img 
                 src={editorImage} 
@@ -69,10 +69,7 @@ const Hero = () => {
             <span 
               className="tracking-tighter font-extrabold"
               style={{ 
-                background: colorPalette.gradients.bluePurple,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text"
+                color: colorPalette.pastel.blue
               }}
             >
               en video de LATAM
@@ -172,10 +169,7 @@ const Hero = () => {
                 <span 
                   className="tracking-tighter font-extrabold"
                   style={{ 
-                    background: colorPalette.gradients.bluePurple,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text"
+                    color: colorPalette.pastel.blue
                   }}
                 >
                   en video de<br />LATAM
@@ -265,7 +259,7 @@ const Hero = () => {
           
           {/* Imagen del editor trabajando */}
           <div className="md:w-1/2">
-            <div className="bg-gradient-to-br from-white via-[#fafafa] to-[#f2f2f7] rounded-xl p-5 shadow-xl">
+            <div className="bg-white rounded-xl p-5 shadow-xl">
               <div className="aspect-video rounded-lg overflow-hidden shadow-inner">
                 <img 
                   src={editorImage} 

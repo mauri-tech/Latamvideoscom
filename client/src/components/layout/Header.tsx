@@ -38,7 +38,7 @@ const Header = () => {
         <div className="flex items-center space-x-4">
           {user ? (
             <Link href="/dashboard">
-              <Button className="bg-gradient-to-r from-[#041C32] to-[#0050FF] text-white px-4 py-2 rounded-md hover:from-[#0A2540] hover:to-[#0060FF] transition font-medium">
+              <Button className="bg-[#6BA6FF] text-white px-4 py-2 rounded-md hover:bg-[#5A95EE] transition font-medium">
                 Mi perfil
               </Button>
             </Link>
@@ -48,7 +48,7 @@ const Header = () => {
                 Iniciar sesión
               </Link>
               <Link href="/register">
-                <Button className="bg-gradient-to-r from-[#041C32] to-[#0050FF] text-white px-4 py-2 rounded-md hover:from-[#0A2540] hover:to-[#0060FF] transition font-medium">
+                <Button className="bg-[#6BA6FF] text-white px-4 py-2 rounded-md hover:bg-[#5A95EE] transition font-medium">
                   Registrarse
                 </Button>
               </Link>
