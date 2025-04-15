@@ -54,8 +54,8 @@ const Hero = () => {
       <div className="container mx-auto px-4">
         {/* Versión móvil con imagen arriba */}
         <div className="flex flex-col md:hidden mb-8">
-          <div className="bg-gradient-to-br from-[#F5F9FF] to-[#EAF2FF] rounded-xl p-4 shadow-lg mb-6">
-            <div className="aspect-video rounded-lg overflow-hidden">
+          <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-50 rounded-xl p-4 shadow-lg mb-6">
+            <div className="aspect-video rounded-lg overflow-hidden shadow-inner">
               <img 
                 src={editorImage} 
                 alt="Profesionales en video de LATAM"
@@ -64,11 +64,12 @@ const Hero = () => {
             </div>
           </div>
           
-          <h1 className="text-2xl font-bold text-center tracking-tight mb-2 leading-tight">
-            Encuentra a profesionales en video de LATAM
+          <h1 className="text-2xl font-bold text-center tracking-tight mb-2 leading-none">
+            Encuentra a profesionales<br />
+            <span className="text-[#0050FF] tracking-tighter">en video de LATAM</span>
           </h1>
           
-          <p className="text-gray-600 text-base md:text-lg mb-6 leading-relaxed text-center">
+          <p className="text-gray-600 text-base md:text-lg mb-4 leading-snug text-center">
             La plataforma para conectar con editores, videógrafos y profesionales
             especializados por estilo, equipo y presupuesto.
           </p>
@@ -100,7 +101,7 @@ const Hero = () => {
               </div>
               
               <Button
-                className="w-full bg-[#0050FF] hover:bg-[#0040E0]"
+                className="w-full bg-[#0050FF] hover:bg-[#0040E0] py-5 font-medium shadow-sm"
                 onClick={handleSearch}
               >
                 Buscar
@@ -116,12 +117,13 @@ const Hero = () => {
           {/* Contenido del texto */}
           <div className="md:w-1/2 mb-12 md:mb-0 pr-8">
             <div className="max-w-lg">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 leading-tight">
-                <span>Encuentra a profesionales</span><br />
-                <span className="text-[#0050FF]">en video de LATAM</span>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 leading-none">
+                <span>Encuentra a</span><br />
+                <span>profesionales</span><br />
+                <span className="text-[#0050FF] tracking-tighter">en video de<br />LATAM</span>
               </h1>
               
-              <p className="text-gray-600 text-lg md:text-xl mb-8 leading-relaxed">
+              <p className="text-gray-600 text-lg md:text-xl mb-6 leading-snug">
                 La plataforma para conectar con editores, videógrafos y profesionales
                 especializados por estilo, equipo y presupuesto.
               </p>
@@ -188,7 +190,7 @@ const Hero = () => {
                 </div>
                 
                 <Button
-                  className="w-full bg-[#0050FF] hover:bg-[#0040E0]"
+                  className="w-full bg-[#0050FF] hover:bg-[#0040E0] py-6 font-medium shadow-sm"
                   onClick={handleSearch}
                 >
                   Buscar profesionales
@@ -201,12 +203,12 @@ const Hero = () => {
           
           {/* Imagen del editor trabajando */}
           <div className="md:w-1/2">
-            <div className="bg-gradient-to-br from-[#F5F9FF] to-[#EAF2FF] rounded-xl p-4 shadow-lg">
-              <div className="aspect-video rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-50 rounded-xl p-5 shadow-xl">
+              <div className="aspect-video rounded-lg overflow-hidden shadow-inner">
                 <img 
                   src={editorImage} 
                   alt="Profesionales en video de LATAM"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-all hover:scale-105 duration-700"
                 />
               </div>
             </div>
