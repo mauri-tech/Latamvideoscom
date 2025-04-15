@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, CheckCircle, Briefcase, Clock, Monitor, MessageSquare } from 'lucide-react';
+import { Star, CheckCircle, Briefcase, Clock, Monitor, MessageSquare, Loader2 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { countries } from '@/lib/constants';
 
 // Tipo para el editor de demostración
 interface Editor {
@@ -10,6 +12,7 @@ interface Editor {
   name: string;
   profilePicture: string;
   location: string;
+  country: string;
   verified: boolean;
   rating: number;
   reviewCount: number;
@@ -21,6 +24,7 @@ interface Editor {
     currency: string;
   };
   experience: number;
+  userId: number;
 }
 
 // Tipo para reseñas
@@ -33,12 +37,13 @@ interface Review {
   comment: string;
 }
 
-// Datos del perfil de demostración interactivo (solo Mauricio Treviño)
-const editorProfile: Editor = {
+// Datos de respaldo en caso de que no se pueda cargar el perfil
+const fallbackEditorProfile: Editor = {
   id: 11,
   name: "Mauricio Treviño Botticelli",
   profilePicture: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
   location: "🇲🇽 Ciudad de México",
+  country: "MX",
   verified: true,
   rating: 4.9,
   reviewCount: 127,
@@ -49,7 +54,8 @@ const editorProfile: Editor = {
     min: 200,
     currency: "USD"
   },
-  experience: 8
+  experience: 8,
+  userId: 14
 };
 
 // Reseñas para el perfil interactivo
@@ -82,6 +88,41 @@ const editorReviews: Review[] = [
 
 const EditorInteractiveProfile = () => {
   const [activeTab, setActiveTab] = useState<'portafolio' | 'equipamiento' | 'tarifas' | 'reseñas'>('portafolio');
+  
+  // Obtener el usuario admin (ID:14 - Mauricio)
+  const { data: adminUser } = useQuery({
+    queryKey: ['/api/users/14'],
+    enabled: true,
+  });
+  
+  // Obtener el perfil del editor del admin
+  const { data: adminProfile, isLoading } = useQuery({
+    queryKey: ['/api/editor-profiles/user/14'],
+    enabled: true,
+  });
+  
+  // Combinar datos del perfil con el fallback
+  const editorProfile = adminProfile ? {
+    id: adminProfile.id,
+    userId: adminProfile.userId,
+    name: adminUser?.name || fallbackEditorProfile.name,
+    profilePicture: adminUser?.profilePicture || fallbackEditorProfile.profilePicture,
+    location: adminProfile.country ? 
+      `${countries.find(c => c.code === adminProfile.country)?.flag || ''} ${countries.find(c => c.code === adminProfile.country)?.name || adminProfile.country}` : 
+      fallbackEditorProfile.location,
+    country: adminProfile.country || fallbackEditorProfile.country,
+    verified: true,
+    rating: 4.9, // Datos estáticos para la demo
+    reviewCount: 127, // Datos estáticos para la demo
+    specialties: ["Editor de video", "Videógrafo"],
+    tags: adminProfile.technologyTags || fallbackEditorProfile.tags,
+    portfolioCount: 23, // Se podría obtener de la API
+    price: {
+      min: adminProfile.basicRate || fallbackEditorProfile.price.min,
+      currency: "USD"
+    },
+    experience: adminProfile.yearsOfExperience || fallbackEditorProfile.experience
+  } : fallbackEditorProfile;
 
   // Renderizar estrellas para el rating
   const renderRating = (rating: number) => {
