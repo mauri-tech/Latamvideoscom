@@ -122,7 +122,7 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
                 <h3 className="text-sm font-semibold text-[#1c1c1e] mb-3 text-left">Tecnologías</h3>
                 <div className="flex flex-wrap gap-2 justify-start">
                   {editor.technologyTags.map((tag, index) => (
-                    <Badge key={index} variant="secondary" className="bg-[#A0C4FF] hover:bg-[#A0C4FF]/90 text-[#041C32] border-none">
+                    <Badge key={index} variant="secondary" className="bg-[#E2E8F0] hover:bg-[#CBD5E1] text-[#020617] border-none">
                       {tag}
                     </Badge>
                   ))}
@@ -214,7 +214,7 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
                   {editor.styles && editor.styles.length > 0 ? (
                     editor.styles.map((style, index) => (
                       <Link key={index} href={`/search?style=${encodeURIComponent(style)}`}>
-                        <Badge variant="secondary" className="bg-[#0050FF]/10 hover:bg-[#0050FF]/20 text-[#0050FF] border-none cursor-pointer transition-colors">
+                        <Badge variant="secondary" className="bg-[#020617]/10 hover:bg-[#020617]/20 text-[#020617] border-none cursor-pointer transition-colors">
                           {style}
                         </Badge>
                       </Link>
