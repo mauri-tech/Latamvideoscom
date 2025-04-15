@@ -64,9 +64,9 @@ export const editorProfiles = pgTable("editor_profiles", {
   advancedRate: real("advanced_rate"),
   weeklyAvailability: jsonb("weekly_availability").notNull().default({}), // JSON object
   paymentMethods: jsonb("payment_methods").notNull().default([]), // Array of payment methods
+  technologyTags: jsonb("technology_tags").notNull().default([]), // Array of technology tags
   experience: text("experience"), // Brief description of experience
   expertise: jsonb("expertise").notNull().default([]), // Array of areas of expertise
-  technologyTags: jsonb("technology_tags").notNull().default([]), // Array of technology/specialty tags
   professionalType: text("professional_type").default('editor'), // Type of professional (editor, videographer, etc.)
   viewCount: integer("view_count").notNull().default(0),
   contactClickCount: integer("contact_click_count").notNull().default(0),
