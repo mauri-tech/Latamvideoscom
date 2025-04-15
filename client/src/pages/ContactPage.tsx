@@ -1,280 +1,200 @@
-import { useState } from 'react';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Helmet } from 'react-helmet';
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Phone, MapPin, Check } from 'lucide-react';
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "El nombre debe tener al menos 2 caracteres.",
-  }),
-  email: z.string().email({
-    message: "Ingresa un correo electrónico válido.",
-  }),
-  subject: z.string().min(1, {
-    message: "Selecciona un asunto.",
-  }),
-  message: z.string().min(10, {
-    message: "El mensaje debe tener al menos 10 caracteres.",
-  }),
-});
+import { Mail, MapPin, Phone, MessageSquare } from 'lucide-react';
 
 const ContactPage = () => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    },
-  });
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
     
-    // Simular envío del formulario
+    // Simulación de envío de formulario
     setTimeout(() => {
-      console.log(values);
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      
       toast({
         title: "Mensaje enviado",
         description: "Hemos recibido tu mensaje. Te contactaremos pronto.",
       });
       
-      form.reset();
+      // Resetear el formulario
+      setName('');
+      setEmail('');
+      setSubject('');
+      setMessage('');
+      setSubmitting(false);
     }, 1500);
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
       <Helmet>
-        <title>Contacto | latamvideos.com</title>
-        <meta name="description" content="Ponte en contacto con el equipo de latamvideos.com para resolver tus dudas sobre nuestra plataforma para editores de video y empresas." />
+        <title>Contacto | LatamVideos</title>
       </Helmet>
-      <Header />
-      
-      <main className="container mx-auto px-4 py-12 md:py-16">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-[#041C32]">Contáctanos</h1>
-        
-        <div className="grid md:grid-cols-5 gap-8 mb-16">
-          <div className="md:col-span-2 space-y-8">
-            <div>
-              <h2 className="text-xl font-semibold mb-4 text-[#041C32]">Estamos aquí para ayudarte</h2>
-              <p className="text-[#8E8E93] mb-6">
-                ¿Tienes alguna pregunta o comentario sobre latamvideos.com? Nuestro equipo está listo para ayudarte.
-                Completa el formulario o utiliza alguno de nuestros canales de contacto.
+      <div className="py-12 md:py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h1 className="text-3xl md:text-4xl font-bold mb-4">Contacto</h1>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                ¿Tienes preguntas sobre cómo LatamVideos puede ayudarte a encontrar profesionales 
+                de video o a impulsar tu carrera? Estamos aquí para ayudarte.
               </p>
             </div>
             
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <Mail className="h-5 w-5 text-[#0050FF] mt-1" />
-                <div>
-                  <h3 className="font-medium text-[#1c1c1e]">Correo electrónico</h3>
-                  <p className="text-[#8E8E93]">contacto@latamvideos.com</p>
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-white rounded-lg p-6 shadow-sm flex flex-col items-center text-center">
+                <div className="bg-[#6BA6FF]/10 p-3 rounded-full mb-4">
+                  <Mail className="h-6 w-6 text-[#6BA6FF]" />
                 </div>
+                <h3 className="font-semibold text-lg mb-2">Correo electrónico</h3>
+                <p className="text-gray-600 mb-3">Respondemos en 24-48 horas</p>
+                <a href="mailto:info@latamvideos.com" className="text-[#6BA6FF] font-medium">info@latamvideos.com</a>
               </div>
               
-              <div className="flex items-start space-x-4">
-                <Phone className="h-5 w-5 text-[#0050FF] mt-1" />
-                <div>
-                  <h3 className="font-medium text-[#1c1c1e]">Teléfono</h3>
-                  <p className="text-[#8E8E93]">+52 55 1234 5678</p>
+              <div className="bg-white rounded-lg p-6 shadow-sm flex flex-col items-center text-center">
+                <div className="bg-[#818CF8]/10 p-3 rounded-full mb-4">
+                  <MapPin className="h-6 w-6 text-[#818CF8]" />
                 </div>
+                <h3 className="font-semibold text-lg mb-2">Ubicación</h3>
+                <p className="text-gray-600 mb-3">Oficina principal</p>
+                <p className="text-gray-800">Ciudad de México, México</p>
               </div>
               
-              <div className="flex items-start space-x-4">
-                <MapPin className="h-5 w-5 text-[#0050FF] mt-1" />
-                <div>
-                  <h3 className="font-medium text-[#1c1c1e]">Oficina</h3>
-                  <p className="text-[#8E8E93]">
-                    Av. Insurgentes Sur 1602<br />
-                    Col. Crédito Constructor<br />
-                    Ciudad de México, CP 03940
-                  </p>
+              <div className="bg-white rounded-lg p-6 shadow-sm flex flex-col items-center text-center">
+                <div className="bg-[#C084FC]/10 p-3 rounded-full mb-4">
+                  <Phone className="h-6 w-6 text-[#C084FC]" />
                 </div>
+                <h3 className="font-semibold text-lg mb-2">Teléfono</h3>
+                <p className="text-gray-600 mb-3">Lun-Vie, 9am-6pm (CT)</p>
+                <a href="tel:+5215555555555" className="text-[#C084FC] font-medium">+52 1 555 555 5555</a>
               </div>
             </div>
             
-            <div className="pt-4">
-              <h3 className="font-medium mb-3 text-[#1c1c1e]">Síguenos en redes sociales</h3>
-              <div className="flex space-x-4">
-                <a href="https://twitter.com" className="text-[#8E8E93] hover:text-[#0050FF] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-                  </svg>
-                </a>
-                <a href="https://facebook.com" className="text-[#8E8E93] hover:text-[#0050FF] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                  </svg>
-                </a>
-                <a href="https://instagram.com" className="text-[#8E8E93] hover:text-[#0050FF] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                  </svg>
-                </a>
-                <a href="https://linkedin.com" className="text-[#8E8E93] hover:text-[#0050FF] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                    <rect x="2" y="9" width="4" height="12"></rect>
-                    <circle cx="4" cy="4" r="2"></circle>
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="md:col-span-3">
-            <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
-              {isSuccess ? (
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Check className="h-8 w-8 text-green-600" />
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="grid md:grid-cols-5">
+                <div className="md:col-span-2 bg-[#020617] text-white p-8 md:p-12 flex flex-col justify-center">
+                  <div className="mb-6">
+                    <MessageSquare className="h-12 w-12 mb-6 text-white/80" />
+                    <h2 className="text-2xl font-bold mb-4">Envíanos un mensaje</h2>
+                    <p className="text-white/80">
+                      Completa el formulario y nos pondremos en contacto contigo lo antes posible.
+                    </p>
                   </div>
-                  <h2 className="text-2xl font-semibold mb-2 text-[#041C32]">¡Mensaje enviado!</h2>
-                  <p className="text-[#8E8E93] mb-6">
-                    Gracias por contactarnos. Hemos recibido tu mensaje y te responderemos lo más pronto posible.
-                  </p>
-                  <Button variant="outline" onClick={() => setIsSuccess(false)}>
-                    Enviar otro mensaje
-                  </Button>
+                  
+                  <div className="mt-auto space-y-6">
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Horario de atención</h3>
+                      <p className="text-white/80">Lunes a Viernes: 9:00 AM - 6:00 PM (CT)</p>
+                      <p className="text-white/80">Sábado a Domingo: Cerrado</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Síguenos</h3>
+                      <div className="flex space-x-4">
+                        <a href="#" className="text-white hover:text-[#6BA6FF] transition-colors">
+                          <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                          </svg>
+                        </a>
+                        <a href="#" className="text-white hover:text-[#6BA6FF] transition-colors">
+                          <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                          </svg>
+                        </a>
+                        <a href="#" className="text-white hover:text-[#6BA6FF] transition-colors">
+                          <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fillRule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z" clipRule="evenodd" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              ) : (
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                
+                <div className="md:col-span-3 p-8 md:p-12">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nombre completo</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Tu nombre" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Correo electrónico</FormLabel>
-                            <FormControl>
-                              <Input placeholder="tu@email.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Nombre completo</Label>
+                        <Input 
+                          id="name" 
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Tu nombre" 
+                          required 
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Correo electrónico</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="tu@email.com" 
+                          required 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="subject">Asunto</Label>
+                      <Select 
+                        value={subject} 
+                        onValueChange={setSubject}
+                      >
+                        <SelectTrigger id="subject">
+                          <SelectValue placeholder="Selecciona un asunto" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="general">Consulta general</SelectItem>
+                          <SelectItem value="support">Soporte técnico</SelectItem>
+                          <SelectItem value="business">Oportunidades de negocio</SelectItem>
+                          <SelectItem value="feedback">Comentarios y sugerencias</SelectItem>
+                          <SelectItem value="other">Otro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="message">Mensaje</Label>
+                      <Textarea 
+                        id="message" 
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="¿En qué podemos ayudarte?" 
+                        rows={5} 
+                        required 
                       />
                     </div>
                     
-                    <FormField
-                      control={form.control}
-                      name="subject"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Asunto</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Selecciona un asunto" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="general">Información general</SelectItem>
-                              <SelectItem value="account">Problemas con mi cuenta</SelectItem>
-                              <SelectItem value="payment">Pagos y facturación</SelectItem>
-                              <SelectItem value="feature">Sugerencia de funcionalidad</SelectItem>
-                              <SelectItem value="other">Otro</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="message"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mensaje</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Escribe tu mensaje aquí..."
-                              className="resize-none min-h-[150px]"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-[#041C32] to-[#0050FF] hover:from-[#0A2540] hover:to-[#0060FF]"
-                      disabled={isSubmitting}
+                      className="bg-[#020617] hover:bg-[#1E293B] w-full md:w-auto"
+                      disabled={submitting}
                     >
-                      {isSubmitting ? "Enviando..." : "Enviar mensaje"}
+                      {submitting ? 'Enviando...' : 'Enviar mensaje'}
                     </Button>
                   </form>
-                </Form>
-              )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        
-        <div className="rounded-xl overflow-hidden">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.1035916220336!2d-99.18549958521424!3d19.407921546125865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff7f3ad48d37%3A0x91a7600faa686995!2sAv.%20Insurgentes%20Sur%201602%2C%20Cr%C3%A9dito%20Constructor%2C%20Benito%20Ju%C3%A1rez%2C%2003940%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses-419!2smx!4v1642777444563!5m2!1ses-419!2smx" 
-            width="100%" 
-            height="450" 
-            style={{ border: 0 }} 
-            allowFullScreen 
-            loading="lazy"
-            title="Ubicación de latamvideos"
-          ></iframe>
-        </div>
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </>
   );
 };
 
