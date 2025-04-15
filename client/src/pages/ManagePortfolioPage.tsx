@@ -550,23 +550,90 @@ const ManagePortfolioPage = () => {
                 name="thumbnailUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>URL de la miniatura</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://ejemplo.com/imagen.jpg" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Imagen de vista previa (se generará automáticamente para videos de YouTube)
-                    </FormDescription>
-                    <div className="flex justify-end">
-                      <Button 
-                        type="button" 
-                        variant="link" 
-                        size="sm" 
-                        onClick={generateThumbnail}
-                        className="text-xs px-0"
-                      >
-                        Generar automáticamente
-                      </Button>
+                    <FormLabel>Miniatura</FormLabel>
+                    <div className="space-y-4">
+                      {field.value && (
+                        <div className="relative w-full h-40 rounded-md overflow-hidden border">
+                          <img 
+                            src={field.value.startsWith('/uploads') ? field.value : field.value} 
+                            alt="Miniatura"
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                      )}
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <FormControl>
+                            <Input placeholder="URL de imagen (opcional)" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            URL de miniatura o sube una imagen
+                          </FormDescription>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Input 
+                            type="file" 
+                            accept="image/jpeg,image/png,image/gif,image/webp"
+                            onChange={async (e) => {
+                              if (e.target.files && e.target.files[0] && currentItemId) {
+                                const formData = new FormData();
+                                formData.append('thumbnail', e.target.files[0]);
+                                
+                                try {
+                                  const res = await fetch(`/api/portfolio/${currentItemId}/thumbnail`, {
+                                    method: 'POST',
+                                    credentials: 'include',
+                                    body: formData
+                                  });
+                                  
+                                  if (!res.ok) {
+                                    throw new Error('Error al subir la imagen');
+                                  }
+                                  
+                                  const data = await res.json();
+                                  field.onChange(data.thumbnailUrl);
+                                  
+                                  toast({
+                                    title: "¡Éxito!",
+                                    description: "Miniatura actualizada correctamente",
+                                  });
+                                  
+                                  // Invalidar la consulta del portafolio para actualizar los datos en caché
+                                  queryClient.invalidateQueries({ queryKey: ['/api/portfolio'] });
+                                } catch (error) {
+                                  toast({
+                                    title: "Error",
+                                    description: error instanceof Error ? error.message : "Error al subir la imagen",
+                                    variant: "destructive",
+                                  });
+                                }
+                              } else if (e.target.files && e.target.files[0] && !currentItemId) {
+                                toast({
+                                  title: "Información",
+                                  description: "Primero guarda el proyecto para poder subir una imagen",
+                                });
+                              }
+                            }}
+                          />
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Archivos de hasta 5MB (JPG, PNG, GIF)
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-end">
+                        <Button 
+                          type="button" 
+                          variant="link" 
+                          size="sm" 
+                          onClick={generateThumbnail}
+                          className="text-xs px-0"
+                        >
+                          Generar automáticamente desde YouTube/Vimeo
+                        </Button>
+                      </div>
                     </div>
                     <FormMessage />
                   </FormItem>
