@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, CheckCircle, Briefcase, Clock, Monitor, MessageSquare, Loader2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { countries } from '@/lib/constants';
+import { countries, colorPalette } from '@/lib/constants';
 
 // Tipo para el editor de demostración
 interface Editor {
@@ -263,7 +263,10 @@ const EditorInteractiveProfile = () => {
                       onClick={() => setActiveTab('portafolio')}
                     >
                       <div className="flex items-center gap-2">
-                        <Briefcase className="w-4 h-4" />
+                        <Briefcase 
+                          className="w-4 h-4" 
+                          style={{ color: activeTab === 'portafolio' ? colorPalette.grayscale.primary : colorPalette.pastel.blue }}
+                        />
                         <span>Portafolio</span>
                       </div>
                     </button>
@@ -272,7 +275,10 @@ const EditorInteractiveProfile = () => {
                       onClick={() => setActiveTab('equipamiento')}
                     >
                       <div className="flex items-center gap-2">
-                        <Monitor className="w-4 h-4" />
+                        <Monitor 
+                          className="w-4 h-4" 
+                          style={{ color: activeTab === 'equipamiento' ? colorPalette.grayscale.primary : colorPalette.pastel.indigo }}
+                        />
                         <span>Equipamiento</span>
                       </div>
                     </button>
@@ -281,7 +287,10 @@ const EditorInteractiveProfile = () => {
                       onClick={() => setActiveTab('tarifas')}
                     >
                       <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
+                        <Clock 
+                          className="w-4 h-4" 
+                          style={{ color: activeTab === 'tarifas' ? colorPalette.grayscale.primary : colorPalette.pastel.purple }}
+                        />
                         <span>Tarifas</span>
                       </div>
                     </button>
@@ -290,7 +299,10 @@ const EditorInteractiveProfile = () => {
                       onClick={() => setActiveTab('reseñas')}
                     >
                       <div className="flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4" />
+                        <MessageSquare 
+                          className="w-4 h-4" 
+                          style={{ color: activeTab === 'reseñas' ? colorPalette.grayscale.primary : colorPalette.pastel.teal }}
+                        />
                         <span>Reseñas</span>
                       </div>
                     </button>
@@ -367,13 +379,13 @@ const EditorInteractiveProfile = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           <div className="flex items-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-sm">
                             <div className="mr-3 bg-blue-100 p-2 rounded-full">
-                              <Monitor className="h-5 w-5 text-blue-600" />
+                              <Monitor className="h-5 w-5" style={{ color: colorPalette.pastel.blue }} />
                             </div>
                             <span className="font-medium text-gray-800">MacBook Pro M1 Max</span>
                           </div>
                           <div className="flex items-center p-3 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg shadow-sm">
                             <div className="mr-3 bg-indigo-100 p-2 rounded-full">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke={colorPalette.pastel.indigo}>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                               </svg>
                             </div>
@@ -381,7 +393,7 @@ const EditorInteractiveProfile = () => {
                           </div>
                           <div className="flex items-center p-3 bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg shadow-sm">
                             <div className="mr-3 bg-sky-100 p-2 rounded-full">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke={colorPalette.pastel.sky}>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                               </svg>
                             </div>
@@ -389,7 +401,7 @@ const EditorInteractiveProfile = () => {
                           </div>
                           <div className="flex items-center p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-sm">
                             <div className="mr-3 bg-purple-100 p-2 rounded-full">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke={colorPalette.pastel.purple}>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                               </svg>
                             </div>
