@@ -76,8 +76,9 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
       <CardContent className="p-0">
         <div className="flex flex-col lg:flex-row">
           {/* Sidebar - Información del profesional */}
-          <div className="lg:w-1/3 bg-[#F9F9F9] p-8 flex flex-col items-center text-center border-r border-gray-100">
-            <div className="w-36 h-36 rounded-full overflow-hidden bg-gray-200 mb-6 border-4 border-white shadow-lg">
+          <div className="lg:w-1/3 bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-50 p-8 flex flex-col items-center text-center border-r border-gray-100 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/30 transform translate-x-20 -translate-y-20 opacity-50"></div>
+            <div className="w-36 h-36 rounded-full overflow-hidden bg-gray-200 mb-6 border-4 border-white shadow-lg relative z-10">
               {editor.profilePicture ? (
                 <img 
                   src={editor.profilePicture} 
@@ -99,17 +100,19 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
             </div>
             
             {/* Estadísticas clave */}
-            <div className="grid grid-cols-2 gap-4 w-full mb-8">
-              <div className="bg-[#F2F2F7] rounded-lg p-4 flex flex-col items-center">
-                <BriefcaseIcon className="h-5 w-5 text-primary mb-1" />
-                <span className="text-xs text-[#525252]">Experiencia</span>
-                <span className="text-lg font-bold text-[#1c1c1e]">{editor.yearsOfExperience || "N/A"} años</span>
+            <div className="grid grid-cols-2 gap-4 w-full mb-8 relative z-10">
+              <div className="bg-gradient-to-br from-blue-100/80 to-indigo-100/80 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-12 h-12 rounded-full bg-white/30 transform translate-x-6 -translate-y-6 opacity-50"></div>
+                <BriefcaseIcon className="h-5 w-5 text-primary mb-1 relative z-10" />
+                <span className="text-xs text-[#525252] relative z-10">Experiencia</span>
+                <span className="text-lg font-bold text-[#1c1c1e] relative z-10">{editor.yearsOfExperience || "N/A"} años</span>
               </div>
               
-              <div className="bg-[#F2F2F7] rounded-lg p-4 flex flex-col items-center">
-                <DollarSignIcon className="h-5 w-5 text-primary mb-1" />
-                <span className="text-xs text-[#525252]">Desde</span>
-                <span className="text-lg font-bold text-[#1c1c1e]">${editor.basicRate} <small>USD</small></span>
+              <div className="bg-gradient-to-br from-indigo-100/80 to-sky-100/80 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-12 h-12 rounded-full bg-white/30 transform translate-x-6 -translate-y-6 opacity-50"></div>
+                <DollarSignIcon className="h-5 w-5 text-primary mb-1 relative z-10" />
+                <span className="text-xs text-[#525252] relative z-10">Desde</span>
+                <span className="text-lg font-bold text-[#1c1c1e] relative z-10">${editor.basicRate} <small>USD</small></span>
               </div>
             </div>
             
@@ -147,21 +150,24 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
             </div>
             
             {/* Botón de contacto */}
-            <Button 
+            <CustomButton 
+              variant="dark"
+              size="lg"
               onClick={handleContactClick} 
-              className="w-full bg-[#0050FF] text-white hover:bg-[#0050FF]/90 transition-all py-6 rounded-md shadow-sm hover:shadow"
+              className="w-full py-6 shadow-sm hover:shadow"
               disabled={contactLoading}
             >
               <MailIcon className="h-5 w-5 mr-2" />
               Contactar
-            </Button>
+            </CustomButton>
             
-            <Button 
+            <CustomButton 
               variant="outline"
-              className="w-full mt-3 border-[#0A0A0A] text-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white transition-all py-6 rounded-md"
+              size="lg"
+              className="w-full mt-3 border-gray-900 py-6"
             >
               Solicitar Cotización
-            </Button>
+            </CustomButton>
           </div>
           
           {/* Área principal - Datos del profesional */}
