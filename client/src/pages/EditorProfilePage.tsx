@@ -184,12 +184,16 @@ const EditorProfilePage = () => {
     software: profileData.software || [],
     styles: profileData.editingStyles || [],
     editingStyles: profileData.editingStyles || [],
+    expertise: profileData.expertise || [],
+    technologyTags: profileData.technologyTags || [],
+    equipment: profileData.equipment || [],
     yearsOfExperience: userData.yearsOfExperience,
     experience: `${userData.yearsOfExperience || ''} años de experiencia.`,
-    equipment: profileData.equipment || [],
     basicRate: profileData.basicRate,
     mediumRate: profileData.mediumRate,
     advancedRate: profileData.advancedRate,
+    weeklyAvailability: profileData.weeklyAvailability || {},
+    paymentMethods: profileData.paymentMethods || [],
     viewCount: profileData.viewCount || 0,
   } : mockEditorData;
   
@@ -285,29 +289,38 @@ const EditorProfilePage = () => {
           </div>
           
           {/* Tabs for Portfolio, Reviews, Equipment, Rates */}
-          <Tabs defaultValue="about" className="mb-6">
-            <TabsList className="w-full border-b-0 rounded-t-lg bg-[#F2F2F7] p-1">
-              <TabsTrigger 
-                value="about" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Acerca de mí">🧑‍💼</span>
-                  <span>Acerca de mí</span>
-                </span>
-              </TabsTrigger>
+          <Tabs defaultValue="portfolio" className="mb-6">
+            <TabsList className="w-full border-b border-gray-200 bg-transparent p-0 mb-4 flex justify-start overflow-x-auto gap-4">
               <TabsTrigger 
                 value="portfolio" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
               >
                 <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Portafolio">🎞️</span>
+                  <span role="img" aria-label="Portafolio">📝</span>
                   <span>Portafolio</span>
                 </span>
               </TabsTrigger>
               <TabsTrigger 
+                value="about" 
+                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Acerca de mí">🎞</span>
+                  <span>Multimedia</span>
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="equipment" 
+                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Equipo Técnico">⚙️</span>
+                  <span>Equipo</span>
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
                 value="rates" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span role="img" aria-label="Tarifas">💰</span>
@@ -315,21 +328,21 @@ const EditorProfilePage = () => {
                 </span>
               </TabsTrigger>
               <TabsTrigger 
-                value="equipment" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
-              >
-                <span className="flex items-center gap-2">
-                  <span role="img" aria-label="Equipo Técnico">⚙️</span>
-                  <span>Equipo Técnico</span>
-                </span>
-              </TabsTrigger>
-              <TabsTrigger 
                 value="reviews" 
-                className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white rounded-md transition-all"
+                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
               >
                 <span className="flex items-center gap-2">
                   <span role="img" aria-label="Reseñas">⭐</span>
                   <span>Reseñas</span>
+                </span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="statistics" 
+                className="rounded-none border-0 px-4 py-2 font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#0050FF] data-[state=active]:text-[#0050FF] bg-transparent text-[#1c1c1e] hover:text-[#0050FF] transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label="Estadísticas">📊</span>
+                  <span>Estadísticas</span>
                 </span>
               </TabsTrigger>
             </TabsList>
@@ -422,37 +435,39 @@ const EditorProfilePage = () => {
             
             {/* Portfolio Tab */}
             <TabsContent value="portfolio" className="mt-6">
-              <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {portfolioLoading ? (
-                  <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="w-full h-[300px] rounded-lg" />
+                  <>
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <Skeleton key={i} className="aspect-[4/3] rounded-xl" />
                     ))}
+                  </>
+                ) : portfolio && portfolio.length === 0 ? (
+                  <div className="col-span-full text-center py-12 bg-white rounded-lg shadow-sm">
+                    <p className="text-[#8E8E93]">El profesional aún no ha agregado proyectos a su portafolio.</p>
                   </div>
-                ) : portfolio.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-[#8E8E93]">El editor aún no ha agregado proyectos a su portafolio.</p>
-                  </div>
-                ) : (
-                  portfolio.map((item) => (
-                    <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all transform hover:translate-y-[-3px] duration-300">
-                      <div className="aspect-video bg-gray-100 relative">
+                ) : portfolio && (
+                  Array.isArray(portfolio) && portfolio.map((item: any) => (
+                    <div key={item.id} className="group bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all transform hover:translate-y-[-3px] duration-300">
+                      <div className="aspect-[16/9] bg-gray-100 relative overflow-hidden">
                         {item.thumbnailUrl ? (
                           <>
                             <img 
                               src={item.thumbnailUrl} 
                               alt={item.title} 
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
-                            <a 
-                              href={item.videoUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium flex items-center shadow-md hover:bg-primary/90 transition-colors"
-                            >
-                              Ver en YouTube
-                              <ExternalLink className="ml-1 h-3.5 w-3.5" />
-                            </a>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                              <a 
+                                href={item.videoUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="bg-[#0050FF] text-white px-3 py-2 rounded-md text-sm font-medium flex items-center shadow-md hover:bg-[#0050FF]/90 transition-colors"
+                              >
+                                Ver proyecto
+                                <ExternalLink className="ml-1 h-3.5 w-3.5" />
+                              </a>
+                            </div>
                           </>
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-[#8E8E93]">
@@ -460,17 +475,75 @@ const EditorProfilePage = () => {
                           </div>
                         )}
                       </div>
-                      <div className="p-6">
-                        <div>
-                          <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                          {item.description && (
-                            <p className="text-[#8E8E93] text-sm leading-relaxed">{item.description}</p>
-                          )}
-                        </div>
+                      <div className="p-5">
+                        <h3 className="text-lg font-bold mb-2 text-[#1c1c1e] line-clamp-1">{item.title}</h3>
+                        {item.description && (
+                          <p className="text-[#8E8E93] text-sm leading-relaxed line-clamp-2">{item.description}</p>
+                        )}
                       </div>
                     </div>
                   ))
                 )}
+              </div>
+            </TabsContent>
+            
+            {/* Statistics Tab */}
+            <TabsContent value="statistics" className="mt-6">
+              <div className="bg-white rounded-xl shadow-sm p-8">
+                <h3 className="text-xl font-bold mb-6 text-[#1c1c1e]">Estadísticas del perfil</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                  <div className="bg-[#F9F9F9] rounded-lg p-6 flex flex-col items-center text-center">
+                    <EyeIcon className="h-10 w-10 text-[#0050FF] mb-3 opacity-80" />
+                    <span className="text-3xl font-bold text-[#1c1c1e]">{profileData?.viewCount || 0}</span>
+                    <span className="text-[#8E8E93] text-sm mt-1">Visitas al perfil</span>
+                  </div>
+                  
+                  <div className="bg-[#F9F9F9] rounded-lg p-6 flex flex-col items-center text-center">
+                    <MailIcon className="h-10 w-10 text-[#0050FF] mb-3 opacity-80" />
+                    <span className="text-3xl font-bold text-[#1c1c1e]">{profileData?.contactCount || 0}</span>
+                    <span className="text-[#8E8E93] text-sm mt-1">Contactos recibidos</span>
+                  </div>
+                  
+                  <div className="bg-[#F9F9F9] rounded-lg p-6 flex flex-col items-center text-center">
+                    <Star className="h-10 w-10 text-[#0050FF] mb-3 opacity-80" />
+                    <span className="text-3xl font-bold text-[#1c1c1e]">{reviews ? reviews.length : 0}</span>
+                    <span className="text-[#8E8E93] text-sm mt-1">Reseñas recibidas</span>
+                  </div>
+                </div>
+                
+                <h4 className="text-lg font-semibold mb-4 text-[#1c1c1e]">Actividad reciente</h4>
+                <div className="border-l-2 border-[#0050FF]/20 pl-5 ml-2 space-y-6">
+                  <div className="relative">
+                    <div className="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-[#0050FF]"></div>
+                    <p className="text-sm text-[#525252]">
+                      <span className="font-medium">Última actualización del perfil:</span> {" "}
+                      {profileData?.updatedAt 
+                        ? format(new Date(profileData.updatedAt), 'dd/MM/yyyy HH:mm') 
+                        : "No disponible"}
+                    </p>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-[#0050FF]"></div>
+                    <p className="text-sm text-[#525252]">
+                      <span className="font-medium">Última reseña recibida:</span> {" "}
+                      {reviews && reviews.length > 0 
+                        ? format(new Date(reviews[0].createdAt), 'dd/MM/yyyy') 
+                        : "No hay reseñas"}
+                    </p>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-[#0050FF]"></div>
+                    <p className="text-sm text-[#525252]">
+                      <span className="font-medium">Perfil creado:</span> {" "}
+                      {profileData?.createdAt 
+                        ? format(new Date(profileData.createdAt), 'dd/MM/yyyy') 
+                        : "No disponible"}
+                    </p>
+                  </div>
+                </div>
               </div>
             </TabsContent>
             

@@ -1,0 +1,233 @@
+⚠️ Prioridad: Rediseño y Corrección del Perfil Público de Usuarios
+Actualmente estamos teniendo un problema importante en la vista del perfil público:
+
+El diseño actual está desordenado y poco atractivo.
+
+Hay datos que no se ven o no se están renderizando correctamente.
+
+Aunque ya tenemos varias cosas funcionando (portafolio, tarifas, base de datos, etc.), el perfil sigue siendo el eslabón más débil y eso nos puede afectar fuerte en conversión.
+
+¿Por qué es crítico?
+🔵 El perfil público debe ser la mejor carta de presentación de cada videógrafo/editor.
+Es su landing page. Si eso no se ve bien, todo lo que funcione detrás pierde valor. Es como tener buen producto pero exhibido en un aparador feo.
+
+🎯 Este perfil será también el que vean los clientes desde la homepage o desde los filtros. Es clave que:
+
+Se vea bien estructurado.
+
+Resalte lo más importante.
+
+Genere confianza y deseo de contacto inmediato.
+
+Problemas actuales
+Campos como tags, especialidades o equipo no aparecen correctamente o no se pueden editar.
+
+La interfaz es confusa y no comunica profesionalismo.
+
+No hay jerarquía visual. Todo se ve igual de plano.
+
+En mobile, la experiencia está rota o desordenada.
+
+No se aprovechan los datos que ya tenemos en la base (años de experiencia, software, etc.).
+
+¿Qué vamos a hacer?
+Rediseñar el perfil como si fuera una landing de Apple o Notion.
+
+Mostrar todos los datos clave (ver instrucciones previas).
+
+Aplicar estilo suizo, con excelente jerarquía, aire y claridad.
+
+Implementar tabs funcionales: 📝 Portafolio | 🎞 Multimedia | 📊 Estadísticas | 📨 Solicitudes
+
+Permitir edición de todos los campos: tags, especialidad, software, equipo, tarifas, disponibilidad.
+
+Asegurarnos que los cambios se guardan correctamente y se actualiza también la vista pública.
+
+Objetivo
+👉 Que cada perfil se vea como una mini página web profesional, clara, limpia y vendible.
+
+Esto no solo mejora la experiencia, sino que aumenta la tasa de conversión de briefs, clics y contrataciones.
+Estamos en un buen momento técnico, y si resolvemos esto, el producto va a lucir muchísimo más.
+
+1. Estructura y Arquitectura del Perfil
+Sección Izquierda (sidebar estilo “Hero”)
+
+Foto del videógrafo: Circular, con un tamaño generoso (ej. 120-150px).
+
+Nombre + Ubicación:
+
+Nombre grande (Satoshi / SF Pro Display en Bold).
+
+Ciudad y país con ícono sutil de localización.
+
+Tags y Especialidades:
+
+Lista de tags (p. ej., “Edición estilo Vox”, “Cinematografía”, “CapCut”).
+
+Mostrar como chips minimalistas, con fondo gris claro #F2F2F7 y texto en gris oscuro.
+
+Reseñas y Calificación:
+
+Si aplica, un sistema de estrellas discretas (sin exagerar).
+
+Breve mención de la cantidad de reseñas (ej. “(4.9) 
+127
+𝑟
+𝑒
+𝑠
+𝑒
+𝑛
+~
+𝑎
+𝑠
+127rese 
+n
+~
+ as”).
+
+Estadísticas Clave (si quieres resaltar):
+
+Ej.: “23 Proyectos”, “$200 en tarifas base”, “5 Años de Experiencia”.
+
+Úsalas como pequeños bloques con íconos ligeros o texto bold.
+
+Sección Derecha (Área principal con Tabs)
+
+Tabs:
+
+Portafolio (o “Proyectos Destacados”)
+
+Equipo (detalle de cámaras, software, etc.)
+
+Tarifas (planes básico, estándar, premium)
+
+Reseñas (comentarios de clientes)
+
+Contenedor:
+
+Cada tab se muestra en un panel principal, sobre fondo blanco.
+
+Usa transiciones suaves al cambiar de tab (0.3s ease-in-out).
+
+Encabezado / Hero Superior (Opcional)
+
+Si deseas un hero de ancho completo con una foto o un video de fondo.
+
+Manténlo minimal para no robar protagonismo al contenido principal.
+
+2. Datos Clave que Deben Verse
+Nombre, ciudad, país
+
+Especialidad principal: Editor de video, Videógrafo, Animador, etc.
+
+Tags: Para proyectos o estilos especiales (“Documentales”, “Edición estilo Vox”, “Reels”, “CapCut”).
+
+Portafolio: Muestra 3-4 proyectos destacados en tarjetas, con miniaturas grandes.
+
+Tarifas: Rango de precios (básico, estándar, premium) o “desde $___”.
+
+Equipo Técnico: Cámaras, lentes, software, etc.
+
+Reseñas / Ratings: Estrellas o puntuación, # de opiniones.
+
+Botones de Acción:
+
+Contactar: Para iniciar mensajería directa.
+
+Solicitar Cotización: Botón principal en azul (#007AFF).
+
+3. Estilo Visual y Diseño Suizo
+Tipografía y Colores
+
+Tipografía: Satoshi o SF Pro Display. Títulos en Bold, texto de cuerpo en Regular o Medium.
+
+Paleta:
+
+Fondo principal blanco o gris muy claro (#F9F9F9).
+
+Texto en gris oscuro (#1C1C1E).
+
+Acento en azul (#007AFF) para botones y links.
+
+Chips/Tags en gris claro (#F2F2F7) con texto #1C1C1E.
+
+Espacios (Padding y Márgenes)
+
+Diseño suizo = mucho aire. Deja respiración entre bloques.
+
+Separa cada sección con ~48px en desktop, ~24px en mobile.
+
+Grilla y Alineación
+
+Estructura en una grilla de 12 columnas o 2-3 columnas principales (en desktop).
+
+En mobile, las secciones se apilan verticalmente, con tabs convertidos en scroll horizontal o un menú superior.
+
+Minimalismo tipo Apple
+
+Pocas sombras, sin gradientes recargados.
+
+Uso inteligente del color: Botones azules, texto neutro, chips suaves.
+
+Iconos: Usar íconos del sistema o minimalistas, en tamaño sutil (16px-20px).
+
+4. Orden y Secuencia en la Presentación
+Sección Izquierda Fija (en desktop)
+
+Muestra la foto, nombre, location, tags y pequeña bio.
+
+Debajo, mini bloques con stats (Proyectos, Tarifas, Años de Exp.), y un botón de Contactar o “Solicitar Cotización”.
+
+Área Principal (derecha) con Tabs
+
+Portafolio: tarjetas grandes con videos o imágenes. Títulos breves y subtítulos.
+
+Equipo: detalle de cámara, lentes, iluminación, software.
+
+Tarifas: secciones con planes (“Básico”, “Completo”, “Premium”).
+
+Reseñas: lista de comentarios, posible calificación de 1-5 estrellas.
+
+Scroll y Animaciones
+
+En mobile, la sección izquierda (foto, name) va arriba; las tabs se ven debajo, en un scroll vertical.
+
+Animaciones suaves:
+
+Efecto fade-in para tarjetas del portafolio.
+
+Hover con leve aumento de escala en las miniaturas (transform: scale(1.03)).
+
+5. Consideraciones para Mobile y Efectos de Scroll
+Responsive
+
+En pantallas pequeñas, la foto y datos van en la parte superior, seguido de tabs en horizontal o un menú.
+
+Las tarjetas de portafolio se vuelven de 1 por fila (scroll vertical).
+
+Botones con tacto amplio (mínimo 44px de alto).
+
+Efectos de Scroll
+
+Mantenerlos sutiles: un parallax ligero en la foto de perfil o un fade-in al bajar.
+
+Evitar animaciones bruscas que afecten la rapidez de carga.
+
+Foco en lo Importante
+
+Lo primero que ve el usuario: la foto y nombre, los tags, y botones de acción.
+
+No satures la vista con trozos de texto largos, coloca la bio extendida en su sección/tabs.
+
+6. Resumen de Instrucciones
+Diseño suizo = aire, tipografía clara (Satoshi/SF Pro), acentos en azul.
+
+Layout con sidebar izquierdo (foto, tags, stats) y zona de tabs en la derecha (Portafolio, Equipo, Tarifa, Reseñas).
+
+Campos imprescindibles:
+
+Nombre, Localización, Tags, Portafolio, Tarifas, Equipo, Reseñas, Botones (Contactar/Solicitar Cotización).
+
+Mobile-first: la información esencial siempre arriba (foto + tags + CTA). Tabs y contenido en scroll vertical.
+
+Transiciones suaves y minimalismo Apple-like: sin recargar con sombras ni gradientes fuertes.
