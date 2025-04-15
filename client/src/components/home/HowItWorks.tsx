@@ -103,7 +103,7 @@ const HowItWorks = () => {
               {index < steps.length - 1 && (
                 <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 z-10">
                   <div className="bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-md">
-                    <ArrowRight className="h-5 w-5 text-[#0050FF]" fill="#E6F0FF" stroke="#0050FF" strokeWidth={2} />
+                    <ArrowRight className="h-5 w-5 text-[#020617]" fill="#F8FAFC" stroke="#020617" strokeWidth={2} />
                   </div>
                 </div>
               )}

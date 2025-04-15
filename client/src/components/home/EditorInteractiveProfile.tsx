@@ -212,8 +212,8 @@ const EditorInteractiveProfile = () => {
                   <h3 className="text-xl font-bold flex items-center gap-1">
                     {editorProfile.name}
                     {editorProfile.verified && (
-                      <span className="text-[#007AFF]" title="Perfil verificado">
-                        <CheckCircle className="w-4 h-4 fill-[#007AFF]" />
+                      <span className="text-[#020617]" title="Perfil verificado">
+                        <CheckCircle className="w-4 h-4 fill-[#020617]" />
                       </span>
                     )}
                   </h3>
@@ -226,7 +226,7 @@ const EditorInteractiveProfile = () => {
                   
                   <div className="flex flex-wrap gap-2 justify-center mb-4">
                     {editorProfile.specialties.map((specialty, idx) => (
-                      <Badge key={idx} className="bg-[#007AFF]/10 text-[#007AFF] border-0">
+                      <Badge key={idx} className="bg-[#020617]/10 text-[#020617] border-0">
                         {specialty}
                       </Badge>
                     ))}
@@ -234,21 +234,21 @@ const EditorInteractiveProfile = () => {
                   
                   <div className="grid grid-cols-3 gap-2 w-full mb-4">
                     <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 text-center shadow-sm">
-                      <p className="text-md font-bold text-[#0050FF]">{editorProfile.portfolioCount}</p>
+                      <p className="text-md font-bold text-[#020617]">{editorProfile.portfolioCount}</p>
                       <p className="text-xs text-gray-600">Proyectos</p>
                     </div>
                     <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-3 text-center shadow-sm">
-                      <p className="text-md font-bold text-[#0050FF]">${editorProfile.price.min}</p>
+                      <p className="text-md font-bold text-[#020617]">${editorProfile.price.min}</p>
                       <p className="text-xs text-gray-600">Desde</p>
                     </div>
                     <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-3 text-center shadow-sm">
-                      <p className="text-md font-bold text-[#0050FF]">{editorProfile.experience}</p>
+                      <p className="text-md font-bold text-[#020617]">{editorProfile.experience}</p>
                       <p className="text-xs text-gray-600">Años exp.</p>
                     </div>
                   </div>
                   
                   <Link href={`/editor/${editorProfile.id}`}>
-                    <Button className="w-full bg-[#0050FF] hover:bg-[#003CC0] py-5 font-medium text-base shadow-md transition-all hover:shadow-lg">
+                    <Button className="w-full bg-[#020617] hover:bg-[#1E293B] py-5 font-medium text-base shadow-md transition-all hover:shadow-lg">
                       Ver perfil completo
                     </Button>
                   </Link>
@@ -405,7 +405,7 @@ const EditorInteractiveProfile = () => {
                         <div className="space-y-4">
                           <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
                             <h5 className="font-medium text-blue-700">Paquete Básico</h5>
-                            <p className="text-2xl text-[#0050FF] font-bold my-2">${editorProfile.price.min}</p>
+                            <p className="text-2xl text-[#020617] font-bold my-2">${editorProfile.price.min}</p>
                             <p className="text-sm text-gray-700">Edición básica de video, hasta 5 minutos de duración.</p>
                           </div>
                           <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-5 shadow-sm transition-all hover:shadow-md">
