@@ -66,7 +66,7 @@ const Hero = () => {
           
           <h1 className="text-2xl font-bold text-center tracking-tight mb-2 leading-none">
             Encuentra a profesionales<br />
-            <span className="text-[#0050FF] tracking-tighter">en video de LATAM</span>
+            <span className="text-[#020617] tracking-tighter">en video de LATAM</span>
           </h1>
           
           <p className="text-gray-600 text-base md:text-lg mb-4 leading-snug text-center">
@@ -158,7 +158,7 @@ const Hero = () => {
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 leading-none">
                 <span>Encuentra a</span><br />
                 <span>profesionales</span><br />
-                <span className="text-[#0050FF] tracking-tighter">en video de<br />LATAM</span>
+                <span className="text-[#020617] tracking-tighter">en video de<br />LATAM</span>
               </h1>
               
               <p className="text-gray-600 text-lg md:text-xl mb-6 leading-snug">

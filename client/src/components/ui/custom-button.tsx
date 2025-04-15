@@ -13,10 +13,10 @@ const CustomButton = React.forwardRef<HTMLButtonElement, CustomButtonProps>(
     const Comp = asChild ? Slot : "button";
     
     const variantStyles = {
-      primary: "bg-[#0050FF] hover:bg-[#0040E0] text-white shadow-md",
-      secondary: "bg-white hover:bg-gray-100 text-gray-800 border border-gray-200 shadow-sm",
-      outline: "bg-transparent hover:bg-gray-100 text-gray-800 border border-gray-300",
-      dark: "bg-gray-900 hover:bg-black text-white shadow-md"
+      primary: "bg-[#020617] hover:bg-[#0F172A] text-white shadow-md",
+      secondary: "bg-white hover:bg-[#F8FAFC] text-[#020617] border border-[#E2E8F0] shadow-sm",
+      outline: "bg-transparent hover:bg-[#F8FAFC] text-[#020617] border border-[#020617]",
+      dark: "bg-[#020617] hover:bg-[#0F172A] text-white shadow-md"
     };
 
     const sizeStyles = {

@@ -95,7 +95,7 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
             <h2 className="text-3xl font-bold text-[#1c1c1e] mb-1">{editor.name}</h2>
             
             <div className="flex items-center justify-center text-[#525252] text-sm mb-4">
-              <MapPin className="h-4 w-4 mr-1 text-primary/80" />
+              <MapPin className="h-4 w-4 mr-1 text-[#020617]/80" />
               <span>{editor.location}</span>
             </div>
             
@@ -103,14 +103,14 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
             <div className="grid grid-cols-2 gap-4 w-full mb-8 relative z-10">
               <div className="bg-gradient-to-br from-white to-[#f2f2f7] backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-12 h-12 rounded-full bg-white/30 transform translate-x-6 -translate-y-6 opacity-50"></div>
-                <BriefcaseIcon className="h-5 w-5 text-primary mb-1 relative z-10" />
+                <BriefcaseIcon className="h-5 w-5 text-[#020617] mb-1 relative z-10" />
                 <span className="text-xs text-[#525252] relative z-10">Experiencia</span>
                 <span className="text-lg font-bold text-[#1c1c1e] relative z-10">{editor.yearsOfExperience || "N/A"} años</span>
               </div>
               
               <div className="bg-gradient-to-br from-[#fafafa] to-[#f2f2f7] backdrop-blur-sm rounded-lg p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-12 h-12 rounded-full bg-white/30 transform translate-x-6 -translate-y-6 opacity-50"></div>
-                <DollarSignIcon className="h-5 w-5 text-primary mb-1 relative z-10" />
+                <DollarSignIcon className="h-5 w-5 text-[#020617] mb-1 relative z-10" />
                 <span className="text-xs text-[#525252] relative z-10">Desde</span>
                 <span className="text-lg font-bold text-[#1c1c1e] relative z-10">${editor.basicRate} <small>USD</small></span>
               </div>
@@ -260,7 +260,7 @@ const ProfileCard = ({ editor, onContactClick }: ProfileCardProps) => {
                   Disponibilidad
                 </h3>
                 <div className="flex items-center">
-                  <Clock className="h-4 w-4 mr-2 text-primary" />
+                  <Clock className="h-4 w-4 mr-2 text-[#020617]" />
                   <span className="text-[#525252]">{getAvailabilityText()}</span>
                 </div>
               </div>
