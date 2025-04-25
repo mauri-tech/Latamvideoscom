@@ -1,0 +1,202 @@
+Instrucciones para Modal, Popup y Banner de Alerta
+
+Elemento	Instrucción Técnica	Contenido	Detalles de Estilo
+Modal inicial (Popup)	Crear un modal que se active al cargar la página (onLoad). Debe poder cerrarse (botón de "Cerrar" o "Entendido").	Mensaje principal: "🚧 Esta página está en construcción. Actualmente estamos finalizando módulos y funcionalidades. Lo que ves es una vista previa (carcasa) de cómo será el sitio final." CTA: "¿Quieres ser de los primeros en publicar tu trabajo? Llena el siguiente formulario:" seguido de tu iframe embebido.	Estilo sobrio pero amigable. Fondo semi-transparente (rgba(0,0,0,0.5)), caja blanca con bordes redondeados, sombra ligera, animación de entrada suave (ej. fadeIn o popIn). Botón de cerrar visible.
+Banner de alerta superior	Instalar un alert-banner fijo al tope del sitio (tipo sticky, siempre visible).	Mensaje: "⚙️ Sitio en construcción — 63% completado" seguido de una barra de progreso animada.	Color de fondo amarillo claro (#FFF3CD), texto negro o gris oscuro. Progress bar animado en verde (#28a745) mostrando 63%. Debe ser delgado (máx. 60px altura).
+Iframe del formulario	Insertar el iframe dentro del Modal, debajo del texto de invitación.	Usa el iframe que enviaste: (formulario de Google Forms).	Que se vea centrado y responsivo (width: 100%; max-width: 640px;) para que no se corte en móvil.
+🚀 Algo más que deberías hacer para el lanzamiento:
+
+Idea	¿Por qué hacerlo?	Cómo aplicarlo rápido
+Agregar contador regresivo (opcional)	Da sensación de urgencia y emoción ("Faltan X días para el lanzamiento oficial").	Puedes usar una librería ligera como Countdown.js o un plugin.
+Formulario de Registro a Newsletter	Empiezas a construir base de usuarios mientras terminas todo.	Además del formulario de Google, puedes meter un mini formulario de correo electrónico con Mailchimp, Brevo, etc. para captar leads.
+Botón de Feedback o Sugerencias	Que los visitantes puedan decirte qué les gustaría ver en el sitio terminado.	Un botón sencillo que abra un mini-formulario de 2-3 preguntas (tipo Typeform o Google Forms).
+Progreso gamificado en el banner	Cada semana podrías ir actualizando el % del banner ("¡Ahora al 70%! 🎯")	Motiva a la gente a regresar a checar avances. Se siente vivo el proyecto.
+📦 Estructura rápida para el Modal (HTML ejemplo)
+html
+Copiar
+Editar
+<div id="popupModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeModal()">&times;</span>
+    <h2>🚧 Esta página está en construcción</h2>
+    <p>Actualmente estamos finalizando módulos y funcionalidades. Lo que ves es una vista previa (carcasa) de cómo será el sitio final.</p>
+    <p>¿Quieres ser de los primeros en publicar tu trabajo? Llena este formulario:</p>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf_A9wsGu--SzvCw6TsHpAk5hSPXqP6jna1W5f2GnQDu4Tn2w/viewform?embedded=true" width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+  </div>
+</div>
+
+<script>
+  window.onload = function() {
+    document.getElementById('popupModal').style.display = 'block';
+  };
+  function closeModal() {
+    document.getElementById('popupModal').style.display = 'none';
+  }
+</script>
+(falta agregarle CSS bonito, te lo paso si quieres 🔥)
+
+¿Quieres que te prepare también el CSS de:
+
+El modal
+
+El banner sticky
+
+El progress bar animado?
+
+Te los dejo listos en tailwind o css puro si quieres que amarre más pro. 🚀
+
+¿Seguimos? 🔥👷‍♂️
+
+
+
+
+
+
+
+Dijiste:
+Dame las instrucciones detalladas para el desarrollador
+
+De poner un modal con el formulario.. la barra de prorgeso y decir que es una version SIN FUNCIONALIDAD tpdavia
+
+
+ChatGPT dijo:
+¡Claro que sí, Mau! Aquí te va un documento técnico detallado para pasarle al desarrollador 💻
+Todo explicado como se debe: claro, directo, con estructura y lógica de ejecución.
+
+📦 INSTRUCCIONES PARA IMPLEMENTAR LA VERSIÓN DE DESARROLLO
+🧱 Objetivo
+Implementar una versión de pre-lanzamiento del sitio que:
+
+Muestra un modal informativo al cargar con un formulario embebido.
+
+Incluye una barra de alerta sticky superior con mensaje y barra de progreso.
+
+Comunica claramente que el sitio aún NO tiene funcionalidad activa, solo visualización.
+
+✅ 1. MODAL AL CARGAR LA PÁGINA
+🧾 Propósito
+Informar que el sitio está en construcción y que se puede llenar un formulario para ser de los primeros en publicar contenido.
+
+🧰 Requisitos técnicos
+Modal debe aparecer automáticamente al cargar la página (window.onload).
+
+Debe tener opción de cerrarse (ícono ❌ o botón).
+
+Incluir formulario de Google Forms embebido.
+
+Modal responsive en móvil y escritorio.
+
+📋 HTML base sugerido
+html
+Copiar
+Editar
+<!-- Modal -->
+<div id="popupModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="close-modal" onclick="closeModal()">✖</button>
+    <h2>🚧 Esta página está en construcción</h2>
+    <p>Estamos terminando los módulos y funcionalidades. Actualmente esto es solo una carcasa visual.</p>
+    <p>¿Quieres ser de los primeros en publicar tu trabajo? Llena este formulario:</p>
+    <div class="form-wrapper">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf_A9wsGu--SzvCw6TsHpAk5hSPXqP6jna1W5f2GnQDu4Tn2w/viewform?embedded=true" width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+    </div>
+  </div>
+</div>
+🧠 JS simple
+js
+Copiar
+Editar
+window.onload = function() {
+  document.getElementById('popupModal').style.display = 'flex';
+};
+
+function closeModal() {
+  document.getElementById('popupModal').style.display = 'none';
+}
+🎨 CSS sugerido
+css
+Copiar
+Editar
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: #fff;
+  max-width: 700px;
+  width: 90%;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.form-wrapper {
+  margin-top: 1.5rem;
+}
+🚨 2. BANNER SUPERIOR DE ALERTA STICKY + PROGRESS BAR
+🧾 Propósito
+Mostrar que el sitio está en desarrollo y que está al 63% de avance.
+
+📋 HTML sugerido
+html
+Copiar
+Editar
+<!-- Banner de alerta -->
+<div id="devBanner">
+  <p>⚠️ Este sitio está en desarrollo. Avance: <strong>63%</strong></p>
+  <div class="progress-bar">
+    <div class="progress-fill"></div>
+  </div>
+</div>
+🎨 CSS para banner
+css
+Copiar
+Editar
+#devBanner {
+  position: sticky;
+  top: 0;
+  background: #fff3cd;
+  color: #333;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+  margin-top: 5px;
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 63%;
+  background-color: #28a745;
+  transition: width 0.3s ease-in-out;
+}
+📌 Extra (opcional pero recomendado)
+
+Funcionalidad	¿Para qué sirve?	Cómo hacerlo
+🔔 Countdown al lanzamiento	Genera urgencia y retorno frecuente.	Usa librerías como countdown.js o un script personalizado.
+💬 Botón de Feedback	Recolecta ideas de los usuarios tempranos.	Otro modal o link a Google Forms de sugerencias.
+🧠 Recordar estado en localStorage	Para que el modal no salga cada vez que el usuario regresa.	Guarda bandera tipo localStorage.setItem('sawModal', true) al cerrarlo.
