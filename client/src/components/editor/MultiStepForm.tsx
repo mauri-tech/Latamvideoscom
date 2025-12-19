@@ -5,13 +5,14 @@ import SkillsForm from './SkillsForm';
 import EquipmentForm from './EquipmentForm';
 import PortfolioForm from './PortfolioForm';
 import RatesForm from './RatesForm';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from 'wouter';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface FormStep {
   title: string;
+  subtitle: string;
   component: React.ReactNode;
 }
 
@@ -28,61 +29,66 @@ const MultiStepForm = () => {
   const { toast } = useToast();
   const [_, navigate] = useLocation();
 
-  // Define steps and their corresponding components
-  const steps: FormStep[] = [
-    {
-      title: "Información personal",
-      component: (
-        <ProfileForm 
-          data={formData.profile} 
-          onSave={(data) => updateFormData('profile', data)}
-        />
-      )
-    },
-    {
-      title: "Softwares y estilos",
-      component: (
-        <SkillsForm 
-          data={formData.skills} 
-          onSave={(data) => updateFormData('skills', data)}
-        />
-      )
-    },
-    {
-      title: "Equipo técnico",
-      component: (
-        <EquipmentForm 
-          data={formData.equipment} 
-          onSave={(data) => updateFormData('equipment', data)}
-        />
-      )
-    },
-    {
-      title: "Portafolio",
-      component: (
-        <PortfolioForm 
-          data={formData.portfolio} 
-          onSave={(data) => updateFormData('portfolio', data)}
-        />
-      )
-    },
-    {
-      title: "Tarifas y disponibilidad",
-      component: (
-        <RatesForm 
-          data={formData.rates} 
-          onSave={(data) => updateFormData('rates', data)}
-        />
-      )
-    }
-  ];
-
   const updateFormData = (step: string, data: any) => {
     setFormData({
       ...formData,
       [step]: data
     });
   };
+
+  // Define steps and their corresponding components
+  const steps: FormStep[] = [
+    {
+      title: "Identidad",
+      subtitle: "Quién eres",
+      component: (
+        <ProfileForm
+          data={formData.profile}
+          onSave={(data) => updateFormData('profile', data)}
+        />
+      )
+    },
+    {
+      title: "Habilidades",
+      subtitle: "Qué sabes hacer",
+      component: (
+        <SkillsForm
+          data={formData.skills}
+          onSave={(data) => updateFormData('skills', data)}
+        />
+      )
+    },
+    {
+      title: "Equipo",
+      subtitle: "Tus herramientas",
+      component: (
+        <EquipmentForm
+          data={formData.equipment}
+          onSave={(data) => updateFormData('equipment', data)}
+        />
+      )
+    },
+    {
+      title: "Portafolio",
+      subtitle: "Tu trabajo",
+      component: (
+        <PortfolioForm
+          data={formData.portfolio}
+          onSave={(data) => updateFormData('portfolio', data)}
+        />
+      )
+    },
+    {
+      title: "Tarifas",
+      subtitle: "Tu valor",
+      component: (
+        <RatesForm
+          data={formData.rates}
+          onSave={(data) => updateFormData('rates', data)}
+        />
+      )
+    }
+  ];
 
   const goToNextStep = () => {
     if (currentStep < steps.length - 1) {
@@ -100,21 +106,15 @@ const MultiStepForm = () => {
 
   const submitForm = async () => {
     setLoading(true);
-    
+
     try {
-      // This is where you would send the form data to your backend API
-      // For this MVP example, we'll simulate a successful registration
-      
-      // In a real implementation, you would handle user creation, profile creation, etc.
-      // const response = await apiRequest('POST', '/api/editor-profiles', combinedData);
-      
+      // Simulation of API call
       setTimeout(() => {
         toast({
-          title: "¡Registro exitoso!",
-          description: "Tu perfil ha sido creado correctamente. Ahora puedes comenzar a recibir propuestas.",
+          title: "¡Perfil completado!",
+          description: "Tu perfil profesional ha sido creado exitosamente.",
         });
-        
-        // Redirect to the dashboard or profile page
+
         navigate('/dashboard');
         setLoading(false);
       }, 1500);
@@ -130,67 +130,67 @@ const MultiStepForm = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
-          {steps.map((step, index) => (
-            <div 
-              key={index} 
-              className={`flex flex-col items-center ${index <= currentStep ? 'text-primary' : 'text-gray-400'}`}
-            >
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 border-2 ${
-                index < currentStep 
-                  ? 'bg-primary text-white border-primary' 
-                  : index === currentStep 
-                    ? 'border-primary text-primary' 
-                    : 'border-gray-300 text-gray-400'
-              }`}>
-                {index < currentStep ? (
-                  <CheckCircle className="h-5 w-5" />
-                ) : (
-                  index + 1
-                )}
-              </div>
-              <span className={`text-xs hidden md:block ${index <= currentStep ? 'font-medium' : ''}`}>
-                {step.title}
-              </span>
-            </div>
-          ))}
+      {/* Stepper Header - Cleaner Look */}
+      <div className="mb-12">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest mb-1">Paso {currentStep + 1} de {steps.length}</p>
+            <h1 className="text-3xl font-bold text-foreground">{steps[currentStep].title}</h1>
+            <p className="text-gray-500">{steps[currentStep].subtitle}</p>
+          </div>
+
+          <div className="hidden md:flex gap-1">
+            {steps.map((_, index) => (
+              <div
+                key={index}
+                className={`h-2 w-12 rounded-full transition-all duration-300 ${index <= currentStep ? 'bg-primary' : 'bg-gray-200'
+                  }`}
+              />
+            ))}
+          </div>
         </div>
-        
-        <div className="h-2 bg-gray-200 rounded-full">
-          <div 
-            className="h-full bg-primary rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-          ></div>
+
+        <div className="h-1 w-full bg-gray-100 rounded-full md:hidden">
+          <div
+            className="h-full bg-primary rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+          />
         </div>
       </div>
-      
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <h2 className="text-2xl font-semibold mb-6">{steps[currentStep].title}</h2>
-        
-        {steps[currentStep].component}
-      </div>
-      
-      <div className="flex justify-between">
+
+      {/* Form Content Card */}
+      <Card className="rounded-2xl shadow-card border-0 bg-white mb-8 overflow-hidden">
+        <CardContent className="p-8">
+          {steps[currentStep].component}
+        </CardContent>
+      </Card>
+
+      {/* Navigation Footer */}
+      <div className="flex justify-between items-center">
         <Button
           variant="outline"
           onClick={goToPreviousStep}
           disabled={currentStep === 0 || loading}
+          className={`rounded-full border-gray-200 ${currentStep === 0 ? 'opacity-0 pointer-events-none' : ''}`}
         >
-          Anterior
+          <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
         </Button>
-        
+
+        <div className="flex gap-4">
+          {/* Optional: Add "Save for later" button here */}
+        </div>
+
         {currentStep < steps.length - 1 ? (
-          <Button onClick={goToNextStep}>
-            Siguiente
+          <Button onClick={goToNextStep} className="rounded-full shadow-lg bg-black hover:bg-gray-800 text-white px-8 h-12">
+            Siguiente <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
         ) : (
-          <Button 
-            onClick={submitForm} 
+          <Button
+            onClick={submitForm}
             disabled={loading}
-            className="bg-primary text-white hover:bg-primary/90"
+            className="rounded-full shadow-lg bg-primary hover:bg-primary/90 text-white px-8 h-12 font-bold"
           >
-            {loading ? 'Registrando...' : 'Finalizar registro'}
+            {loading ? 'Guardando...' : 'Completar Perfil'}
           </Button>
         )}
       </div>

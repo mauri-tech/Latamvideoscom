@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
 } from '@/components/ui/pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
   // Estados para paginación
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  
+
   // Manejo de tipo de datos
   interface EditorData {
     id: number;
@@ -37,61 +37,61 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
     thumbnailUrl: string;
     basicRate: number;
   }
-  
+
   // Transformar los filtros en parámetros de consulta
   const filterParams = new URLSearchParams();
-  
+
   if (filters.software && filters.software.length) {
     filterParams.set('software', filters.software.join(','));
   }
-  
+
   if (filters.styles && filters.styles.length) {
     filterParams.set('editingStyles', filters.styles.join(','));
   }
-  
+
   if (filters.maxRate) {
     filterParams.set('maxRate', filters.maxRate.toString());
   }
-  
+
   // Agregar filtro de tipo profesional 
   if (filters.professionalType) {
     filterParams.set('professionalType', filters.professionalType);
   }
-  
+
   // Agregar filtro de país
   if (filters.country) {
     filterParams.set('country', filters.country);
   }
-  
+
   // Agregar filtro de experiencia
   if (filters.experienceLevel) {
     filterParams.set('experienceLevel', filters.experienceLevel);
   }
-  
+
   // Agregar filtro de tipos de proyecto
   if (filters.projectType) {
     filterParams.set('projectType', filters.projectType);
   }
-  
+
   // Agregar filtro de idiomas
   if (filters.languages && filters.languages.length) {
     filterParams.set('languages', filters.languages.join(','));
   }
-  
+
   // Agregar filtro de disponibilidad
   if (filters.availability) {
     filterParams.set('availability', filters.availability);
   }
-  
+
   // Agregar filtro de tiempo de entrega
   if (filters.deliveryTime) {
     filterParams.set('deliveryTime', filters.deliveryTime);
   }
-  
+
   // Agregar parámetros de paginación
   filterParams.set('page', filters.page?.toString() || currentPage.toString());
   filterParams.set('limit', filters.limit?.toString() || itemsPerPage.toString());
-  
+
   // Ordenamiento (si está disponible)
   if (filters.sortBy) {
     filterParams.set('sortBy', filters.sortBy);
@@ -99,25 +99,36 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       filterParams.set('sortDirection', filters.sortDirection);
     }
   }
-  
+
   const queryString = filterParams.toString();
   const queryKey = queryString ? `/api/editor-profiles?${queryString}` : '/api/editor-profiles';
-  
-  const { data: response, isLoading, error } = useQuery({
+
+  // Interfaces for API response
+  interface SearchResponse {
+    results: any[];
+    pagination: {
+      total: number;
+      totalPages: number;
+      page: number;
+      limit: number;
+    };
+  }
+
+  const { data: response, isLoading, error } = useQuery<SearchResponse>({
     queryKey: [queryKey],
     staleTime: 60000, // 1 minuto
   });
-  
+
   const editors = response?.results || [];
-  
+
   // Obtener información de paginación del API
   const totalItems = response?.pagination?.total || 0;
   const totalPages = response?.pagination?.totalPages || 1;
-  
+
   // Function to get country name from country code
   const getCountryName = (countryCode: string) => {
     // This would typically be a lookup in a real implementation
-    const countryMap: {[key: string]: string} = {
+    const countryMap: { [key: string]: string } = {
       'MX': 'México',
       'CO': 'Colombia',
       'AR': 'Argentina',
@@ -125,20 +136,20 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       'PE': 'Perú',
       'UY': 'Uruguay',
     };
-    
+
     return countryMap[countryCode] || countryCode;
   };
-  
+
   // Manejar cambio de página
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    
+
     // Agregar el parámetro de página a los filtros
     const newParams = new URLSearchParams(filterParams.toString());
     newParams.set('page', page.toString());
     newParams.set('limit', itemsPerPage.toString());
-    
+
     // Triggering a new search with the updated page
     onFilterChange({
       ...filters,
@@ -146,7 +157,7 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       limit: itemsPerPage
     });
   };
-  
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -181,7 +192,7 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="text-center py-8">
@@ -189,7 +200,7 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       </div>
     );
   }
-  
+
   if (editors.length === 0) {
     return (
       <div className="text-center py-8">
@@ -198,7 +209,7 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       </div>
     );
   }
-  
+
   // Datos de ejemplo para mostrar cuando la API no devuelve resultados
   const sampleEditors = [
     {
@@ -238,15 +249,15 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
       basicRate: 60,
     },
   ];
-  
+
   // Convertir datos de API a formato esperado o usar datos de ejemplo
-  const displayEditors: EditorData[] = editors && Array.isArray(editors) && editors.length > 0 ? 
+  const displayEditors: EditorData[] = editors && Array.isArray(editors) && editors.length > 0 ?
     editors.map((editor: any) => {
       if (editor.profile) {
         // Extraer información de software y estilos de API
-        const softwareItems = (editor.profile.software || []) as any[]; 
+        const softwareItems = (editor.profile.software || []) as any[];
         const styleItems = (editor.profile.editingStyles || []) as any[];
-        
+
         // Si hay datos de perfil de API, formatearlos
         return {
           id: editor.profile.id,
@@ -262,7 +273,7 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
         };
       }
       return editor; // Si ya está en el formato correcto
-    }) 
+    })
     : sampleEditors;
 
   return (
@@ -271,7 +282,7 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
         <p className="text-sm text-[#8E8E93]">
           {displayEditors.length} editores encontrados
         </p>
-        <select 
+        <select
           className="text-sm border rounded-md p-1"
           aria-label="Ordenar resultados"
           value={filters.sortBy}
@@ -289,80 +300,80 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
           <option value="experience">Más experiencia</option>
         </select>
       </div>
-      
+
       <div className="space-y-4">
         {displayEditors.map((editor) => (
-          <Card key={editor.id} className="shadow-sm overflow-hidden">
+          <Card key={editor.id} className="shadow-card hover:shadow-hover transition-all duration-300 overflow-hidden bg-white rounded-2xl border-0">
             <CardContent className="p-0">
               <div className="flex flex-col md:flex-row">
-                <div className="md:w-1/3 h-48 md:h-auto relative">
-                  <img 
+                <div className="md:w-1/3 h-52 md:h-auto relative">
+                  <img
                     src={editor.thumbnailUrl}
                     alt={`Portfolio de ${editor.name}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   />
                   <div className="absolute top-4 left-4">
-                    <Badge className="bg-white text-primary hover:bg-white">
+                    <Badge className="bg-white/90 backdrop-blur-sm text-foreground hover:bg-white shadow-sm font-medium">
                       {editor.country ? getCountryName(editor.country) : 'Internacional'}
                     </Badge>
                   </div>
                 </div>
-                <div className="p-6 md:w-2/3">
+                <div className="p-6 md:w-2/3 flex flex-col justify-between">
                   <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <img 
-                          src={editor.profilePicture} 
-                          alt={editor.name} 
-                          className="w-10 h-10 rounded-full object-cover"
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4 mb-3">
+                        <img
+                          src={editor.profilePicture}
+                          alt={editor.name}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
                         />
                         <div>
-                          <h3 className="font-medium">{editor.name}</h3>
-                          <p className="text-sm text-[#8E8E93]">{editor.location}</p>
+                          <h3 className="font-bold text-lg leading-none mb-1 text-foreground">{editor.name}</h3>
+                          <p className="text-sm text-muted-foreground">{editor.location}</p>
                         </div>
                       </div>
-                      
-                      <div className="flex flex-wrap gap-2 mt-3">
+
+                      <div className="flex flex-wrap gap-2 mt-4 mb-3">
                         {[...editor.software, ...editor.styles].slice(0, 4).map((tag, index) => (
-                          <Badge key={index} variant="secondary" className="bg-[#F2F2F7] hover:bg-[#F2F2F7] text-[#8E8E93]">
+                          <Badge key={index} variant="secondary" className="bg-gray-50 hover:bg-gray-100 text-muted-foreground border-0 font-normal">
                             {tag}
                           </Badge>
                         ))}
                         {[...editor.software, ...editor.styles].length > 4 && (
-                          <Badge variant="secondary" className="bg-[#F2F2F7] hover:bg-[#F2F2F7] text-[#8E8E93]">
+                          <Badge variant="secondary" className="bg-gray-50 hover:bg-gray-100 text-muted-foreground border-0 font-normal">
                             +{[...editor.software, ...editor.styles].length - 4} más
                           </Badge>
                         )}
                       </div>
-                      
-                      <p className="text-sm mt-3 text-[#1c1c1e] line-clamp-2">
+
+                      <p className="text-sm mt-3 text-muted-foreground line-clamp-2 leading-relaxed">
                         {editor.bio}
                       </p>
                     </div>
-                    
-                    <div className="mt-4 md:mt-0 text-right">
-                      <div className="mb-2">
-                        <p className="text-sm text-[#8E8E93]">Desde</p>
-                        <p className="text-xl font-semibold text-primary">${editor.basicRate} USD</p>
+
+                    <div className="mt-4 md:mt-0 text-right min-w-[140px]">
+                      <div className="mb-4">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">Desde</p>
+                        <p className="text-2xl font-bold text-primary">${editor.basicRate} <span className="text-sm text-muted-foreground font-normal">USD</span></p>
                       </div>
-                      <div className="flex space-x-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="text-primary border-primary hover:bg-primary/5 flex-1"
+                      <div className="flex flex-col space-y-2">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="bg-primary hover:bg-primary/90 w-full rounded-full font-bold shadow-md hover:shadow-lg transition-all"
+                          onClick={() => window.location.href = `/editor/${editor.id}#contact`}
+                        >
+                          Contactar
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-foreground hover:bg-gray-50 w-full rounded-full hover:text-primary transition-colors"
                           asChild
                         >
                           <Link href={`/editor/${editor.id}`}>
                             Ver perfil
                           </Link>
-                        </Button>
-                        <Button 
-                          variant="default"
-                          size="sm"
-                          className="bg-primary hover:bg-primary/90 flex-1"
-                          onClick={() => window.location.href = `/editor/${editor.id}#contact`}
-                        >
-                          Contactar
                         </Button>
                       </div>
                     </div>
@@ -373,13 +384,13 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
           </Card>
         ))}
       </div>
-      
+
       {totalPages > 1 && (
         <Pagination className="mt-8">
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious 
-                href="#" 
+              <PaginationPrevious
+                href="#"
                 onClick={(e) => {
                   e.preventDefault();
                   if (currentPage > 1) {
@@ -389,11 +400,11 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
                 className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
-            
+
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               // Mostrar páginas alrededor de la página actual
               let pageNum = 1;
-              
+
               if (totalPages <= 5) {
                 // Si hay 5 o menos páginas, mostrar todas
                 pageNum = i + 1;
@@ -407,10 +418,10 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
                 // Si estamos en páginas intermedias
                 pageNum = currentPage - 2 + i;
               }
-              
+
               return (
                 <PaginationItem key={pageNum}>
-                  <PaginationLink 
+                  <PaginationLink
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
@@ -423,10 +434,10 @@ const EditorList = ({ filters, onFilterChange }: EditorListProps) => {
                 </PaginationItem>
               );
             })}
-            
+
             <PaginationItem>
-              <PaginationNext 
-                href="#" 
+              <PaginationNext
+                href="#"
                 onClick={(e) => {
                   e.preventDefault();
                   if (currentPage < totalPages) {

@@ -21,16 +21,16 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F2F7]">
+    <div className="min-h-screen bg-gray-50">
       <Helmet>
         <title>Buscar profesionales | latamvideos.com</title>
         <meta name="description" content="Encuentra profesionales de video especializados para tus proyectos en Latinoamérica. Filtra por tipo de profesional, país y presupuesto." />
       </Helmet>
       <Header />
-      
+
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6">Buscar profesionales en video</h1>
-        
+
         <div className="flex flex-col md:flex-row gap-6">
           {/* Filters Sidebar */}
           <div className="w-full md:w-1/4">
@@ -39,17 +39,17 @@ const SearchPage = () => {
               initialFilters={filters}
             />
           </div>
-          
+
           {/* Results Section */}
           <div className="w-full md:w-3/4">
-            <EditorList 
-              filters={filters} 
-              onFilterChange={handleFilterChange} 
+            <EditorList
+              filters={filters}
+              onFilterChange={handleFilterChange}
             />
           </div>
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );

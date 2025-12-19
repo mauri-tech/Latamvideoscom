@@ -8,14 +8,14 @@ interface FeatureProps {
 
 const Feature: React.FC<FeatureProps> = ({ title, description }) => {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-md border border-[#E5E5EA] gradient-card-soft relative">
+    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
       <div className="flex items-start">
-        <div className="bg-[#0050FF]/10 p-2 rounded-full mr-4 flex-shrink-0">
-          <Check className="h-5 w-5 text-[#0050FF]" />
+        <div className="bg-primary/10 p-3 rounded-full mr-4 flex-shrink-0">
+          <Check className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h3 className="font-medium text-lg mb-2">{title}</h3>
-          <p className="text-gray-700">{description}</p>
+          <h3 className="font-bold text-lg mb-2 text-foreground">{title}</h3>
+          <p className="text-muted-foreground">{description}</p>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@ const Features = () => {
       description: "Define tus tarifas según el servicio y experiencia que ofreces, con paquetes para diferentes necesidades."
     }
   ];
-  
+
   const businessFeatures = [
     {
       title: "Búsqueda avanzada por especialidad",
@@ -59,20 +59,20 @@ const Features = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">¿Por qué funciona?</h2>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-            Conectamos creativos con negocios, agencias y personas mediante una plataforma inteligente 
+            Conectamos creativos con negocios, agencias y personas mediante una plataforma inteligente
             que facilita la búsqueda por estilo, especialización y presupuesto.
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-2 gap-16">
           <div>
             <h3 className="text-2xl font-bold mb-6 text-center flex items-center justify-center">
-              <span className="bg-blue-100 text-blue-800 p-2 rounded-full mr-2">👨‍🎨</span> 
+              <span className="bg-blue-100 text-blue-800 p-2 rounded-full mr-2">👨‍🎨</span>
               Para Creativos
             </h3>
             <div className="grid gap-6">
               {creativeFeatures.map((feature, index) => (
-                <Feature 
+                <Feature
                   key={index}
                   title={feature.title}
                   description={feature.description}
@@ -80,15 +80,15 @@ const Features = () => {
               ))}
             </div>
           </div>
-          
+
           <div>
             <h3 className="text-2xl font-bold mb-6 text-center flex items-center justify-center">
-              <span className="bg-blue-100 text-blue-800 p-2 rounded-full mr-2">🏢</span> 
+              <span className="bg-blue-100 text-blue-800 p-2 rounded-full mr-2">🏢</span>
               Para Negocios
             </h3>
             <div className="grid gap-6">
               {businessFeatures.map((feature, index) => (
-                <Feature 
+                <Feature
                   key={index}
                   title={feature.title}
                   description={feature.description}

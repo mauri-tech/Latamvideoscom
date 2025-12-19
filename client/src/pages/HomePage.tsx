@@ -3,58 +3,49 @@ import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
-import Features from '@/components/home/Features';
-import EditorInteractiveProfile from '@/components/home/EditorInteractiveProfile';
-import BusinessSection from '@/components/home/BusinessSection';
+import TrustStrip from '@/components/home/TrustStrip';
+import CategoryNav from '@/components/home/CategoryNav';
 import FeaturedEditors from '@/components/home/FeaturedEditors';
-import HiringProcess from '@/components/home/HiringProcess';
-import Testimonials from '@/components/home/Testimonials';
-import CTASection from '@/components/home/CTASection';
 import HowItWorks from '@/components/home/HowItWorks';
+import CTASection from '@/components/home/CTASection';
 
 /**
- * HomePage - Agregando componentes uno a uno
+ * HomePage - Rediseñado para simplicidad y conversión
  */
 const HomePage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>latamvideos.com - El portafolio inteligente para editores de video</title>
-        <meta 
-          name="description" 
-          content="Conectamos a editores de video con marcas, agencias y creadores que buscan talento específico por estilo, equipo y precio." 
+        <title>LatamVideos - El Marketplace #1 de Editores de Video</title>
+        <meta
+          name="description"
+          content="Encuentra al editor perfecto para YouTube, Reels, Bodas o Cine. Talento verificado y pagos seguros."
         />
       </Helmet>
-      
+
       <div className="min-h-screen bg-white">
         <Header />
-        
+
         <main>
-          {/* 1. Hero Section */}
+          {/* 1. Hero with Central Search Pill */}
           <Hero />
-          
-          {/* 2. Business Section */}
-          <BusinessSection />
-          
-          {/* 3. How It Works */}
-          <HowItWorks />
-          
-          {/* 4. Editor Interactive Profile */}
-          <EditorInteractiveProfile />
-          
-          {/* 5. Featured Editors */}
+
+          {/* 2. Social Proof */}
+          <TrustStrip />
+
+          {/* 3. Niche Navigation */}
+          <CategoryNav />
+
+          {/* 4. The Product (Talent) */}
           <FeaturedEditors />
-          
-          {/* 6. Hiring Process */}
-          <HiringProcess />
-          
-          {/* 7. Testimonials */}
-          <Testimonials />
-          
-          {/* 8. Final CTA */}
+
+          {/* 5. Simplicity Explanation */}
+          <HowItWorks />
+
+          {/* 6. Final Call to Action */}
           <CTASection />
         </main>
-        
+
         <Footer />
       </div>
     </>

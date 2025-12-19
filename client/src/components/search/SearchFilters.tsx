@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -27,10 +27,10 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
     sortBy: initialFilters.sortBy || 'relevance',
     sortDirection: initialFilters.sortDirection || 'desc',
   });
-  
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTags, setActiveTags] = useState<string[]>([]);
-  
+
   // Tipos de profesionales
   const professionalTypes = [
     { value: "all", label: "Todos los profesionales" },
@@ -43,30 +43,30 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
     { value: "animator", label: "Animador" },
     { value: "director", label: "Director" }
   ];
-  
+
   const updateFilter = (key: string, value: any) => {
     // Si el valor es "todos" para el país, convertirlo a string vacío para mantener la lógica existente
     const processedValue = key === 'country' && value === 'todos' ? '' : value;
     const newFilters = { ...filters, [key]: processedValue, page: 1 }; // Reset to page 1 when changing filters
     setFilters(newFilters);
     onFilterChange(newFilters);
-    
+
     // Actualizar etiquetas activas
     updateActiveTags(key, value);
   };
-  
+
   // Función para actualizar las etiquetas activas
   const updateActiveTags = (key: string, value: any) => {
     let newTags = [...activeTags];
-    
+
     // Remover etiqueta existente para esta key si existe
     newTags = newTags.filter(tag => !tag.startsWith(`${key}:`));
-    
+
     // Añadir nueva etiqueta si hay un valor
     if (value && value !== '' && value !== 'todos' && value !== 'all' && value !== 'none') {
       let tagText = '';
-      
-      switch(key) {
+
+      switch (key) {
         case 'country':
           const countryObj = countries.find(c => c.code === value);
           tagText = `País: ${countryObj ? `${countryObj.flag} ${countryObj.name}` : value}`;
@@ -80,29 +80,29 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
         default:
           tagText = `${key}: ${value}`;
       }
-      
+
       if (tagText) {
         newTags.push(`${key}:${tagText}`);
       }
     }
-    
+
     setActiveTags(newTags);
   };
-  
+
   // Función para remover una etiqueta específica
   const removeTag = (tag: string) => {
     const [key] = tag.split(':');
-    
+
     // Valores por defecto según la key
     let defaultValue: any = '';
     if (key === 'maxRate') {
       defaultValue = 150;
     }
-    
+
     // Actualizar filtros y quitar la etiqueta
     updateFilter(key, defaultValue);
   };
-  
+
   const resetFilters = () => {
     const resetValues = {
       professionalType: '',
@@ -113,35 +113,35 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
       sortBy: 'relevance', // Restablecer orden
       sortDirection: 'desc' // Restablecer dirección
     };
-    
+
     setFilters(resetValues);
     onFilterChange(resetValues);
     setActiveTags([]);
   };
-  
+
   const handleSliderChange = (value: number[]) => {
     updateFilter('maxRate', value[0]);
   };
-  
+
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-[#041C32]">Buscar profesionales</h2>
-        
+    <div className="bg-white rounded-2xl shadow-card border-0 p-6 md:p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-foreground">Filtros</h2>
+
         <div className="flex items-center gap-2">
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={resetFilters}
-            className="text-[#8E8E93] hover:text-primary hover:bg-transparent"
+            className="text-muted-foreground hover:text-primary hover:bg-transparent px-2"
           >
             <X className="h-4 w-4 mr-1" />
             Limpiar
           </Button>
-          
-          <Button 
-            variant="link" 
-            size="sm" 
+
+          <Button
+            variant="link"
+            size="sm"
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-primary md:hidden"
           >
@@ -150,23 +150,23 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
           </Button>
         </div>
       </div>
-      
+
       {/* Etiquetas de filtros activos */}
       {activeTags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-6">
           {activeTags.map((tag, index) => {
             const [key, ...restParts] = tag.split(':');
             const label = restParts.join(':');
-            
+
             return (
-              <Badge 
-                key={index} 
+              <Badge
+                key={index}
                 variant="secondary"
-                className="px-2 py-1 bg-blue-50 text-[#0050FF] hover:bg-blue-100 flex items-center"
+                className="px-3 py-1 bg-primary/5 text-primary hover:bg-primary/10 flex items-center border-0 rounded-full"
               >
                 {label}
-                <X 
-                  className="h-3 w-3 ml-1 cursor-pointer" 
+                <X
+                  className="h-3 w-3 ml-2 cursor-pointer"
                   onClick={() => removeTag(tag)}
                 />
               </Badge>
@@ -174,18 +174,18 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
           })}
         </div>
       )}
-      
-      <div className={`space-y-6 ${isExpanded ? 'block' : 'hidden md:block'}`}>
+
+      <div className={`space-y-8 ${isExpanded ? 'block' : 'hidden md:block'}`}>
         {/* Filtro: Tipo de profesional */}
-        <div>
-          <label htmlFor="professionalType" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+        <div className="space-y-3">
+          <label htmlFor="professionalType" className="block text-sm font-bold text-foreground">
             Tipo de profesional
           </label>
           <Select
             value={filters.professionalType || "all"}
             onValueChange={(value) => updateFilter('professionalType', value === "all" ? "" : value)}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full rounded-xl border-gray-200 focus:ring-primary h-12">
               <SelectValue placeholder="Todos los profesionales" />
             </SelectTrigger>
             <SelectContent>
@@ -197,17 +197,17 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             </SelectContent>
           </Select>
         </div>
-        
+
         {/* Filtro: País */}
-        <div>
-          <label htmlFor="country" className="block text-sm font-medium text-[#1c1c1e] mb-2">
+        <div className="space-y-3">
+          <label htmlFor="country" className="block text-sm font-bold text-foreground">
             País
           </label>
           <Select
             value={filters.country || "all"}
             onValueChange={(value) => updateFilter('country', value === "all" ? "" : value)}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full rounded-xl border-gray-200 focus:ring-primary h-12">
               <SelectValue placeholder="Todos los países" />
             </SelectTrigger>
             <SelectContent>
@@ -220,40 +220,44 @@ const SearchFilters = ({ onFilterChange, initialFilters = {} }: SearchFiltersPro
             </SelectContent>
           </Select>
         </div>
-        
+
         {/* Filtro: Presupuesto */}
-        <div>
-          <label htmlFor="price" className="block text-sm font-medium text-[#1c1c1e] mb-4">
-            Presupuesto máximo: ${filters.maxRate} USD
-          </label>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <label htmlFor="price" className="block text-sm font-bold text-foreground">
+              Presupuesto máximo
+            </label>
+            <span className="text-sm font-medium text-primary">${filters.maxRate} USD</span>
+          </div>
           <Slider
             defaultValue={[filters.maxRate]}
             max={500}
             min={0}
             step={10}
             onValueChange={handleSliderChange}
+            className="py-4"
           />
-          <div className="flex justify-between text-xs text-[#8E8E93] mt-2">
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>$0</span>
             <span>$500+</span>
           </div>
         </div>
-        
+
         {/* Mensaje informativo */}
-        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-4">
-          <p className="text-sm text-[#0050FF]">
+        <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Estos filtros te ayudarán a encontrar rápidamente al profesional ideal para tu proyecto.
           </p>
         </div>
-        
+
         <Button
-          className="w-full bg-[#0050FF] hover:bg-[#0040E0] mt-4"
+          className="w-full bg-primary hover:bg-primary/90 rounded-full h-12 font-bold text-base shadow-md hover:shadow-lg transition-all"
           onClick={() => {
             updateFilter('page', 1); // Reset to page 1 when applying filters
             setIsExpanded(false); // Close accordion on mobile
           }}
         >
-          Buscar profesionales
+          Aplicar filtros
         </Button>
       </div>
     </div>

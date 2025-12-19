@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { CustomButton } from '@/components/ui/custom-button';
+import { Button } from '@/components/ui/button';
 import editorImage from '../../assets/editor-hero.jpg';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -50,226 +50,77 @@ const Hero = () => {
   };
 
   return (
-    <div className="bg-white pt-10 md:pt-16 pb-12">
-      <div className="container mx-auto px-4">
-        {/* Versión móvil con imagen arriba */}
-        <div className="flex flex-col md:hidden mb-8">
-          <div className="bg-white rounded-xl p-4 shadow-lg mb-6">
-            <div className="aspect-video rounded-lg overflow-hidden shadow-inner">
-              <img 
-                src={editorImage} 
-                alt="Profesionales en video de LATAM"
-                className="w-full h-full object-cover"
-              />
-            </div>
+    <div className="bg-background pt-16 md:pt-24 pb-20">
+      <div className="container mx-auto px-4 flex flex-col items-center text-center">
+
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-foreground max-w-4xl">
+          Encuentra a los mejores <br className="hidden md:block" />
+          <span className="text-primary">profesionales de video</span> en LATAM
+        </h1>
+
+        <p className="text-muted-foreground text-lg md:text-xl mb-12 max-w-2xl leading-relaxed">
+          Conecta con editores, videógrafos, animadores y directores verificados.
+          Gestión segura, pagos protegidos y talento de clase mundial.
+        </p>
+
+        {/* Airbnb-style Floating Pill Search Bar - Optimized for Mobile */}
+        <div className="bg-white rounded-3xl md:rounded-full shadow-hover p-4 md:p-2 flex flex-col md:flex-row items-center w-full max-w-4xl border border-gray-100 gap-4 md:gap-0">
+
+          <div className="flex-1 w-full md:w-auto px-2 md:px-6 py-2 border-b md:border-b-0 md:border-r border-gray-100 relative group text-left">
+            <label className="block text-xs font-bold text-foreground uppercase tracking-wider mb-1">Rol</label>
+            <Select value={professionalType} onValueChange={setProfessionalType}>
+              <SelectTrigger className="w-full border-0 shadow-none p-0 h-auto text-base text-muted-foreground font-normal focus:ring-0 bg-transparent">
+                <SelectValue placeholder="¿Qué buscas?" />
+              </SelectTrigger>
+              <SelectContent>
+                {professionalTypes.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          
-          <h1 className="text-2xl font-bold text-center tracking-tight mb-2 leading-none">
-            Encuentra a profesionales<br />
-            <span 
-              className="tracking-tighter font-extrabold"
-              style={{ 
-                color: colorPalette.pastel.blue
-              }}
+
+          <div className="flex-1 w-full md:w-auto px-2 md:px-6 py-2 border-b md:border-b-0 md:border-r border-gray-100 relative group text-left">
+            <label className="block text-xs font-bold text-foreground uppercase tracking-wider mb-1">País</label>
+            <Select value={country} onValueChange={setCountry}>
+              <SelectTrigger className="w-full border-0 shadow-none p-0 h-auto text-base text-muted-foreground font-normal focus:ring-0 bg-transparent">
+                <SelectValue placeholder="Ubicación" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los países</SelectItem>
+                {countries.map((c) => (
+                  <SelectItem key={c.code} value={c.code}>{c.flag} {c.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex-1 w-full md:w-auto px-2 md:px-6 py-2 relative group text-left">
+            <div className="flex justify-between mb-1">
+              <label className="block text-xs font-bold text-foreground uppercase tracking-wider">Presupuesto</label>
+              <span className="text-xs text-muted-foreground">${maxRate}</span>
+            </div>
+            <Slider
+              defaultValue={[maxRate]}
+              max={500}
+              step={10}
+              onValueChange={(val) => setMaxRate(val[0])}
+              className="py-2"
+            />
+          </div>
+
+          <div className="p-2 w-full md:w-auto">
+            <Button
+              size="lg"
+              className="rounded-xl md:rounded-full w-full md:w-auto h-12 md:h-14 px-8 bg-primary hover:bg-primary/90 text-white font-bold text-lg shadow-lg"
+              onClick={handleSearch}
             >
-              en video de LATAM
-            </span>
-          </h1>
-          
-          <p className="text-gray-600 text-base md:text-lg mb-4 leading-snug text-center">
-            La plataforma para conectar con editores, videógrafos y profesionales
-            especializados por estilo, equipo y presupuesto.
-          </p>
-
-          {/* Buscador simplificado para móvil */}
-          <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <h2 className="text-lg font-bold text-[#041C32] mb-4">Buscar profesionales</h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="professionalType-mobile" className="block text-sm font-medium text-[#1c1c1e] mb-2">
-                  Tipo de profesional
-                </label>
-                <Select
-                  value={professionalType}
-                  onValueChange={setProfessionalType}
-                >
-                  <SelectTrigger id="professionalType-mobile" className="w-full">
-                    <SelectValue placeholder="Todos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {professionalTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <label htmlFor="country-mobile" className="block text-sm font-medium text-[#1c1c1e] mb-2">
-                  País
-                </label>
-                <Select
-                  value={country}
-                  onValueChange={setCountry}
-                >
-                  <SelectTrigger id="country-mobile" className="w-full">
-                    <SelectValue placeholder="Todos los países" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos los países</SelectItem>
-                    {countries.map((country) => (
-                      <SelectItem key={country.code} value={country.code}>
-                        {country.flag} {country.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <label htmlFor="price-mobile" className="block text-sm font-medium text-[#1c1c1e] mb-2">
-                  Presupuesto máximo: ${maxRate} USD
-                </label>
-                <Slider
-                  id="price-mobile"
-                  defaultValue={[maxRate]}
-                  max={500}
-                  min={0}
-                  step={10}
-                  onValueChange={(value) => setMaxRate(value[0])}
-                />
-              </div>
-              
-              <CustomButton
-                variant="dark"
-                size="lg"
-                className="w-full py-5 mt-2"
-                style={{ backgroundColor: colorPalette.grayscale.primary, color: "white" }}
-                onClick={handleSearch}
-              >
-                Buscar profesionales
-              </CustomButton>
-            </div>
+              Buscar
+            </Button>
           </div>
-          
-          {/* Botones removidos por petición del usuario */}
+
         </div>
 
-        {/* Versión desktop */}
-        <div className="hidden md:flex md:flex-row items-center">
-          {/* Contenido del texto */}
-          <div className="md:w-1/2 mb-12 md:mb-0 pr-8">
-            <div className="max-w-lg">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 leading-none">
-                <span>Encuentra a</span><br />
-                <span>profesionales</span><br />
-                <span 
-                  className="tracking-tighter font-extrabold"
-                  style={{ 
-                    color: colorPalette.pastel.blue
-                  }}
-                >
-                  en video de<br />LATAM
-                </span>
-              </h1>
-              
-              <p className="text-gray-600 text-lg md:text-xl mb-6 leading-snug">
-                La plataforma para conectar con editores, videógrafos y profesionales
-                especializados por estilo, equipo y presupuesto.
-              </p>
-              
-              {/* Buscador desktop */}
-              <div className="bg-white rounded-lg shadow-sm p-5 mb-6">
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label htmlFor="professionalType-desktop" className="block text-sm font-medium text-[#1c1c1e] mb-2">
-                      Tipo de profesional
-                    </label>
-                    <Select
-                      value={professionalType}
-                      onValueChange={setProfessionalType}
-                    >
-                      <SelectTrigger id="professionalType-desktop" className="w-full">
-                        <SelectValue placeholder="Todos" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {professionalTypes.map((type) => (
-                          <SelectItem key={type.value} value={type.value}>
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="country-desktop" className="block text-sm font-medium text-[#1c1c1e] mb-2">
-                      País
-                    </label>
-                    <Select
-                      value={country}
-                      onValueChange={setCountry}
-                    >
-                      <SelectTrigger id="country-desktop" className="w-full">
-                        <SelectValue placeholder="Todos los países" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos los países</SelectItem>
-                        {countries.map((country) => (
-                          <SelectItem key={country.code} value={country.code}>
-                            {country.flag} {country.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                
-                <div className="mb-6">
-                  <label htmlFor="price-desktop" className="block text-sm font-medium text-[#1c1c1e] mb-2">
-                    Presupuesto máximo: ${maxRate} USD
-                  </label>
-                  <Slider
-                    id="price-desktop"
-                    defaultValue={[maxRate]}
-                    max={500}
-                    min={0}
-                    step={10}
-                    onValueChange={(value) => setMaxRate(value[0])}
-                  />
-                </div>
-                
-                <CustomButton
-                  variant="dark"
-                  size="lg"
-                  className="w-full py-6"
-                  style={{ backgroundColor: colorPalette.grayscale.primary, color: "white" }}
-                  onClick={handleSearch}
-                >
-                  Buscar profesionales
-                </CustomButton>
-              </div>
-              
-              {/* Botones removidos por petición del usuario */}
-            </div>
-          </div>
-          
-          {/* Imagen del editor trabajando */}
-          <div className="md:w-1/2">
-            <div className="bg-white rounded-xl p-5 shadow-xl">
-              <div className="aspect-video rounded-lg overflow-hidden shadow-inner">
-                <img 
-                  src={editorImage} 
-                  alt="Profesionales en video de LATAM"
-                  className="w-full h-full object-cover transition-all hover:scale-105 duration-700"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

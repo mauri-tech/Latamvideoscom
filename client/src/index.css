@@ -5,279 +5,112 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Clase para ocultar barras de desplazamiento */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* White */
+    --foreground: 220 13% 18%; /* Soft Black #222222 */
+    
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+    
+    --primary: 349 100% 61%; /* Airbnb Red #FF385C */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 220 14% 96%; /* #F7F7F7 */
+    --secondary-foreground: 220 13% 18%;
+    
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%; /* #717171 */
+    
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 13% 18%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
 
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+    --border: 220 13% 91%; /* #EDDDDD or similar subtle grey */
+    --input: 220 13% 91%;
+    --ring: 220 13% 18%; /* Focus rings should be black/grey not blue */
+    
+    --radius: 0.75rem; /* 12px for softer corners */
+    
+    --font-satoshi: 'Satoshi', sans-serif;
+    
+    /* Custom Variables for specific Airbnb traits */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 
-/* Gradientes premium inspirados en Apple */
-.gradient-premium-blue {
-  background: linear-gradient(125deg, #041C32 0%, #0050FF 35%, #A0C4FF 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.gradient-premium-blue::before,
-.gradient-premium-blue::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.gradient-premium-blue::before {
-  background: radial-gradient(120% 120% at 50% 30%, rgba(160, 196, 255, 0.2) 0%, rgba(0, 80, 255, 0.05) 50%, rgba(4, 28, 50, 0) 100%);
-  animation: pulse 8s ease-in-out infinite alternate;
-}
-
-.gradient-premium-blue::after {
-  background: radial-gradient(70% 100% at 50% 100%, rgba(0, 80, 255, 0.3) 0%, rgba(4, 28, 50, 0) 70%);
-  animation: wave 12s ease-in-out infinite;
-}
-
-/* Gradiente suave para tarjetas */
-.gradient-card-soft {
-  background: linear-gradient(135deg, #f5f9ff 0%, #e8f0ff 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.gradient-card-soft::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(100% 100% at 0% 0%, rgba(160, 196, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Animaciones para los efectos de "respiración" */
-@keyframes pulse {
-  0% {
-    opacity: 0.3;
-    transform: scale(1);
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 40% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 349 100% 61%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%; 
   }
-  100% {
-    opacity: 0.7;
-    transform: scale(1.05);
-  }
-}
-
-@keyframes wave {
-  0% {
-    transform: translateY(5%) rotate(-1deg);
-  }
-  50% {
-    transform: translateY(0) rotate(0deg);
-  }
-  100% {
-    transform: translateY(5%) rotate(1deg);
-  }
-}
-
-/* Animaciones para pantalla de carga */
-@keyframes float-slow {
-  0% {
-    transform: translateY(0) translateX(0);
-  }
-  50% {
-    transform: translateY(-15px) translateX(10px);
-  }
-  100% {
-    transform: translateY(0) translateX(0);
-  }
-}
-
-@keyframes float-reverse {
-  0% {
-    transform: translateY(0) translateX(0);
-  }
-  50% {
-    transform: translateY(15px) translateX(-10px);
-  }
-  100% {
-    transform: translateY(0) translateX(0);
-  }
-}
-
-@keyframes expand {
-  0% {
-    width: 0;
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    width: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes expand-delay {
-  0%, 20% {
-    width: 0;
-    opacity: 0;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    width: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes expand-delay-2 {
-  0%, 40% {
-    width: 0;
-    opacity: 0;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    width: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes expand-reverse {
-  0% {
-    width: 0;
-    opacity: 0;
-    left: 100%;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    width: 100%;
-    left: 0;
-    opacity: 0;
-  }
-}
-
-@keyframes pulse-slow {
-  0% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0.3;
-  }
-}
-
-@keyframes spin-slow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spin-reverse {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(-360deg);
-  }
-}
-
-/* Clases de utilidad para las animaciones */
-.animate-float-slow {
-  animation: float-slow 6s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: float-reverse 7s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
-}
-
-.animate-expand {
-  animation: expand 8s linear infinite;
-}
-
-.animate-expand-delay {
-  animation: expand-delay 8s linear infinite;
-}
-
-.animate-expand-delay-2 {
-  animation: expand-delay-2 8s linear infinite;
-}
-
-.animate-expand-reverse {
-  animation: expand-reverse 7s linear infinite;
-}
-
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
-}
-
-.animate-spin-reverse {
-  animation: spin-reverse 10s linear infinite;
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out forwards;
 }
 
 @layer base {
-  :root {
-    --font-satoshi: 'Satoshi', sans-serif;
-  }
-  
   * {
     @apply border-border;
-    letter-spacing: 0.02em;
-    line-height: 1.6;
   }
-
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply bg-background text-foreground;
     font-family: var(--font-satoshi);
+    -webkit-font-smoothing: antialiased;
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-satoshi);
-    letter-spacing: 0.03em;
-    line-height: 1.3;
     font-weight: 700;
+    letter-spacing: -0.02em; /* Tighter tracking for headings */
+  }
+
+  /* Utility to hide scrollbars but allow scrolling */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom Utilities for Premium UI */
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08); /* Airbnb-style soft float */
   }
   
-  button, .button {
-    letter-spacing: 0.04em;
+  .shadow-card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04); /* Very subtle card shadow */
+  }
+
+  .shadow-hover {
+    box-shadow: 0 16px 32px rgba(0,0,0,0.12); /* Lift effect */
+    transition: box-shadow 0.3s ease;
   }
 }

@@ -28,6 +28,7 @@ import TestimonialsPage from "@/pages/TestimonialsPage";
 import ComoFuncionaPage from "@/pages/ComoFuncionaPage";
 import MessagesPage from "@/pages/MessagesPage";
 import EditProfilePage from "@/pages/EditProfilePage";
+import MobileNav from "@/components/layout/MobileNav";
 
 function Router() {
   return (
@@ -62,7 +63,7 @@ function Router() {
 function App() {
   const [showModal, setShowModal] = useState(true);
   const [showBanner, setShowBanner] = useState(true);
-  
+
   useEffect(() => {
     // Check if user has already dismissed the modal
     const hasSeenModal = localStorage.getItem('sawConstructionModal');
@@ -70,12 +71,12 @@ function App() {
       setShowModal(false);
     }
   }, []);
-  
+
   const handleCloseModal = () => {
     setShowModal(false);
     localStorage.setItem('sawConstructionModal', 'true');
   };
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
@@ -91,15 +92,15 @@ function App() {
                       Sitio en construcción — 63% completado
                     </p>
                   </div>
-                  
+
                   <div className="mt-1 w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                    <div 
+                    <div
                       className="bg-[#28a745] h-full rounded-full transition-all duration-1000 ease-out"
                       style={{ width: '63%' }}
                     />
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setShowBanner(false)}
                   className="ml-4 text-gray-500 hover:text-gray-700 transition-colors"
                 >
@@ -109,51 +110,51 @@ function App() {
             </div>
           </div>
         )}
-        
+
         <Router />
         <Toaster />
-        
+
         {/* Modal de construcción - vanilla implementation */}
         {showModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-4">
             <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto">
               <div className="p-6 relative">
-                <button 
+                <button
                   onClick={handleCloseModal}
                   className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
                 >
                   ×
                 </button>
-                
+
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <span role="img" aria-label="construction">🚧</span> 
+                  <span role="img" aria-label="construction">🚧</span>
                   Esta página está en construcción
                 </h2>
-                
+
                 <p className="text-gray-600 mb-4">
                   Actualmente estamos finalizando módulos y funcionalidades. Lo que ves es una vista previa (carcasa) de cómo será el sitio final.
                 </p>
-                
+
                 <div className="border-t border-gray-200 my-4 pt-4">
                   <p className="font-medium mb-3">
                     ¿Quieres ser de los primeros en publicar tu trabajo? Llena el siguiente formulario:
                   </p>
-                  
+
                   <div className="w-full rounded-md overflow-hidden bg-gray-50 border border-gray-200">
-                    <iframe 
+                    <iframe
                       src="https://docs.google.com/forms/d/e/1FAIpQLSf_A9wsGu--SzvCw6TsHpAk5hSPXqP6jna1W5f2GnQDu4Tn2w/viewform?embedded=true"
-                      width="100%" 
-                      height="500" 
-                      frameBorder="0" 
+                      width="100%"
+                      height="500"
+                      frameBorder="0"
                       title="Formulario de registro"
                     >
                       Cargando...
                     </iframe>
                   </div>
                 </div>
-                
+
                 <div className="mt-6 text-center">
-                  <button 
+                  <button
                     onClick={handleCloseModal}
                     className="px-6 py-2 bg-[#020617] text-white rounded hover:bg-[#1E293B] transition-colors"
                   >
@@ -164,6 +165,10 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Global Bottom Navigation for Mobile */}
+        <MobileNav />
+
       </AuthProvider>
     </QueryClientProvider>
   );
