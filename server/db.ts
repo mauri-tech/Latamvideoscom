@@ -1,15 +1,12 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
-import * as schema from "@shared/schema";
+import { createClient } from '@supabase/supabase-js';
 
-neonConfig.webSocketConstructor = ws;
-
-if (!process.env.DATABASE_URL) {
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
   console.warn(
-    "DATABASE_URL not set. Did you forget to provision a database? Continuing with in-memory storage.",
+    "Supabase credentials not set. Falling back to in-memory storage.",
   );
 }
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL || "postgres://user:pass@localhost:5432/db" });
-export const db = drizzle(pool, { schema });
+export const supabase = createClient(
+  process.env.SUPABASE_URL || "",
+  process.env.SUPABASE_KEY || ""
+);
